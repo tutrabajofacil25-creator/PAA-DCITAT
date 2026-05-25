@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PAA 2026 – CITEs Artesanía y Turismo</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f4f3ef;--surface:#fff;--surface2:#eeece6;--surface3:#e5e3dc;
+  --text:#18180f;--text2:#595850;--text3:#8c8b82;
+  --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.13);
+  --blue:#1557a0;--blue-l:#deeaf8;--blue-m:#2e7dd4;
+  --green:#2a5c0d;--green-l:#e3f0d4;--green-m:#4a8c1c;
+  --amber:#7a4200;--amber-l:#fdf0dc;--amber-m:#c8720e;
+  --red:#8c1f1f;--red-l:#fbe8e8;
+  --purple:#5630a8;--purple-l:#ece8f9;
+  --teal:#0a5c52;--teal-l:#d8f0ec;--teal-m:#0e8f7e;
+  --r:8px;--r2:12px;
+  --font:'IBM Plex Sans',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:13px;line-height:1.5;min-height:100vh}
+
+/* HEADER */
+.header{background:#0d1b2e;color:#fff;padding:0 28px;border-bottom:3px solid #C8720E}
+.header-top{display:flex;align-items:center;justify-content:space-between;padding:14px 0 10px}
+.header-mincetur{font-size:11px;font-weight:600;color:#f0c080;letter-spacing:0.5px;margin-bottom:5px;text-transform:uppercase}
+.header-top h1{font-size:22px;font-weight:700;letter-spacing:-0.3px;line-height:1.2;color:#fff}
+.header-top .sub{font-size:12px;color:rgba(255,255,255,0.78);margin-top:4px;font-weight:500}
+.header-bottom{border-top:1px solid rgba(255,255,255,0.12);padding:7px 0;font-size:11px;color:rgba(255,255,255,0.6)}
+.hbadge{display:flex;gap:8px;align-items:center;flex-shrink:0;margin-left:24px}
+.badge{font-size:12px;font-weight:700;padding:5px 14px;border-radius:6px;letter-spacing:0.5px}
+.badge-peru{background:#C8720E;color:#fff}
+.badge-yr{background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.35);font-size:13px}
+
+/* FILTERBAR */
+.filterbar{background:var(--surface);border-bottom:1px solid var(--border2);padding:8px 28px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,0.06)}
+.fb-label{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.4px;white-space:nowrap}
+.fb-chips{display:flex;gap:5px;flex-wrap:wrap}
+.chip{font-size:11px;padding:4px 11px;border-radius:20px;border:1px solid var(--border2);background:var(--surface2);color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap;font-weight:500;user-select:none}
+.chip:hover{background:var(--surface3);color:var(--text)}
+.chip.active{background:var(--text);color:#fff;border-color:var(--text)}
+.chip-modal.active-art{background:#1557a0;color:#fff;border-color:#1557a0}
+.chip-modal.active-cap{background:#2e7dd4;color:#fff;border-color:#2e7dd4}
+.chip-modal.active-dif{background:#2a5c0d;color:#fff;border-color:#2a5c0d}
+.chip-modal.active-idi{background:#c8720e;color:#fff;border-color:#c8720e}
+.chip-modal.active-tt{background:#5630a8;color:#fff;border-color:#5630a8}
+.fb-info{font-size:10px;color:var(--text3);margin-left:auto;white-space:nowrap}
+.fb-actions{display:flex;gap:6px;margin-left:8px}
+.btn-action{font-size:11px;padding:5px 12px;border-radius:6px;border:1px solid var(--border2);background:var(--surface2);color:var(--text);cursor:pointer;font-weight:500;display:flex;align-items:center;gap:5px;transition:all .15s;font-family:var(--font);white-space:nowrap}
+.btn-action:hover{background:var(--text);color:#fff;border-color:var(--text)}
+.btn-action.primary{background:var(--blue);color:#fff;border-color:var(--blue)}
+.btn-action.primary:hover{background:#0e4280}
+
+/* MAIN */
+.main{padding:16px 28px;display:flex;flex-direction:column;gap:14px}
+.sec-hdr{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:7px;border-left:2px solid var(--amber-m);padding-left:7px}
+
+/* KPI */
+.kpi-row{display:grid;grid-template-columns:repeat(6,1fr);gap:9px}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:11px 13px;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.kpi.k-blue::before{background:var(--blue)}.kpi.k-green::before{background:var(--green-m)}
+.kpi.k-amber::before{background:var(--amber-m)}.kpi.k-purple::before{background:var(--purple)}
+.kpi.k-teal::before{background:var(--teal-m)}.kpi.k-red::before{background:#c0392b}
+.kpi .lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:4px}
+.kpi .val{font-size:22px;font-weight:600;line-height:1;font-family:var(--mono)}
+.kpi.k-blue .val{color:var(--blue)}.kpi.k-green .val{color:var(--green-m)}
+.kpi.k-amber .val{color:var(--amber-m)}.kpi.k-purple .val{color:var(--purple)}
+.kpi.k-teal .val{color:var(--teal-m)}.kpi.k-red .val{color:var(--red)}
+.kpi .sub{font-size:9px;color:var(--text3);margin-top:3px}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px}
+.g13{display:grid;grid-template-columns:1fr 2.2fr;gap:13px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:13px;overflow:hidden}
+.ct{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}
+.cs{font-size:10px;color:var(--text3);margin-bottom:9px}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:7px;font-size:10px;color:var(--text2)}
+.li{display:flex;align-items:center;gap:4px}
+.ld{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.chart-wrap{position:relative;width:100%}
+.h160{height:160px}.h180{height:180px}.h200{height:200px}.h220{height:220px}
+.h240{height:240px}.h260{height:260px}.h280{height:280px}.h300{height:300px}
+
+/* TIPO SPLIT */
+.tipo-split{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tipo-blk{border-radius:var(--r);padding:11px 13px;border:1px solid}
+.tipo-blk.priv{background:var(--blue-l);border-color:rgba(21,87,160,0.18)}
+.tipo-blk.pub{background:var(--green-l);border-color:rgba(42,92,13,0.18)}
+.tb-head{font-size:11px;font-weight:600;margin-bottom:7px;display:flex;align-items:center;gap:5px}
+.tipo-blk.priv .tb-head{color:var(--blue)}.tipo-blk.pub .tb-head{color:var(--green)}
+.tb-cites{font-size:9px;color:var(--text3);margin-bottom:7px;font-style:italic}
+.tb-div{border-top:1px solid;margin:6px 0;opacity:0.3}
+.tb-row{display:flex;justify-content:space-between;margin-bottom:3px;font-size:11px}
+.tb-lbl{color:var(--text2)}.tb-val{font-weight:600;font-family:var(--mono);font-size:10px}
+.tipo-blk.priv .tb-val{color:var(--blue)}.tipo-blk.pub .tb-val{color:var(--green)}
+
+/* TABLE */
+.dt{width:100%;border-collapse:collapse;font-size:11px}
+.dt thead th{background:var(--surface2);color:var(--text2);font-weight:600;padding:6px 8px;text-align:right;border-bottom:1px solid var(--border2);font-size:10px;text-transform:uppercase;letter-spacing:0.2px}
+.dt thead th:first-child{text-align:left}
+.dt tbody td{padding:6px 8px;border-bottom:1px solid var(--border);text-align:right}
+.dt tbody td:first-child{text-align:left;font-weight:500}
+.dt tbody tr:hover{background:var(--surface2)}
+.dt tfoot td{padding:6px 8px;font-weight:700;border-top:2px solid var(--border2);text-align:right;background:var(--surface2);font-family:var(--mono);font-size:10px}
+.dt tfoot td:first-child{text-align:left}
+.cdot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:4px}
+
+/* EFF BARS */
+.brow{display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.brow .blbl{width:70px;font-size:10px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.brow .btrk{flex:1;height:14px;background:var(--surface2);border-radius:3px;overflow:hidden}
+.brow .bfil{height:100%;border-radius:3px;transition:width .4s}
+.brow .bval{min-width:110px;text-align:right;font-size:10px;color:var(--text2);font-family:var(--mono)}
+
+/* INSIGHTS */
+.insights-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}
+.ins{padding:9px 11px;border-radius:var(--r)}
+.ins.riesgo{background:var(--red-l);border-left:3px solid #c0392b}
+.ins.oport{background:var(--green-l);border-left:3px solid var(--green-m)}
+.ins.tend{background:var(--blue-l);border-left:3px solid var(--blue)}
+.ins .ititle{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:3px}
+.ins.riesgo .ititle{color:var(--red)}.ins.oport .ititle{color:var(--green)}.ins.tend .ititle{color:var(--blue)}
+.ins p{font-size:10px;color:var(--text2);line-height:1.55}
+
+/* PANEL OVERLAY */
+.panel-overlay{display:none;position:fixed;top:0;right:0;bottom:0;width:430px;background:var(--surface);border-left:1px solid var(--border2);z-index:500;flex-direction:column;box-shadow:-4px 0 20px rgba(0,0,0,0.12)}
+.panel-overlay.open{display:flex}
+.panel-header{background:#0d1b2e;color:#fff;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.panel-header h2{font-size:15px;font-weight:600}
+.panel-close{background:none;border:none;color:#fff;font-size:20px;cursor:pointer;opacity:0.7;line-height:1;padding:2px 6px}
+.panel-close:hover{opacity:1}
+.panel-search{padding:10px 14px;border-bottom:1px solid var(--border);flex-shrink:0}
+.panel-search input{width:100%;padding:7px 11px;border:1px solid var(--border2);border-radius:var(--r);font-size:12px;background:var(--surface2);font-family:var(--font);outline:none}
+.panel-search input:focus{border-color:var(--blue-m)}
+.panel-filters{padding:8px 14px;border-bottom:1px solid var(--border);display:flex;gap:6px;align-items:center;flex-shrink:0;flex-wrap:wrap}
+.panel-filters select{font-size:11px;padding:4px 8px;border:1px solid var(--border2);border-radius:6px;background:var(--surface2);font-family:var(--font);outline:none;cursor:pointer}
+.panel-count{font-size:10px;color:var(--text3);margin-left:auto}
+.panel-body{flex:1;overflow-y:auto;padding:10px 14px}
+.act-card{border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;margin-bottom:8px;transition:box-shadow .15s}
+.act-card:hover{box-shadow:0 2px 8px rgba(0,0,0,0.08);border-color:var(--border2)}
+.act-badge{display:inline-block;font-size:9px;font-weight:600;padding:2px 7px;border-radius:10px;margin-bottom:5px}
+.act-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px;line-height:1.3}
+.act-tipo{font-size:10px;color:var(--text2);margin-bottom:4px;font-style:italic}
+.act-obj{font-size:10px;color:var(--text2);margin-bottom:6px;line-height:1.45}
+.act-meta{display:flex;gap:6px;flex-wrap:wrap;font-size:10px}
+.act-tag{background:var(--surface2);padding:2px 7px;border-radius:4px;color:var(--text2)}
+.act-tag.blue{background:var(--blue-l);color:var(--blue)}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:600;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal-box{background:var(--surface);border-radius:var(--r2);padding:24px;width:520px;max-width:96vw}
+.modal-title{font-size:16px;font-weight:600;margin-bottom:4px}
+.modal-sub{font-size:11px;color:var(--text3);margin-bottom:18px}
+.report-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.ropt{border:1px solid var(--border2);border-radius:var(--r);padding:12px;cursor:pointer;transition:all .15s}
+.ropt:hover{border-color:var(--blue-m);background:var(--blue-l)}
+.ropt.sel{border-color:var(--blue);background:var(--blue-l)}
+.ropt .ro-title{font-size:12px;font-weight:600;margin-bottom:2px}
+.ropt .ro-desc{font-size:10px;color:var(--text2)}
+.modal-footer{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.btn-cancel{padding:7px 16px;border:1px solid var(--border2);border-radius:6px;background:var(--surface2);cursor:pointer;font-size:12px;font-family:var(--font)}
+.btn-gen{padding:7px 18px;border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:12px;font-weight:600;font-family:var(--font)}
+.btn-gen.green{background:#1d8348}.btn-gen.green:hover{background:#155934}
+.btn-gen.red{background:#8c1f1f}.btn-gen.red:hover{background:#6a1717}
+
+#d3map{width:100%;min-height:380px}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-top">
+    <div>
+      <div class="header-mincetur">Ministerio de Comercio Exterior y Turismo</div>
+      <h1>Centros de Innovación Tecnológica (CITE) de Artesanía y Turismo</h1>
+      <div class="sub">Plan Anual de Actividades (PAA) 2026 &nbsp;&middot;&nbsp; 8 Centros de Innovación Tecnológica</div>
+    </div>
+    <div class="hbadge">
+      <span class="badge badge-peru">PERÚ</span>
+      <span class="badge badge-yr">2026</span>
+    </div>
+  </div>
+  <div class="header-bottom">Dirección de Centros de Innovación Tecnológica de Artesanía y Turismo (DCITAT)</div>
+</div>
+
+<!-- FILTERBAR -->
+<div class="filterbar">
+  <span class="fb-label">CITE:</span>
+  <div class="fb-chips" id="chips-cite"></div>
+  <div style="width:1px;height:20px;background:var(--border2);margin:0 3px"></div>
+  <div class="fb-chips" id="chips-modal"></div>
+  <span class="fb-info" id="fb-info">Todos los CITEs &middot; todas las modalidades &middot; 972 actividades</span>
+  <div class="fb-actions">
+    <button class="btn-action primary" onclick="openPanel()">&#9776; Actividades &mdash; Detalle</button>
+    <button class="btn-action" onclick="openReport()">&#8595; Generar reporte</button>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- KPIs -->
+<div>
+  <div class="sec-hdr">Métricas generales</div>
+  <div class="kpi-row">
+    <div class="kpi k-blue"><div class="lbl">Actividades</div><div class="val" id="kpi-act">972</div><div class="sub" id="kpi-act-s">8 CITEs · 2026</div></div>
+    <div class="kpi k-green"><div class="lbl">Atenciones</div><div class="val" id="kpi-aten">20,602</div><div class="sub" id="kpi-aten-s">8 CITEs · 2026</div></div>
+    <div class="kpi k-purple"><div class="lbl">Beneficiarios</div><div class="val" id="kpi-benef">9,217</div><div class="sub" id="kpi-benef-s">8 CITEs · 2026</div></div>
+    <div class="kpi k-amber"><div class="lbl">Presupuesto técnico</div><div class="val" id="kpi-pres">S/ 4.99M</div><div class="sub" id="kpi-pres-s">8 CITEs · 2026</div></div>
+    <div class="kpi k-red"><div class="lbl">Gastos operativos</div><div class="val" id="kpi-gop">S/ 1.85M</div><div class="sub" id="kpi-gop-s">8 CITEs · 2026</div></div>
+    <div class="kpi k-teal"><div class="lbl">Presupuesto total</div><div class="val" id="kpi-total">S/ 6.85M</div><div class="sub" id="kpi-total-s">8 CITEs · 2026</div></div>
+  </div>
+</div>
+
+<!-- TENDENCIAS MENSUALES -->
+<div>
+  <div class="sec-hdr">Distribución mensual de actividades · Tendencias 2026</div>
+  <div class="g2">
+    <div class="card">
+      <div class="ct">Actividades y atenciones por mes</div>
+      <div class="cs" id="cs-monthly">Mayor concentración entre mayo y septiembre</div>
+      <div class="legend">
+        <div class="li"><div class="ld" style="background:#1557a0"></div>Actividades (eje izq.)</div>
+        <div class="li"><div class="ld" style="background:#4a8c1c"></div>Atenciones (eje der.)</div>
+      </div>
+      <div class="chart-wrap h240"><canvas id="ch-monthly-act"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ct">Presupuesto por mes</div>
+      <div class="cs" id="cs-pres">Junio registra el mayor desembolso mensual</div>
+      <div class="legend">
+        <div class="li"><div class="ld" style="background:#c8720e"></div>Presupuesto mensual (S/)</div>
+        <div class="li"><div class="ld" style="background:#7a4200;opacity:0.5"></div>Acumulado anual (S/)</div>
+      </div>
+      <div class="chart-wrap h240"><canvas id="ch-monthly-pres"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- POR CITE -->
+<div>
+  <div class="sec-hdr">Análisis por CITE y tipo de gestión</div>
+  <div class="g13">
+    <div class="card">
+      <div class="ct">Gestión: Privado vs. Público</div>
+      <div class="cs">Comparación según tipo de administración</div>
+      <div class="tipo-split">
+        <div class="tipo-blk priv">
+          <div class="tb-head"><span style="width:8px;height:8px;background:#1557a0;border-radius:50%;display:inline-block"></span>CITEs Privados (5)</div>
+          <div class="tb-cites">Arequipa · Camélidos · Chulucanas · Huancavelica · Utcumbamba</div>
+          <div class="tb-div"></div>
+          <div class="tb-row"><span class="tb-lbl">Actividades</span><span class="tb-val">722</span></div>
+          <div class="tb-row"><span class="tb-lbl">Atenciones</span><span class="tb-val">16,465</span></div>
+          <div class="tb-row"><span class="tb-lbl">Beneficiarios</span><span class="tb-val">6,808</span></div>
+          <div class="tb-row"><span class="tb-lbl">Pres. técnico</span><span class="tb-val">S/ 3.89M</span></div>
+          <div class="tb-row"><span class="tb-lbl">Pres. total</span><span class="tb-val">S/ 5.02M</span></div>
+          <div class="tb-row"><span class="tb-lbl">Costo/atención</span><span class="tb-val">S/ 305</span></div>
+        </div>
+        <div class="tipo-blk pub">
+          <div class="tb-head"><span style="width:8px;height:8px;background:#2a5c0d;border-radius:50%;display:inline-block"></span>CITEs Públicos (3)</div>
+          <div class="tb-cites">Ayacucho · Sipán · Ucayali</div>
+          <div class="tb-div"></div>
+          <div class="tb-row"><span class="tb-lbl">Actividades</span><span class="tb-val">250</span></div>
+          <div class="tb-row"><span class="tb-lbl">Atenciones</span><span class="tb-val">4,137</span></div>
+          <div class="tb-row"><span class="tb-lbl">Beneficiarios</span><span class="tb-val">2,409</span></div>
+          <div class="tb-row"><span class="tb-lbl">Pres. técnico</span><span class="tb-val">S/ 1.10M</span></div>
+          <div class="tb-row"><span class="tb-lbl">Pres. total</span><span class="tb-val">S/ 1.83M</span></div>
+          <div class="tb-row"><span class="tb-lbl">Costo/atención</span><span class="tb-val">S/ 442</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ct">Resumen por CITE</div>
+      <div class="cs">Fuente: PAA 2026 — consolidado oficial</div>
+      <table class="dt">
+        <thead>
+          <tr><th>CITE</th><th>Act.</th><th>Aten.</th><th>Benef.</th><th>Pres. técnico (S/)</th><th>Gastos op. (S/)</th><th>Total (S/)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="cdot" style="background:#1557a0"></span>Arequipa</td><td>144</td><td>1,748</td><td>1,313</td><td>831,451</td><td>210,630</td><td>1,042,081</td></tr>
+          <tr><td><span class="cdot" style="background:#d63031"></span>Ayacucho</td><td>72</td><td>1,050</td><td>1,050</td><td>366,666</td><td>235,272</td><td>601,938</td></tr>
+          <tr><td><span class="cdot" style="background:#8e44ad"></span>Camélidos S.</td><td>284</td><td>2,796</td><td>2,794</td><td>852,635</td><td>253,247</td><td>1,105,881</td></tr>
+          <tr><td><span class="cdot" style="background:#c0392b"></span>Chulucanas</td><td>87</td><td>880</td><td>801</td><td>715,335</td><td>220,411</td><td>935,746</td></tr>
+          <tr><td><span class="cdot" style="background:#1d8348"></span>Huancavelica</td><td>84</td><td>2,495</td><td>700</td><td>656,139</td><td>215,806</td><td>871,945</td></tr>
+          <tr><td><span class="cdot" style="background:#d68910"></span>Sipán</td><td>99</td><td>2,284</td><td>802</td><td>366,171</td><td>259,400</td><td>625,571</td></tr>
+          <tr><td><span class="cdot" style="background:#6d4c41"></span>Ucayali</td><td>79</td><td>803</td><td>557</td><td>366,666</td><td>233,346</td><td>600,012</td></tr>
+          <tr><td><span class="cdot" style="background:#154360"></span>Utcumbamba</td><td>123</td><td>8,546</td><td>1,200</td><td>839,300</td><td>224,047</td><td>1,063,347</td></tr>
+        </tbody>
+
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- MAPA + EFICIENCIA + PRESUPUESTO -->
+<div>
+  <div class="sec-hdr">Cobertura geográfica y eficiencia</div>
+  <div class="g2">
+    <div class="card">
+      <div class="ct">Mapa de cobertura por CITE</div>
+      <div class="cs">Fuente: variable "Actividades por región" del PAA 2026 · Totales coinciden con columna "Actividades" · Validado con la Red CITE MINCETUR (21/05/2026)</div>
+      <div id="d3map"></div>
+      <div class="legend" style="margin-top:8px;flex-wrap:wrap">
+        <div class="li"><div class="ld" style="background:#1557a0"></div>Arequipa</div>
+        <div class="li"><div class="ld" style="background:#d63031"></div>Ayacucho</div>
+        <div class="li"><div class="ld" style="background:#8e44ad"></div>Camélidos</div>
+        <div class="li"><div class="ld" style="background:#c0392b"></div>Chulucanas</div>
+        <div class="li"><div class="ld" style="background:#1d8348"></div>Huancavelica</div>
+        <div class="li"><div class="ld" style="background:#d68910"></div>Sipán</div>
+        <div class="li"><div class="ld" style="background:#6d4c41"></div>Ucayali</div>
+        <div class="li"><div class="ld" style="background:#154360"></div>Utcumbamba</div>
+      </div>
+      <div style="margin-top:8px;font-size:10px;color:#8c8b82;border-top:1px solid rgba(0,0,0,0.07);padding-top:7px;line-height:1.5">
+        Las etiquetas sobre cada región muestran el número de actividades según <em>Actividades por región</em>. Los totales coinciden con la columna "Actividades" del PAA 2026. Pase el cursor sobre la región para ver el detalle por CITE.
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:13px">
+      <div class="card">
+        <div class="ct">Costo por atención (S/)</div>
+        <div class="cs">Presupuesto total ÷ atenciones · menor = más eficiente</div>
+        <div id="eff-bars"></div>
+      </div>
+      <div class="card">
+        <div class="ct">Presupuesto total por CITE</div>
+        <div class="cs">Ordenado de mayor a menor · actividades técnicas + gastos operativos</div>
+        <div class="legend">
+          <div class="li"><div class="ld" style="background:#1557a0"></div>Actividades técnicas</div>
+          <div class="li"><div class="ld" style="background:#c8720e"></div>Gastos operativos</div>
+        </div>
+        <div class="chart-wrap h200"><canvas id="ch-pres-stk"></canvas></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODALIDADES + FINANCIAMIENTO -->
+<div>
+  <div class="sec-hdr">Modalidades de intervención y financiamiento</div>
+  <div class="g2">
+    <div class="card">
+      <div class="ct">Actividades según modalidad de intervención</div>
+      <div class="cs" id="cs-modal">Capacitación concentra la mayor cantidad de actividades</div>
+      <div class="chart-wrap h200"><canvas id="ch-modal"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ct">Fuentes de financiamiento</div>
+      <div class="cs" id="cs-fin">Distribución según tipo de financiamiento</div>
+      <div class="legend" id="legend-fin"></div>
+      <div class="chart-wrap h180"><canvas id="ch-fin"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- HALLAZGOS -->
+<div>
+  <div class="sec-hdr">Lo que dicen los datos · PAA 2026</div>
+  <div class="card" style="padding:14px 18px">
+    <div id="insights-container" class="insights-grid">
+      <!-- Se genera dinámicamente por generateInsights() -->
+    </div>
+  </div>
+</div>
+
+
+</div><!-- /main -->
+
+<!-- NOTA DE VALIDACIÓN -->
+<div style="margin:0 28px 28px;background:#fff;border:1px solid rgba(0,0,0,0.08);border-left:4px solid #C8720E;border-radius:8px;padding:13px 18px;display:flex;align-items:flex-start;gap:12px">
+  <div style="font-size:18px;flex-shrink:0;margin-top:1px">&#9432;</div>
+  <div>
+    <div style="font-size:12px;font-weight:700;color:#0d1b2e;margin-bottom:4px">Nota técnica</div>
+    <div style="font-size:11px;color:#595850;line-height:1.6">
+      La información de las métricas (actividades, atenciones y presupuesto) contenida en este dashboard fue <strong>validada con los directores y coordinadores de la Red CITE</strong> del Ministerio de Comercio Exterior y Turismo (MINCETUR). <strong style="color:#0d1b2e">Fecha de corte: 21/05/2026.</strong>
+    </div>
+  </div>
+</div>
+
+<!-- PANEL -->
+<div class="panel-overlay" id="panel-act">
+  <div class="panel-header">
+    <h2>Actividades — Detalle</h2>
+    <button class="panel-close" onclick="closePanel()">&#x2715;</button>
+  </div>
+  <div class="panel-search">
+    <input type="text" id="panel-search" placeholder="Buscar por nombre u objetivo..." oninput="renderPanel()">
+  </div>
+  <div class="panel-filters">
+    <select id="panel-sort" onchange="renderPanel()">
+      <option value="pres_desc">&#8595; Mayor presupuesto</option>
+      <option value="act_desc">&#8595; Más actividades</option>
+      <option value="aten_desc">&#8595; Más atenciones</option>
+      <option value="name_asc">A–Z Nombre</option>
+    </select>
+    <select id="panel-mod" onchange="renderPanel()">
+      <option value="ALL">Todas las modalidades</option>
+      <option value="Articulación">Articulación</option>
+      <option value="Capacitación">Capacitación</option>
+      <option value="Difusión de Información">Difusión</option>
+      <option value="I + D + i">I + D + i</option>
+      <option value="Transferencia Tecnológica">Trans. Tecnológica</option>
+    </select>
+    <span class="panel-count" id="panel-count"></span>
+  </div>
+  <div class="panel-body" id="panel-body"></div>
+</div>
+
+<!-- MODAL REPORTE -->
+<div class="modal-overlay" id="modal-report">
+  <div class="modal-box">
+    <div class="modal-title">Generar reporte</div>
+    <div class="modal-sub"><strong>Excel</strong>: datos tabulares para análisis. &nbsp;<strong>PDF</strong>: captura de gráficos del dashboard actual.</div>
+    <div class="report-options">
+      <div class="ropt sel" id="ropt-resumen" onclick="selReport('resumen')"><div class="ro-title">&#128196; Resumen ejecutivo</div><div class="ro-desc">Métricas por CITE, tabla consolidada</div></div>
+      <div class="ropt" id="ropt-detalle" onclick="selReport('detalle')"><div class="ro-title">&#128203; Detalle de actividades</div><div class="ro-desc">Listado completo con nombre, tipo, presupuesto</div></div>
+      <div class="ropt" id="ropt-mensual" onclick="selReport('mensual')"><div class="ro-title">&#128200; Distribución mensual</div><div class="ro-desc">Actividades, atenciones y presupuesto mes a mes</div></div>
+      <div class="ropt" id="ropt-financ" onclick="selReport('financ')"><div class="ro-title">&#128178; Financiamiento</div><div class="ro-desc">Fuentes por CITE</div></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeReport()">Cancelar</button>
+      <button class="btn-gen green" onclick="generateExcel()">&#128202; Exportar (Excel)</button>
+      <button class="btn-gen red" onclick="generatePDF()">&#128247; Exportar gráficos (PDF)</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script>
+// ── ACTUALIZACIÓN DESDE CSV (sin CORS) ───────────────────────────────────
+// El administrador puede cargar el CSV exportado del Sheet usando el botón
+// de actualización que aparece en la esquina superior izquierda.
+
+function parseCSV(text) {
+  const lines = [];
+  let cur = '', inQ = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (ch === '"') { inQ = !inQ; }
+    else if (ch === '\n' && !inQ) { lines.push(cur); cur = ''; }
+    else { cur += ch; }
+  }
+  if (cur) lines.push(cur);
+  return lines.map(line => {
+    const cells = [], len = line.length;
+    let cell = '', q = false;
+    for (let i = 0; i < len; i++) {
+      const ch = line[i];
+      if (ch === '"') { q = !q; }
+      else if (ch === ',' && !q) { cells.push(cell.trim()); cell = ''; }
+      else { cell += ch; }
+    }
+    cells.push(cell.trim());
+    return cells;
+  });
+}
+
+function csvToActs(rows) {
+  if (rows.length < 2) return [];
+  // Índices exactos basados en el CSV real (87 columnas)
+  // 0:N°  1:Año  2:CITE  3:Tipo CITE  4:Responsable  5:Modalidad  6:Tipo actividad
+  // 7:CÓDIGO  8:Nombre  9:Objetivo  10:Temática  11:Línea artesanal
+  // 12-29: Proveedores  30:Beneficiario  31:Participantes  32:Dirección
+  // 33:Región  34:Provincia  35:Distrito  36:Costo  37:Financiamiento
+  // 38:Meses  39:Distribución  40:Act.x región  41:Resumen  42:Total act.
+  // 43:Ventas  44:UNIDAD  45-56:Act.mes  57:Total act  58-69:Atenc.mes
+  // 70:Total atenc  71-82:Presup.mes  83:Total presup  84:Obs  85:Fecha  86:Versión
+  const N = {
+    CITE: 2, MODAL: 5, TIPO: 6, CODIGO: 7, NOMBRE: 8, OBJ: 9,
+    LINEA: 11, BENEF: 30, PART: 31, REGION: 33, PROV: 34, DIST: 35,
+    COSTO: 36, FIN: 37, MESES: 38, TOTAL_ACT: 42, VENTAS: 43, UNIDAD: 44,
+    // Actividades por mes (cols 45-56)
+    A_ENE:45,A_FEB:46,A_MAR:47,A_ABR:48,A_MAY:49,A_JUN:50,
+    A_JUL:51,A_AGO:52,A_SET:53,A_OCT:54,A_NOV:55,A_DIC:56,
+    TOTAL_A:57,
+    // Atenciones por mes (cols 58-69)
+    AT_ENE:58,AT_FEB:59,AT_MAR:60,AT_ABR:61,AT_MAY:62,AT_JUN:63,
+    AT_JUL:64,AT_AGO:65,AT_SET:66,AT_OCT:67,AT_NOV:68,AT_DIC:69,
+    TOTAL_AT:70,
+    // Presupuesto por mes (cols 71-82)
+    P_ENE:71,P_FEB:72,P_MAR:73,P_ABR:74,P_MAY:75,P_JUN:76,
+    P_JUL:77,P_AGO:78,P_SET:79,P_OCT:80,P_NOV:81,P_DIC:82,
+    TOTAL_P:83
+  };
+  const n = (v) => parseFloat((v||'0').toString().replace(/,/g,'')) || 0;
+  const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+                 'Julio','Agosto','Setiembre','Octubre','Noviembre','Diciembre'];
+  const aIdx  = [45,46,47,48,49,50,51,52,53,54,55,56];
+  const atIdx = [58,59,60,61,62,63,64,65,66,67,68,69];
+  const pIdx  = [71,72,73,74,75,76,77,78,79,80,81,82];
+
+  return rows.slice(1).map(r => {
+    if (!r[N.CITE] || r[N.CITE].trim() === '') return null;
+    // Distribución mensual
+    const monthly = meses.map((m,i) => ({
+      mes: m, a: n(r[aIdx[i]]), at: n(r[atIdx[i]]), p: n(r[pIdx[i]])
+    }));
+    return {
+      c:  r[N.CITE].trim(),
+      m:  r[N.MODAL]  || '',
+      t:  r[N.TIPO]   || '',
+      cd: r[N.CODIGO] || '',
+      n:  r[N.NOMBRE] || '',
+      o:  r[N.OBJ]    || '',
+      la: r[N.LINEA]  || '',
+      u:  r[N.UNIDAD] || '',
+      f:  r[N.FIN]    || '',
+      be: r[N.BENEF]  || '',
+      re: r[N.REGION] || '',
+      a:  n(r[57]),   // col 57 Actividades — coincide con dashboard original (972)
+      at: n(r[70]),   // col 70 Atenciones total
+      p:  n(r[83]),   // col 83 Presupuesto Actividades
+      v:  n(r[N.VENTAS]),
+      monthly: monthly,
+      r: []
+    };
+  }).filter(d => d !== null);
+}
+
+function loadCSVFromText(csvText) {
+  const rows = parseCSV(csvText);
+  if (rows.length < 2) { alert('CSV vac\u00edo o sin datos.'); return; }
+
+  const C = {
+    CITE:2, MODAL:5, ACT:57, ATEN:70, PRES:83, FIN:37, REG:33,
+    mA:[45,46,47,48,49,50,51,52,53,54,55,56],
+    mAt:[58,59,60,61,62,63,64,65,66,67,68,69],
+    mP:[71,72,73,74,75,76,77,78,79,80,81,82]
+  };
+  const fn = v => parseFloat((v||'0').toString().replace(/,/g,'')) || 0;
+  const MODAL_MAP = {
+    'I + D + i':'idi','Transferencia Tecnol\u00f3gica':'tt',
+    'Capacitaci\u00f3n':'cap','Difusi\u00f3n de Informaci\u00f3n':'dif','Articulaci\u00f3n':'art'
+  };
+  const FIN_MAP = {
+    'Privado-Subvenci\u00f3n':'Privado-Subvenci\u00f3n',
+    'Privado-Recurso Propios (RP)':'Privado-RP',
+    'Privado-Recursos Propios (RP)':'Privado-RP',
+    'P\u00fablico-Recursos Ordinarios (RO)':'P\u00fablico-RO',
+    'P\u00fablico-Recursos Externos (RE)':'P\u00fablico-RE',
+    'P\u00fablico-Recursos Directamente Recaudados (RDR)':'P\u00fablico-RDR',
+    'P\u00fablico- Recursos Directamente Recaudados (RDR)':'P\u00fablico-RDR'
+  };
+
+  const acc = {};
+  D.cites.forEach(c => {
+    acc[c] = {
+      act:0, aten:0, pres:0,
+      mA:[0,0,0,0,0,0,0,0,0,0,0,0],
+      mAt:[0,0,0,0,0,0,0,0,0,0,0,0],
+      mP:[0,0,0,0,0,0,0,0,0,0,0,0],
+      modal:{art:0,cap:0,dif:0,idi:0,tt:0},
+      fin:{}, regionActs:{}
+    };
+  });
+
+  let totalRows = 0;
+  rows.slice(1).forEach(r => {
+    const c = (r[C.CITE]||'').trim();
+    if (!c || !acc[c]) return;
+    totalRows++;
+    const actVal = fn(r[C.ACT]);
+    acc[c].act  += actVal;
+    acc[c].aten += fn(r[C.ATEN]);
+    acc[c].pres += fn(r[C.PRES]);
+    C.mA.forEach((col,i)  => acc[c].mA[i]  += fn(r[col]));
+    C.mAt.forEach((col,i) => acc[c].mAt[i] += fn(r[col]));
+    C.mP.forEach((col,i)  => acc[c].mP[i]  += fn(r[col]));
+    const mk = MODAL_MAP[(r[C.MODAL]||'').trim()] || null;
+    if (mk) acc[c].modal[mk] = (acc[c].modal[mk]||0) + actVal;
+    const fk = FIN_MAP[(r[C.FIN]||'').trim()] || (r[C.FIN]||'').trim().slice(0,25);
+    if (fk) acc[c].fin[fk] = (acc[c].fin[fk]||0) + actVal;
+    const reg = (r[C.REG]||'').trim();
+    if (reg) acc[c].regionActs[reg] = (acc[c].regionActs[reg]||0) + actVal;
+  });
+
+  if (totalRows === 0) { alert('No se encontraron registros v\u00e1lidos.'); return; }
+
+  D.cites.forEach((c,i) => {
+    const a = acc[c];
+    D.act[i]        = Math.round(a.act);
+    D.aten[i]       = Math.round(a.aten);
+    D.presTec[i]    = a.pres;
+    D.presTotal[i]  = a.pres + D.gop[i];
+    D.mAct[c]       = a.mA.map(Math.round);
+    D.mAten[c]      = a.mAt.map(Math.round);
+    D.mPres[c]      = a.mP;
+    D.modal[c]      = a.modal;
+    D.fin[c]        = a.fin;
+    D.regionActs[c] = a.regionActs;
+  });
+
+  Object.keys(charts).forEach(k => {
+    if (charts[k] && charts[k].destroy) { charts[k].destroy(); charts[k] = null; }
+  });
+  updateAll();
+
+  const btn = document.getElementById('btn-update-csv');
+  if (btn) {
+    btn.textContent = '\u2713 ' + totalRows + ' registros cargados';
+    btn.style.background = '#2a5c0d';
+    setTimeout(() => { btn.textContent = '\u2191 Actualizar datos'; btn.style.background = '#1557a0'; }, 4000);
+  }
+}
+
+// ── BOTÓN DE ACTUALIZACIÓN CON CONTRASEÑA ────────────────────────────────
+const ADMIN_PASS = 'CITE2026*';
+
+document.addEventListener('DOMContentLoaded', function() {
+
+  const style = document.createElement('style');
+  style.textContent = `
+    #admin-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:10000;display:none;align-items:center;justify-content:center}
+    #admin-overlay.show{display:flex}
+    #admin-modal{background:#fff;border-radius:12px;padding:28px 30px;width:320px;box-shadow:0 8px 40px rgba(0,0,0,.25);font-family:inherit}
+    #admin-modal h3{font-size:15px;font-weight:700;color:#18180f;margin:0 0 5px}
+    #admin-modal p{font-size:12px;color:#595850;margin:0 0 16px;line-height:1.5}
+    #admin-pass-input{width:100%;border:1.5px solid #ddd;border-radius:7px;padding:9px 12px;font-size:14px;outline:none;margin-bottom:8px;transition:border-color .2s;box-sizing:border-box}
+    #admin-pass-input:focus{border-color:#1557a0}
+    #admin-pass-err{font-size:11px;color:#8c1f1f;margin-bottom:10px;display:none;font-weight:600}
+    #admin-pass-err.show{display:block}
+    .admin-btns{display:flex;gap:8px}
+    #btn-admin-ok{flex:1;background:#1557a0;color:#fff;border:none;border-radius:7px;padding:9px;font-size:13px;font-weight:600;cursor:pointer}
+    #btn-admin-ok:hover{background:#0d3d7a}
+    #btn-admin-cancel{background:none;border:1.5px solid #ddd;border-radius:7px;padding:9px 14px;font-size:13px;font-weight:600;cursor:pointer;color:#595850}
+  `;
+  document.head.appendChild(style);
+
+  const overlay = document.createElement('div');
+  overlay.id = 'admin-overlay';
+  overlay.innerHTML = `
+    <div id="admin-modal">
+      <h3>🔐 Acceso de administrador</h3>
+      <p>Ingresa la contraseña para cargar datos actualizados al dashboard.</p>
+      <input type="password" id="admin-pass-input" placeholder="Contraseña" autocomplete="off"/>
+      <div id="admin-pass-err">Contraseña incorrecta. Intenta nuevamente.</div>
+      <div class="admin-btns">
+        <button id="btn-admin-ok">Ingresar</button>
+        <button id="btn-admin-cancel">Cancelar</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.accept = '.csv';
+  fileInput.style.display = 'none';
+  fileInput.onchange = function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => loadCSVFromText(ev.target.result);
+    reader.readAsText(file, 'UTF-8');
+    fileInput.value = '';
+  };
+  document.body.appendChild(fileInput);
+
+  const btn = document.createElement('button');
+  btn.id = 'btn-update-csv';
+  btn.textContent = '↑ Actualizar datos';
+  btn.style.cssText = 'position:fixed;bottom:20px;right:20px;background:#1557a0;color:#fff;border:none;border-radius:8px;padding:10px 18px;font-size:13px;font-weight:600;cursor:pointer;z-index:9999;box-shadow:0 3px 12px rgba(0,0,0,.25);transition:background .2s';
+  btn.onmouseenter = () => btn.style.background = '#0d3d7a';
+  btn.onmouseleave = () => { if (!btn.textContent.startsWith('✓')) btn.style.background = '#1557a0'; };
+  btn.onclick = () => {
+    overlay.classList.add('show');
+    document.getElementById('admin-pass-input').value = '';
+    document.getElementById('admin-pass-err').classList.remove('show');
+    setTimeout(() => document.getElementById('admin-pass-input').focus(), 100);
+  };
+  document.body.appendChild(btn);
+
+  function tryLogin() {
+    const val = document.getElementById('admin-pass-input').value;
+    if (val === ADMIN_PASS) {
+      overlay.classList.remove('show');
+      fileInput.click();
+    } else {
+      document.getElementById('admin-pass-err').classList.add('show');
+      document.getElementById('admin-pass-input').value = '';
+      document.getElementById('admin-pass-input').focus();
+    }
+  }
+
+  document.getElementById('btn-admin-ok').onclick = tryLogin;
+  document.getElementById('btn-admin-cancel').onclick = () => overlay.classList.remove('show');
+  document.getElementById('admin-pass-input').onkeydown = e => { if (e.key === 'Enter') tryLogin(); };
+  overlay.onclick = e => { if (e.target === overlay) overlay.classList.remove('show'); };
+});
+
+const ACTS=[{"c":"CITE AREQUIPA","m":"Articulación","t":"2. Articulación para el desarrollo de iniciativas","n":"Organización de \"ShowRoom Joyería\" Museo de Minerales (Nacionales)","o":"Participación y organización de ShowRoom de Joyería en el Museo de Minerales, con la finalidad exhibir productos de la artesanía de Arequipa.","u":"Evento","f":"Privado-Subvención","a":1,"at":10,"p":27100.0,"r":[]},{"c":"CITE AREQUIPA","m":"Articulación","t":"5. Articulación comercial turístico-artesanal","n":"Organización de ferias, ruedas de negocios, Show Room (Locales)","o":"Desarrollo de Ferias presenciales en la región Arequipa, con la finalidad de generar espacios de venta para los artesanos, consiguiendo así se reactiven, ofreci","u":"Evento","f":"Privado-Subvención","a":4,"at":105,"p":55900.0,"r":[]},{"c":"CITE AREQUIPA","m":"Articulación","t":"2. Articulación para el desarrollo de iniciativas","n":"Participación de Show Room \"CasaCor Perú\" (Nacionales)","o":"Participación en Show Room \"CasaCor Perú\", con la finalidad de exhibir productos de la artesanía de Arequipa.","u":"Evento","f":"Privado-Subvención","a":1,"at":0,"p":6500.0,"r":[]},{"c":"CITE AREQUIPA","m":"Articulación","t":"5. Articulación comercial turístico-artesanal","n":"Participación en feria Festival de la Innovación de los CITE's de Artesanía y Turismo - Exhibe Perú ","o":"Generar un espacio de venta directa del CITE Arequipa, así como promover que los artesanos de la Región Arequipa puedan participar en la Feria Nacional de la In","u":"Evento","f":"Privado-Subvención","a":1,"at":10,"p":15500.0,"r":[]},{"c":"CITE AREQUIPA","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":"Participación en Feria Nacional de Artesanía \"De Nuestras Manos 2026\"","o":"Generar un espacio de venta directa del CITE Arequipa, así como promover que los artesanos de la Región Arequipa puedan postular para obtener un stand en la Fer","u":"Evento","f":"Privado-Subvención","a":1,"at":10,"p":5500.0,"r":[]},{"c":"CITE AREQUIPA","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":"Participación en ferias, ruedas de negocios, Show Room, (Internacionales)","o":"Participación en ferias presenciales fuera del país, con la finalidad de generar espacios de venta para los artesanos, consiguiendo así se reactiven, ofreciendo","u":"Evento","f":"Privado-Subvención","a":1,"at":15,"p":60000.0,"r":[]},{"c":"CITE AREQUIPA","m":"Articulación","t":"5. Articulación comercial turístico-artesanal","n":"Promoción de Artesanía mediante canales de venta físicos","o":"Generar la implementación del punto de venta en el centro artesanal que se estableció en el ex penal de Chivay, en el marco del Convenio entre el INPE, CITE Are","u":"Informe","f":"Privado-Subvención","a":4,"at":0,"p":7070.51,"r":[]},{"c":"CITE AREQUIPA","m":"Articulación","t":"1. Articulación institucional y gobernanza","n":"Reuniones de coordinación con Instituciones, públicas, privadas entre otras.","o":"Generar reuniones con empresas, instituciones públicas entre otros, con el fin de coordinar acciones en bien de la artesanía Arequipeña.","u":"Reunión","f":"Privado-Subvención","a":3,"at":0,"p":14980.0,"r":[]},{"c":"CITE AREQUIPA","m":"Capacitación","t":"3. Cursos","n":"Curso de Capacitación en Bordados del Colca (Costura y Patronaje; Bordado de Accesorios; Bordado en ","o":"Mejorar las capacidades en bordados del Colca artesanal de los artesanos de la provincia de Caylloma","u":"Curso","f":"Privado-Subvención","a":12,"at":180,"p":42000.0,"r":[]},{"c":"CITE AREQUIPA","m":"Capacitación","t":"3. Cursos","n":"Curso de Capacitación en Fieltro","o":"Buscar dar otras opciones de trabajo con la fibra de alpaca a nuestras artesanas, con la finalidad de innovar en productos en las provincias de Caylloma y Arequ","u":"Curso","f":"Privado-Subvención","a":8,"at":120,"p":34750.0,"r":[]},{"c":"CITE AREQUIPA","m":"Capacitación","t":"3. Cursos","n":"Curso de Capacitación en Joyería Especializada ","o":"Consolidar los conocimientos de los artesanos joyeros con la finalidad de mejorar la calidad de sus productos","u":"Curso","f":"Privado-Subvención","a":5,"at":75,"p":38000.0,"r":[]},{"c":"CITE AREQUIPA","m":"Capacitación","t":"3. Cursos","n":"Curso de capacitación en Joyería General","o":"Insertar en el rubro joyero artesanal a nuevas personas de la Región Arequipa.","u":"Curso","f":"Privado-Subvención","a":5,"at":75,"p":1500.0,"r":[]},{"c":"CITE AREQUIPA","m":"Capacitación","t":"3. Cursos","n":"Curso de Capacitación en Tejido a Mano y/o Tejido a Punto","o":"Mejorar las capacidades en el tejido a punto, en las provincias de Arequipa, Castilla y Caylloma","u":"Curso","f":"Privado-Subvención","a":19,"at":285,"p":54000.0,"r":[]},{"c":"CITE AREQUIPA","m":"Capacitación","t":"3. Cursos","n":"Curso de Capacitación en tejido en telar o tejido plano","o":"Mejorar las capacidades en Tejido a Telar, en los niveles Intermedio y Avanzado, a los artesanos textiles de la provincia de Caylloma.","u":"Curso","f":"Privado-Subvención","a":2,"at":30,"p":6600.0,"r":[]},{"c":"CITE AREQUIPA","m":"Capacitación","t":"3. Cursos","n":"Curso de Capacitación en Transformación de la fibra de alpaca ( Categorización y clasificación de fi","o":"Mejorar las capacidades en Teñido Natural, categorización y clasificación de hilo, en las provincias de Arequipa, Castilla y Caylloma.","u":"Curso","f":"Privado-Subvención","a":11,"at":165,"p":33000.0,"r":[]},{"c":"CITE AREQUIPA","m":"Capacitación","t":"3. Cursos","n":"Curso de Capacitación Tejido a punto (Máquina de tejer mecánica)","o":"Mejorar las capacidades en el tejido a máquina artesanal en las provincias de Caylloma y Arequipa","u":"Curso","f":"Privado-Subvención","a":11,"at":165,"p":36300.0,"r":[]},{"c":"CITE AREQUIPA","m":"Capacitación","t":"4. Programas de capacitación","n":"Programa de capacitación en Inglés para Artesanos (Virtual)","o":"Mejorar las capacidades de artesanos en el manejo del idioma inglés con la finalidad de que se pueda tener mayo comunicación al momento de atender a los turista","u":"Programa","f":"Privado-Recurso Propios (RP)","a":1,"at":50,"p":0.0,"r":[]},{"c":"CITE AREQUIPA","m":"Capacitación","t":"3. Cursos","n":"Seminario sobre Ventas en Línea (E-commerce)","o":"Mejorar las capacidades de ventas en línea utilizando los diferente canales de ventas digitales de nuestros artesanos, con la finalidad de que puedan incrementa","u":"Seminario","f":"Privado-Subvención","a":1,"at":15,"p":2000.0,"r":[]},{"c":"CITE AREQUIPA","m":"Capacitación","t":"2. Talleres","n":"Taller de Fotografía de Producto para Artesanos","o":"Mejorar capacidades de los artesanos en digitalizar sus productos mediante la fotografía.","u":"Taller","f":"Privado-Subvención","a":2,"at":30,"p":4000.0,"r":[]},{"c":"CITE AREQUIPA","m":"Capacitación","t":"2. Talleres","n":"Taller de Storytelling y Marca Personal","o":"Mejorar las capacidades de Storytelling y marca personal de nuestros artesanos, con la finalidad de que puedan incrementar sus ventas.","u":"Taller","f":"Privado-Subvención","a":2,"at":30,"p":3500.0,"r":[]},{"c":"CITE AREQUIPA","m":"Difusión de Información","t":"2. Campañas informativas","n":"Acompañamiento para participación en fondos concursables a unidades productivas","o":"Incentivar a los artesanos y asociaciones artesanales a postular a fondos concursables entre ellos, Somos Artesanía, Turismo Emprende, entre otros.","u":"Servicio Especializado","f":"Privado-Recurso Propios (RP)","a":2,"at":15,"p":0.0,"r":[]},{"c":"CITE AREQUIPA","m":"Difusión de Información","t":"1. Generación de información estratégica","n":"Comunicación y difusión de la oferta de servicios del CITE","o":"Promover la comercialización de la artesanía mediante las plataformas comerciales del CITE Arequipa, para lo cual se contará con los servicios de un especialist","u":"Servicio","f":"Privado-Subvención","a":7,"at":0,"p":24100.0,"r":[]},{"c":"CITE AREQUIPA","m":"Difusión de Información","t":"4. Exhibición/Exposición","n":"Desarrollo y promoción del seminario de innovación de la artesanía (Arequipa y Caylloma)","o":"Participación, desarrollo y promoción para los seminarios de innovación en la provincia de Arequipa y Caylloma.","u":"Evento","f":"Privado-Subvención","a":3,"at":60,"p":19640.0,"r":[]},{"c":"CITE AREQUIPA","m":"Difusión de Información","t":"1. Generación de información estratégica","n":"Difusión de Programa de internacionalización","o":"Poder realizar alianzas con universidades, Promperú, donde podamos incentivar y sensibilizar mediante asistencias técnicas la internacionalización de nuestros a","u":"Evento","f":"Privado-Subvención","a":1,"at":10,"p":0.0,"r":[]},{"c":"CITE AREQUIPA","m":"Difusión de Información","t":"1. Generación de información estratégica","n":"Producción de material audio visual y/o impreso para difusión de actividades y logros de los artesan","o":"Desarrollar videos y/o material impreso, en los cuales se difunda los principales logros obtenidos por nuestros artesanos.","u":"Material Producido","f":"Privado-Subvención","a":2,"at":0,"p":10000.0,"r":[]},{"c":"CITE AREQUIPA","m":"I + D + i","t":"1. Estudio técnico","n":"Estudio de identidad cultural para la artesanía textil Arequipeña ","o":"Desarrollar un estudio de la identidad cultural y mercado para la artesanía de Arequipa, específicamente de distritos de las provincias de Caylloma y Castilla, ","u":"Estudio","f":"Privado-Subvención","a":1,"at":0,"p":28000.0,"r":[]},{"c":"CITE AREQUIPA","m":"I + D + i","t":"1. Estudio técnico","n":"Validación de Insumos para fotograbado en joyería.","o":"Validar el insumo innovado por CITE Arequipa, con referencia a la técnica de fotograbado.","u":"Servicio Especializado","f":"Privado-Subvención","a":1,"at":0,"p":23100.0,"r":[]},{"c":"CITE AREQUIPA","m":"Transferencia Tecnológica","t":"4. Asistencia técnica","n":"Asistencia técnica a talleres artesanales de la línea Textil","o":"Llegar a cada uno de los talleres de nuestros artesanos textil, con la finalidad de dar soporte técnico para el ordenamiento de taller, supervisión de técnicas ","u":"Asistencia técnica","f":"Privado-Subvención","a":11,"at":106,"p":56200.0,"r":[]},{"c":"CITE AREQUIPA","m":"Transferencia Tecnológica","t":"6. Desarrollo de servicios","n":"Diseño e implementación de experiencias turísticas","o":"Realizar la implementación, monitoreo y mejora continua de experiencias turísticas en la provincia de Caylloma","u":"Experiencia Turística","f":"Privado-Subvención","a":4,"at":12,"p":41700.0,"r":[]},{"c":"CITE AREQUIPA","m":"Transferencia Tecnológica","t":"5. Desarrollo de productos","n":"Diseño y Desarrollo de nuevos productos","o":"Diseñar y Desarrollar una colección textil, adquirir materiales, insumos y herramientas para el desarrollo de la colección, dicha colección estará enfocada a me","u":"Colección","f":"Privado-Subvención","a":1,"at":10,"p":49500.0,"r":[]},{"c":"CITE AREQUIPA","m":"Transferencia Tecnológica","t":"7. Implementación de estándares y metodologías","n":"Implementación de Calidad y Mejora de Procesos","o":"Desarrollar la identificación e implementación de las 5s y desarrollo de economía circular, con artesanos de la Región Arequipa, con lo cual se busca lograr el ","u":"Certificación","f":"Privado-Subvención","a":3,"at":35,"p":28500.0,"r":[]},{"c":"CITE AREQUIPA","m":"Transferencia Tecnológica","t":"11. Pasantía/intercambio","n":"Pasantía en la Línea de Joyería","o":"Buscar generar que los artesanos de la Región de Arequipa puedan experimentar y conocer nuevas experiencias en cuando a la unión de la artesanía con el turismo.","u":"Pasantía","f":"Privado-Subvención","a":1,"at":10,"p":30400.0,"r":[]},{"c":"CITE AREQUIPA","m":"Transferencia Tecnológica","t":"9. Soporte productivo","n":"Servicio especializado dentro de la línea de Joyería","o":"Con esta actividad se busca que los artesanos joyeros puedan utilizar el equipamiento con el cual cuenta el CITE Arequipa en su taller, la misma que es supervis","u":"Servicio","f":"Privado-Subvención","a":12,"at":120,"p":72110.0,"r":[]},{"c":"CITE AYACUCHO","m":"Articulación","t":"2. Articulación para el desarrollo de iniciativas","n":"Adecuación e implementación de paneles informativos de la RUTA ARTESANAL de grandes maestros","o":"Adecuar e implementar paneles informativos de la Ruta Artesanal de Grandes Maestros Ayacuchanos, con el fin de orientar a los visitantes, difundir el valor cult","u":"Panel","f":"Público-Recursos Ordinarios (RO)","a":1,"at":5,"p":20000.0,"r":[]},{"c":"CITE AYACUCHO","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":"Ejecución de acciones de articulación comercial, posicionamiento institucional del CITE y promoción ","o":"Ejecutar acciones de articulación comercial para fortalecer el posicionamiento institucional del CITE y promover la formalización de los artesanos en la región ","u":"Acción","f":"Público-Recursos Ordinarios (RO)","a":3,"at":75,"p":0.0,"r":[]},{"c":"CITE AYACUCHO","m":"Articulación","t":"5. Articulación comercial turístico-artesanal","n":"Fam trip y press tour vivencial de experiencias de nuevos talleres que integran la ruta artesanal de","o":"Promover la Ruta Artesanal de los Grandes Maestros Ayacuchanos mediante la realización de un fam trip y press tour vivencial, dando a conocer nuevos talleres ar","u":"Fam trip","f":"Público-Recursos Ordinarios (RO)","a":1,"at":10,"p":10000.0,"r":[]},{"c":"CITE AYACUCHO","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":"Organización y Ejecución de Ferias locales de artesanía.","o":"Organizar y ejecutar ferias locales de artesanía para promover la exhibición y comercialización de productos artesanales, fortalecer la visibilidad de los artes","u":"Feria","f":"Público-Recursos Ordinarios (RO)","a":3,"at":120,"p":64000.0,"r":[]},{"c":"CITE AYACUCHO","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":"Participación en Ferias Nacionales","o":"Participación en Ferias Nacionales","u":"Feria","f":"Público-Recursos Ordinarios (RO)","a":2,"at":13,"p":6000.0,"r":[]},{"c":"CITE AYACUCHO","m":"Articulación","t":"2. Articulación para el desarrollo de iniciativas","n":"Reuniones de coordinación interinstitucional en promoción del turismo y la artesanía para la gestión","o":"Fortalecer la articulación interinstitucional para promover el turismo y la artesanía en Ayacucho, mediante la coordinación de acciones conjuntas, alineación de","u":"Informe / Acta","f":"Público-Recursos Ordinarios (RO)","a":9,"at":0,"p":0.0,"r":[]},{"c":"CITE AYACUCHO","m":"Capacitación","t":"5. Formación especializada","n":"Curso de capacitación de herramientas digitales para comercialización artesanal aplicadas a líneas a","o":"Implementar herramientas digitales para fortalecer la comercialización de las líneas artesanales priorizadas, facilitando la promoción, difusión y venta de los ","u":"Curso","f":"Público-Recursos Ordinarios (RO)","a":2,"at":30,"p":7000.0,"r":[]},{"c":"CITE AYACUCHO","m":"Capacitación","t":"5. Formación especializada","n":"Curso de capacitación de la linea artesanal de Cueros y Pieles","o":"Fortalecer las capacidades técnicas de los artesanos en la línea artesanal de cueros y pieles, mediante capacitación en técnicas de elaboración, manejo de mater","u":"Curso","f":"Público-Recursos Ordinarios (RO)","a":3,"at":20,"p":9000.0,"r":[]},{"c":"CITE AYACUCHO","m":"Capacitación","t":"5. Formación especializada","n":"Curso de capacitación de la linea artesanal de Imaginería","o":"Fortalecer las capacidades técnicas de los artesanos en la línea artesanal de imaginería mediante capacitación en técnicas de elaboración, tallado, acabado y po","u":"Curso","f":"Público-Recursos Ordinarios (RO)","a":3,"at":20,"p":13500.0,"r":[]},{"c":"CITE AYACUCHO","m":"Capacitación","t":"5. Formación especializada","n":"Curso de capacitación de la linea artesanal de Joyería y Orfebrería","o":"Fortalecer las capacidades técnicas de los artesanos en la línea artesanal de joyería y orfebrería, mediante capacitación en técnicas de elaboración, manejo de ","u":"Curso","f":"Público-Recursos Ordinarios (RO)","a":3,"at":20,"p":9000.0,"r":[]},{"c":"CITE AYACUCHO","m":"Capacitación","t":"5. Formación especializada","n":"Curso de capacitación de la linea artesanal de Talla","o":"Fortalecer las capacidades técnicas de los artesanos en la línea artesanal de talla mediante capacitación en técnicas de tallado, manejo de herramientas y mejor","u":"Curso","f":"Público-Recursos Ordinarios (RO)","a":2,"at":20,"p":9000.0,"r":[]},{"c":"CITE AYACUCHO","m":"Capacitación","t":"5. Formación especializada","n":"Curso de capacitación en Fortalecimiento en Costos, Presupuestos y Finanzas para Artesanos aplicadas","o":"Fortalecer las capacidades de los artesanos en la gestión de costos, elaboración de presupuestos y manejo de finanzas, con el fin de mejorar la planificación ec","u":"Curso","f":"Público-Recursos Ordinarios (RO)","a":3,"at":60,"p":9000.0,"r":[]},{"c":"CITE AYACUCHO","m":"Capacitación","t":"5. Formación especializada","n":"Curso de capacitación en tecnologías de trazabilidad artesanal a las líneas artesanales priorizadas.","o":"Capacitación en tecnologías de trazabilidad artesanal a las líneas artesanales priorizadas.","u":"Curso","f":"Público-Recursos Ordinarios (RO)","a":2,"at":40,"p":6000.0,"r":[]},{"c":"CITE AYACUCHO","m":"Capacitación","t":"5. Formación especializada","n":"Curso de capacitación en ventas online usando Tecnologías digitales aplicadas a las líneas artesanal","o":"Fortalecer las capacidades de los artesanos en ventas online mediante el uso de tecnologías digitales, con el fin de mejorar la promoción, comercialización y ac","u":"Curso","f":"Público-Recursos Ordinarios (RO)","a":3,"at":60,"p":9000.0,"r":[]},{"c":"CITE AYACUCHO","m":"Capacitación","t":"2. Talleres","n":"Curso y/o Taller integral de gestión empresarial","o":"Fortalecer las capacidades de los participantes en gestión empresarial mediante el desarrollo de conocimientos y herramientas en planificación, organización, ad","u":"Curso","f":"Público-Recursos Ordinarios (RO)","a":5,"at":60,"p":0.0,"r":[]},{"c":"CITE AYACUCHO","m":"Capacitación","t":"4. Programas de capacitación","n":"Programa de capacitación de la linea artesanal de Textilería","o":"Fortalecer las capacidades técnicas y creativas de los artesanos en la línea artesanal de textilería mediante capacitación en técnicas de tejido, diseño y uso d","u":"Programa de Capacitación","f":"Público-Recursos Ordinarios (RO)","a":3,"at":20,"p":9000.0,"r":[]},{"c":"CITE AYACUCHO","m":"Capacitación","t":"4. Programas de capacitación","n":"Programa de implementación de storytelling comercial aplicadas a las líneas artesanales priorizadas.","o":"capacitar y Implementar estrategias de storytelling comercial en las líneas artesanales priorizadas para fortalecer la identidad cultural de los productos, comu","u":"Programa de Capacitación","f":"Público-Recursos Ordinarios (RO)","a":3,"at":60,"p":9000.0,"r":[]},{"c":"CITE AYACUCHO","m":"Difusión de Información","t":"2. Campañas informativas","n":"Campaña de inscripción y actualización del RNA ","o":"Campaña de inscripción y actualización del RNA","u":"Campaña","f":"Público-Recursos Ordinarios (RO)","a":4,"at":200,"p":0.0,"r":[]},{"c":"CITE AYACUCHO","m":"Difusión de Información","t":"4. Exhibición/Exposición","n":"Exposición de piezas artesanales en la Casa de la Artesanía Ayacuchana","o":"Promover y difundir las piezas artesanales elaboradas por los artesanos mediante su exposición en la Casa de la Artesanía Ayacuchana, con el fin de fortalecer l","u":"Muestra o Exposición","f":"Público-Recursos Ordinarios (RO)","a":3,"at":60,"p":18000.0,"r":[]},{"c":"CITE AYACUCHO","m":"Difusión de Información","t":"1. Generación de información estratégica","n":"Seguimiento operativo en la planificación y ejecución de las actividades e indicadores del PAA 2026,","o":"Realizar el seguimiento operativo a la planificación y ejecución de las actividades e indicadores del PAA 2026 del CITE Ayacucho, con el fin de asegurar el cump","u":"Informe","f":"Público-Recursos Ordinarios (RO)","a":3,"at":0,"p":32000.0,"r":[]},{"c":"CITE AYACUCHO","m":"Difusión de Información","t":"3. Espacios de difusión técnica","n":"Socialización del estudio de materias primas y técnicas de dorado de procesos productivos artesanale","o":"Socializar los resultados del estudio sobre materias primas y técnicas de dorado en los procesos productivos artesanales, con el fin de compartir conocimientos,","u":"Socialización","f":"Público-Recursos Ordinarios (RO)","a":1,"at":15,"p":12000.0,"r":[]},{"c":"CITE AYACUCHO","m":"I + D + i","t":"1. Estudio técnico","n":"Estudio de materias primas y optimización de procesos productivos en las líneas artesanales del CITE","o":"Analizar las materias primas y optimizar los procesos productivos en las líneas artesanales del CITE Ayacucho, con el fin de mejorar la eficiencia, calidad y so","u":"Estudio","f":"Público-Recursos Ordinarios (RO)","a":1,"at":10,"p":12000.0,"r":[]},{"c":"CITE AYACUCHO","m":"I + D + i","t":"1. Estudio técnico","n":"Estudio e investigación de mercados para la línea artesanal de Talla (Piedra de Huamanga)","o":"Realizar un estudio e investigación de mercado para la línea artesanal de talla en Piedra de Huamanga, con el fin de identificar tendencias, preferencias de con","u":"Estudio","f":"Público-Recursos Ordinarios (RO)","a":1,"at":10,"p":12000.0,"r":[]},{"c":"CITE AYACUCHO","m":"Transferencia Tecnológica","t":"4. Asistencia técnica","n":"Asistencia técnica en demostraciones prácticas de técnicas artesanales tradicionales","o":"Brindar asistencia técnica mediante demostraciones prácticas de técnicas artesanales tradicionales, con el fin de fortalecer las capacidades de los artesanos, p","u":"Asistencia técnica","f":"Público-Recursos Ordinarios (RO)","a":1,"at":10,"p":3500.0,"r":[]},{"c":"CITE AYACUCHO","m":"Transferencia Tecnológica","t":"4. Asistencia técnica","n":"Asistencia técnica en la mejora de proceso productivo en líneas artesanales priorizadas Imaginería","o":"Brindar asistencia técnica para mejorar los procesos productivos en la línea artesanal de imaginería, fortaleciendo técnicas de elaboración, optimizando el uso ","u":"Asistencia técnica","f":"Público-Recursos Ordinarios (RO)","a":1,"at":20,"p":5000.0,"r":[]},{"c":"CITE AYACUCHO","m":"Transferencia Tecnológica","t":"4. Asistencia técnica","n":"Asistencia técnica en la mejora de proceso productivo la línea artesanal de Talla ","o":"Brindar asistencia técnica a los artesanos para mejorar los procesos productivos en la línea artesanal de talla, fortaleciendo técnicas de elaboración, optimiza","u":"Asistencia técnica","f":"Público-Recursos Ordinarios (RO)","a":1,"at":10,"p":2500.0,"r":[]},{"c":"CITE AYACUCHO","m":"Transferencia Tecnológica","t":"5. Desarrollo de productos","n":"Cocreación y diseño de productos artesanales innovadores","o":"Fomentar la creatividad y la colaboración entre artesanos y participantes para desarrollar ideas y prototipos de productos artesanales innovadores, combinando t","u":"Colección","f":"Público-Recursos Ordinarios (RO)","a":1,"at":20,"p":14500.0,"r":[]},{"c":"CITE AYACUCHO","m":"Transferencia Tecnológica","t":"5. Desarrollo de productos","n":"Diseño y desarrollo de colecciones artesanales.","o":"Fortalecer las capacidades de las unidades económicas artesanales para el diseño y desarrollo de colecciones artesanales con identidad cultural, innovación y or","u":"Colección","f":"Público-Recursos Ordinarios (RO)","a":1,"at":20,"p":28000.0,"r":[]},{"c":"CITE AYACUCHO","m":"Transferencia Tecnológica","t":"5. Desarrollo de productos","n":"Diseño y desarrollo de empaque, embalajes de productos artesanales","o":"Diseñar y desarrollar empaques y embalajes adecuados para productos artesanales, con el fin de mejorar su presentación, protección y valor comercial, fortalecie","u":"Prototipo Empaque","f":"Público-Recursos Ordinarios (RO)","a":1,"at":20,"p":7000.0,"r":[]},{"c":"CITE AYACUCHO","m":"Transferencia Tecnológica","t":"11. Pasantía/intercambio","n":"Experiencia práctica de pasantía en procesos productivos (Pasantías)","o":"Brindar a los participantes una experiencia práctica en entornos reales de producción, permitiéndoles aplicar conocimientos técnicos, fortalecer habilidades lab","u":"Pasantía","f":"Público-Recursos Ordinarios (RO)","a":2,"at":22,"p":30666.0,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"Articulación","t":"6. Articulación regulatoria y de reconocimiento instituciona","n":"Autorizacion como ente certificado para competencias laborales en la cadena de valor de los camelido","o":"Actividad orientada a gestionar la obtención o renovación de certificaciones o acreditaciones que respalden la calidad y reconocimiento institucional del CITE. ","u":"Acreditaciones obtenidas por el CITE ","f":"Privado-Subvención","a":1,"at":0,"p":3200.0,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"Articulación","t":"1. Articulación institucional y gobernanza","n":"Compromisos de gestión a nivel multisectorial - Planes de trabajo / Convenios / Acuerdos a favor del","o":"Actividad orientada a establecer y fortalecer alianzas estratégicas entre entidades públicas, privadas, académicas y de cooperación para el desarrollo del secto","u":"Informe","f":"Privado-Subvención","a":4,"at":0,"p":17367.18,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"Articulación","t":"4. Articulación networking y negociación","n":"Desarrollo del Plan para la creación y promoción de marca colectiva para productos artesanales. ","o":"Desarrollo de acciones para la creación, fortalecimiento y promoción de marcas individuales o colectivas de productos y servicios artesanales.","u":"Marcas colectivas registradas","f":"Privado-Subvención","a":10,"at":100,"p":10349.9,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"Articulación","t":"2. Articulación para el desarrollo de iniciativas","n":"Gestión de acceso a financiamiento para sostenibilidad del CITE","o":"Actividad orientada a identificar, gestionar y canalizar fuentes de financiamiento que contribuyan a la sostenibilidad operativa y financiera del CITE (Proyecto","u":"Proyecto","f":"Privado-Subvención","a":3,"at":75,"p":30960.0,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":"Gestion del showroom del CITE CS","o":"Muestrario de alta calidad donde no siempre hay stock para venta inmediata y presenta colecciones de artesanos que han recibido asistencia técnica en diseño e i","u":"Informe","f":"Privado-Subvención","a":9,"at":300,"p":38640.0,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":"Participacion en ferias internacionales","o":"Participación en Evento que facilita el encuentro entre expositores y visitantes de distintos países para fomentar el intercambio cultural y comercial global.","u":"Feria","f":"Privado-Subvención","a":2,"at":2,"p":25895.0,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":"Participación en Ferias nacional de artesanía","o":"Participación de artesanos expositores de la región Puno beneficiarios del CITE para participar en una feria a nivel nacional.","u":"Feria","f":"Privado-Subvención","a":5,"at":240,"p":57822.0,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":"Participación en Ferias Regional de artesanía","o":"Participación de artesanos expositores de un mismo departamento o región política beneficiarios del CITE.","u":"Feria","f":"Privado-Subvención","a":3,"at":270,"p":17465.04,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"Capacitación","t":"3. Cursos","n":"Capacitacion de mujeres clasificadoras en fibra de alpaca (NTP)","o":"Capacitación para el fortalecimiento de los conocimientos, habilidades y aptitudes de una mujer en clasificación de fibra de alpaca, independientemente de cómo ","u":"Curso","f":"Privado-Subvención","a":5,"at":75,"p":13900.0,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"Capacitación","t":"4. Programas de capacitación","n":"Capacitacion en buenas practicas de esquila electromecanica (NTP)","o":"Capacitación para el fortalecimiento de los conocimientos, habilidades y aptitudes de un productor alpaquero formado para la esquila electromecánica, independie","u":"Curso","f":"Privado-Subvención","a":5,"at":75,"p":18050.0,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"Capacitación","t":"3. Cursos","n":"Capacitación en mercado, tendencias y comercialización avanzada","o":"Formación enfocada en la inteligencia de mercado y las ventas. Enseña a los artesanos a identificar las tendencias de consumo (colores, formas, materiales deman","u":"Curso","f":"Privado-Subvención","a":15,"at":225,"p":17100.0,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"Capacitación","t":"4. Programas de capacitación","n":"Certificacion de competencias laborales en la linea textil artesanal de artesanos de la region Puno","o":"El reconocimiento público y formal de los conocimientos, habilidades y aptitudes de un artesano, independientemente de cómo los haya adquirido (herencia familia","u":"Artesano certificado","f":"Privado-Subvención","a":90,"at":90,"p":41250.0,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"Capacitación","t":"4. Programas de capacitación","n":"Programa 1: textiles tradicionales con valor comercial","o":"Formación técnica y práctica dirigida a los artesanos para optimizar sus métodos de producción. El objetivo es incrementar la eficiencia (productividad) y asegu","u":"Programa ejecutado","f":"Privado-Subvención","a":5,"at":100,"p":31700.0,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"Capacitación","t":"4. Programas de capacitación","n":"Programa 2: producción artesanal textil comercial","o":"Formación técnica y práctica dirigida a los artesanos para optimizar sus métodos de producción. El objetivo es incrementar la eficiencia (productividad) y asegu","u":"Programa ejecutado","f":"Privado-Subvención","a":10,"at":200,"p":32500.0,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"Capacitación","t":"4. Programas de capacitación","n":"Programa 3: nuevas técnicas – fieltro con fibra de alpaca","o":"Formación técnica y práctica dirigida a los artesanos para optimizar sus métodos de producción. El objetivo es incrementar la eficiencia (productividad) y asegu","u":"Programa ejecutado","f":"Privado-Subvención","a":10,"at":200,"p":29000.0,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"Difusión de Información","t":"3. Espacios de difusión técnica","n":"Desarrollo de seminarios de innovación artesanal en la línea textil y sublineas textiles camélidos","o":"Eventos para discutir temas relevantes, actualizar conocimientos y presentar tendencias del sector de alcance regional.  ","u":"Evento de innovación","f":"Privado-Subvención","a":1,"at":70,"p":13000.0,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"Difusión de Información","t":"3. Espacios de difusión técnica","n":"Difusión de información técnica para la mejora productiva, calidad y cumplimiento normativo en línea","o":"Actividad orientada a la elaboración y difusión de información técnica especializada (manuales, guías, fichas técnicas u otros) que contribuya a la mejora de la","u":"Manuales","f":"Privado-Subvención","a":1,"at":30,"p":10000.0,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"Difusión de Información","t":"2. Campañas informativas","n":"Difusión de programas de financiamiento para unidades productivas","o":"Actividad orientada a informar, orientar y acompañar a unidades productivas artesanales en el acceso a fondos concursables públicos o privados.","u":"Personas atendidas.","f":"Privado-Subvención","a":50,"at":50,"p":4160.0,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"Difusión de Información","t":"6. Posicionamiento institucional y de marca","n":"Ejecución de acciones de difusión sobre la artesanía (charlas, streaming, redes sociales, etc.).","o":"Actividad orientada a visibilizar y posicionar la oferta de servicios del CITE mediante el desarrollo y gestión de herramientas de comunicación y difusión (Gene","u":"Acción","f":"Privado-Subvención","a":10,"at":0,"p":44800.0,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"Difusión de Información","t":"1. Generación de información estratégica","n":"Encuestas, Línea base de línea artesanal, caracterización de la población objetivo (Censo).","o":"Actividad orientada a la generación, procesamiento, análisis y difusión de información estratégica (líneas base, líneas de salida, encuestas, caracterización de","u":"Documento","f":"Privado-Subvención","a":1,"at":0,"p":4900.0,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"Difusión de Información","t":"5. Reconocimientos institucionales","n":"Promover la participación de los artesanos textiles en el concurso de artesanía textil región Puno","o":"Actividad orientada a promover y/o participar en eventos que reconozcan la trayectoria, innovación o aporte cultural de los artesanos.","u":"Postulaciones","f":"Privado-Subvención","a":5,"at":5,"p":3080.0,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"Difusión de Información","t":"3. Espacios de difusión técnica","n":"Semana de la Innovación ","o":"Semana (5 días) donde se realizarán eventos para discutir temas relevantes, actualizar conocimientos y presentar tendencias del sector de alcance nacional y/o r","u":"Evento de innovación","f":"Privado-Subvención","a":1,"at":30,"p":6000.0,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"Difusión de Información","t":"3. Espacios de difusión técnica","n":"Seminario y congresos nacionales e internacionales","o":"Participación de eventos (seminarios y/o congresos) para discutir temas relevantes, actualizar conocimientos y presentar tendencias del sector de alcance intern","u":"Evento de innovación","f":"Privado-Subvención","a":3,"at":6,"p":12420.0,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"Difusión de Información","t":"3. Espacios de difusión técnica","n":"Sensibilizacion sobre la innovacion de productos artesanales y turisticos","o":"Realizar un evento competitivo donde se busca y premia la creación de soluciones, productos o procesos novedosos y eficaces para un problema específico, reunien","u":"Evento de innovación","f":"Privado-Subvención","a":1,"at":30,"p":2480.0,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"I + D + i","t":"2. Investigaciones","n":"Desarrollo de estudios o investigaciones de mercado sobre producto con potencial escalable.","o":"Actividad destinada a analizar la demanda, tendencias, segmentos de mercado, precios, canales de comercialización y requisitos técnicos-comerciales de productos","u":"Investigación","f":"Privado-Subvención","a":1,"at":30,"p":18500.0,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"I + D + i","t":"3. Validación de prototipos","n":"Diseño, desarrollo y validación de soluciones (tecnológicas o mecánicas u otros) para la mejora la c","o":"Actividad orientada al diseño conceptual, desarrollo técnico y validación en entorno real de soluciones tecnológicas, mecánicas u otras innovaciones aplicadas q","u":"Prototipo validado","f":"Privado-Subvención","a":1,"at":30,"p":40989.9,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"I + D + i","t":"2. Investigaciones","n":"Optimización del Uso de la Fibra de Alpaca y Otros Fibras Naturales","o":"Investigación aplicada destinada a evaluar la viabilidad técnica, económica, ambiental y productiva del uso de materias primas e insumos alternativos en la prod","u":"Investigación","f":"Privado-Subvención","a":1,"at":30,"p":42200.0,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"I + D + i","t":"2. Investigaciones","n":"Recuperación de Métodos de Producción Artesanal en Peligro de Extinción","o":"Actividad orientada a la identificación, documentación, análisis técnico y sistematización de técnicas artesanales, procesos productivos y diseños tradicionales","u":"Investigación","f":"Privado-Subvención","a":1,"at":30,"p":34200.0,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"Transferencia Tecnológica","t":"4. Asistencia técnica","n":"Asistencia técnica para adecuación de Establecimientos Productivos de Artesanía -EPAs con fines turí","o":"La transformación técnica de un taller (EPA) para que pueda recibir turistas de manera segura y estética. El fin es que el taller se convierta en un punto de ve","u":"EPAS","f":"Privado-Subvención","a":5,"at":58,"p":22620.0,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"Transferencia Tecnológica","t":"6. Desarrollo de servicios","n":"Diseño e implementación de experiencias turísticas de la Ruta Turística Artesanal TITIQAQA","o":"Diseñar e implementar los procesos de creación y puesta en operación de vivencias turísticas auténticas en talleres artesanales, articuladas al territorio, que ","u":"Experiencia Turística","f":"Privado-Subvención","a":5,"at":70,"p":29900.0,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"Transferencia Tecnológica","t":"5. Desarrollo de productos","n":"Diseño y desarrollo de colecciones en textiles para mercado internacional y asistencia técnica para ","o":"Adaptar el diseño, tamaño y precio del producto según el perfil del comprador: para el mercado internacional se debe dar un enfoque en certificaciones, sostenib","u":"Colección","f":"Privado-Subvención","a":1,"at":15,"p":31150.0,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"Transferencia Tecnológica","t":"5. Desarrollo de productos","n":"Diseño y desarrollo de colecciones textiles para mercado nacional y asistencia técnica para su desar","o":"Adaptar el diseño, tamaño y precio del producto según el perfil del comprador: para el mercado nacional con productos de uso cotidiano o decoración local, con i","u":"Colección","f":"Privado-Subvención","a":1,"at":15,"p":24650.0,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"Transferencia Tecnológica","t":"5. Desarrollo de productos","n":"Diseño y desarrollo de productos souvenir para el mercado turístico del destino Lago Titicaca y asis","o":"Adaptar el diseño, tamaño y precio del producto según el perfil del comprador: para el mercado receptivo, se deben elaborar productos tipo \"souvenir\" de alta ga","u":"Colección","f":"Privado-Subvención","a":1,"at":15,"p":21200.0,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"Transferencia Tecnológica","t":"1. Laboratorio de cocreación (Living Lab)","n":"Implementación de Fab Lab artesanal (con equipamiento)","o":"Fab Lab (Laboratorio de Fabricación): es un espacio de producción a pequeña escala que utiliza herramientas digitales. En el sector artesanal, busca la hibridac","u":"Laboratorio implementado","f":"Privado-Subvención","a":1,"at":90,"p":49210.0,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"Transferencia Tecnológica","t":"7. Implementación de estándares y metodologías","n":"Implementación y adecuación de procesos y productos artesanales conforme a Normas Técnicas Peruanas ","o":"Aplicar las NTP que establecen los requisitos de calidad, terminología, métodos de ensayo o directrices para un producto o servicio específico en Perú, administ","u":"Unidades productivas asistidas","f":"Privado-Subvención","a":5,"at":75,"p":11640.0,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"Transferencia Tecnológica","t":"4. Asistencia técnica","n":"Mejoramiento de la gestión de calidad de talleres artesanales textiles (5 S)","o":"Aplicar la metodología de gestión japonesa destinada a mejorar las condiciones de trabajo y la moral del personal mediante la organización del entorno. En un ta","u":"Talleres artesanales ","f":"Privado-Subvención","a":5,"at":75,"p":11640.0,"r":[]},{"c":"CITE CAMÉLIDOS SUDAMERICANOS","m":"Transferencia Tecnológica","t":"4. Asistencia técnica","n":"Servicio de esquila electromecánica","o":"Brindar asistencia técnica a otros actores de la cadena productiva:  Servicio especializado de transferencia de conocimientos y acompañamiento directo dirigido ","u":"Informe","f":"Privado-Subvención","a":6,"at":90,"p":28695.5,"r":[]},{"c":"CITE CHULUCANAS","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":"Congreso Internacional de Joyeria","o":"","u":"Evento","f":"","a":1,"at":10,"p":9000.0,"r":[]},{"c":"CITE CHULUCANAS","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":"Diseño y desarrollo de una plataforma e-commerce intereactiva","o":"Acción que permitirá crear una tienda en línea, la cual generará la construcción de un puente digital entre la tradición técnica y un mercado global que valora ","u":"Acción","f":"Privado-Subvención","a":1,"at":0,"p":34500.0,"r":[]},{"c":"CITE CHULUCANAS","m":"Articulación","t":"2. Articulación para el desarrollo de iniciativas","n":"Formulación de planes de negocios para gremios artesanales para acceder a fuentes de financiamiento","o":"solucionar parte de la problemática que aqueja al sector y obtener las herramientas y potencialidades necesarias para el desarrollo sostenido de los artesanos, ","u":"Planes de negocio","f":"Privado-Subvención","a":1,"at":20,"p":12400.0,"r":[]},{"c":"CITE CHULUCANAS","m":"Articulación","t":"1. Articulación institucional y gobernanza","n":"Gestión de autorización de uso de la Denominación de origen Chulucanas para artesanos ceramistas","o":"","u":"Autorización\n otorgada","f":"","a":1,"at":5,"p":5300.0,"r":[]},{"c":"CITE CHULUCANAS","m":"Articulación","t":"1. Articulación institucional y gobernanza","n":"Gestión para la suscripción de convenio con institucion pública y/o Privada.","o":"","u":"Convenio","f":"","a":1,"at":0,"p":2250.0,"r":[]},{"c":"CITE CHULUCANAS","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":"Implementación del punto de venta de cerámica","o":"","u":"Punto de venta","f":"","a":11,"at":11,"p":43490.0,"r":[]},{"c":"CITE CHULUCANAS","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":"Mejoramiento e implementación de galeria de exhibición venta de CITE CERAMICA","o":"","u":"Punto de venta","f":"","a":1,"at":5,"p":8800.0,"r":[]},{"c":"CITE CHULUCANAS","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":"Organización de ferias, ruedas de negocios, show rooms (locales)","o":"Objetivo de esta actividad es promover  de institucionalizar dicho evento en cual participarían artesanos ceramistas de Chulucanas y La Encantada, así como arte","u":"Evento","f":"Privado-Subvención","a":2,"at":60,"p":77175.0,"r":[]},{"c":"CITE CHULUCANAS","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":"Organización de show rooms (Nacionales)","o":"","u":"Evento","f":"","a":1,"at":15,"p":1500.0,"r":[]},{"c":"CITE CHULUCANAS","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":"Participación en ferias, ruedas de negocios, show rooms (Internacionales).","o":"","u":"Evento","f":"","a":1,"at":15,"p":18450.0,"r":[]},{"c":"CITE CHULUCANAS","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":"Participación en ferias, ruedas de negocios, show rooms (Nacionales).","o":"","u":"Evento","f":"","a":5,"at":98,"p":78210.0,"r":[]},{"c":"CITE CHULUCANAS","m":"Articulación","t":"1. Articulación institucional y gobernanza","n":"Reuniones institucionales","o":"","u":"Reunión","f":"","a":3,"at":0,"p":28300.0,"r":[]},{"c":"CITE CHULUCANAS","m":"Capacitación","t":"3. Cursos","n":"Curso en Bordado artesanal  en telar","o":"El objetivo es fomentar la exploración creativa a través del hilo y la aguja, promoviendo la creación y composición de imágenes bordadas.","u":"Curso","f":"Privado-Subvención","a":1,"at":20,"p":12710.0,"r":[]},{"c":"CITE CHULUCANAS","m":"Capacitación","t":"3. Cursos","n":"Curso en tecnica de escultura y modelado a mano de ceramica de Chulucanas","o":"El objetivo de mejorar las técnicas en la elaboración de las diversas formas de cuerpos de figuras humanas, de flora y fauna, las cuales permitan desarrollar fo","u":"Curso","f":"Privado-Subvención","a":1,"at":20,"p":22350.0,"r":[]},{"c":"CITE CHULUCANAS","m":"Capacitación","t":"3. Cursos","n":"Curso en Tejido de Crochet - Nivel Intermedio","o":"El objetivo principal del taller es que los artesanos aprendan diversas técnicas de tejido para poder emprender en el futuro , ya sea vendiendo sus creaciones o","u":"Curso","f":"Privado-Subvención","a":1,"at":20,"p":17500.0,"r":[]},{"c":"CITE CHULUCANAS","m":"Capacitación","t":"5. Formación especializada","n":"Diseño y estructuración de la malla curricular para el fortalecimiento de capacidades en la línea ar","o":"El objetivo de dicho servicio es ofrecerle al artesano o estudiante de cerámica de Chulucanas el acceso a un plan de estudios consistente el cual le permita des","u":"Documento","f":"Privado-Subvención","a":1,"at":0,"p":8000.0,"r":[]},{"c":"CITE CHULUCANAS","m":"Capacitación","t":"4. Programas de capacitación","n":"Gestión para certificacion de competencias laborales MTPE a artesanos ceramistas","o":"","u":"Informe","f":"","a":1,"at":30,"p":3750.0,"r":[]},{"c":"CITE CHULUCANAS","m":"Capacitación","t":"2. Talleres","n":"Taller de Uso de Herramientas de Redes Sociales para Promoción de productos Artesanales","o":"Objetivo es promover a través del marketing digital en redes sociales los productos artesanales, tomando como caso de estudio   a los artesanos  por  medio del ","u":"Taller","f":"Privado-Subvención","a":1,"at":15,"p":4700.0,"r":[]},{"c":"CITE CHULUCANAS","m":"Difusión de Información","t":"3. Espacios de difusión técnica","n":"Concurso de Innovación en Cerámica Artesanal","o":"","u":"Concurso","f":"","a":1,"at":10,"p":5400.0,"r":[]},{"c":"CITE CHULUCANAS","m":"Difusión de Información","t":"3. Espacios de difusión técnica","n":"Difusión y acompañamiento para la postulación de artesanos a fondos concursables","o":"","u":"Artesano\n asesorado","f":"","a":1,"at":75,"p":6350.0,"r":[]},{"c":"CITE CHULUCANAS","m":"Difusión de Información","t":"3. Espacios de difusión técnica","n":"Difusión y Desarrollo de contenidos para Redes del CITE cerámica Chulucanas ","o":"Esta meta está enfocada en iniciar de manera inmediata la promoción de sus productos y diversos videos que ayuden a reinsertar y promocionar sus productos.","u":"Publicación","f":"Privado-Subvención","a":11,"at":0,"p":25500.0,"r":[]},{"c":"CITE CHULUCANAS","m":"Difusión de Información","t":"4. Exhibición/Exposición","n":"Elaboración y difusión de catálogos de Productos Artesanales decorativos y utilitarios    ","o":"El objetivo de promover, difundir, promocionar y comercializar los productos artesanales decorativos y utilitarios en beneficio de los ceramistas y artesanos de","u":"Catálogo","f":"Privado-Subvención","a":3,"at":36,"p":5400.0,"r":[]},{"c":"CITE CHULUCANAS","m":"Difusión de Información","t":"1. Generación de información estratégica","n":"Inscripción y actualización del artesano en el Registro Nacional del Artesano(RNA)","o":"","u":"Campaña","f":"","a":3,"at":150,"p":4600.0,"r":[]},{"c":"CITE CHULUCANAS","m":"Difusión de Información","t":"4. Exhibición/Exposición","n":"Seminario de innovación","o":"","u":"Producto","f":"","a":1,"at":10,"p":5000.0,"r":[]},{"c":"CITE CHULUCANAS","m":"I + D + i","t":"1. Estudio técnico","n":"Estudio de perfil del visitante de la ruta turistica artesanal","o":"Esta actividad tiene como objetivo Convertir datos en decisiones para aumentar el flujo de turistas y asegurar que el artesano reciba un pago justo por el valor","u":"Estudio","f":"Privado-Subvención","a":1,"at":0,"p":14000.0,"r":[]},{"c":"CITE CHULUCANAS","m":"I + D + i","t":"1. Estudio técnico","n":"Estudio técnico orientado a la aplicación y manejo adecuado de arcilla de alta temperatura para la e","o":"EMAste estudio tiene como objetivo fortalecer con nuevos conocimientos de técnicas de manejo de pasta cerámica gres y elaborar productos cerámicos diferentes pa","u":"Estudio","f":"Privado-Subvención","a":1,"at":0,"p":30000.0,"r":[]},{"c":"CITE CHULUCANAS","m":"I + D + i","t":"2. Investigaciones","n":"Investigación Aplicada para la mejora Tecnológica de hornos de ahumado en la  Cerámica de Chulucanas","o":"optimizar la eficiencia energética y la calidad técnica del proceso de quema , reduciendo el impacto ambiental y los costos de producción sin perder la tradició","u":"Investigación","f":"Privado-Subvención","a":1,"at":0,"p":40000.0,"r":[]},{"c":"CITE CHULUCANAS","m":"Transferencia Tecnológica","t":"4. Asistencia técnica","n":"Asistencia Tecnica en tejido a telar","o":"Mejorar las habilidades y conocimiento de los artesanos para producir tejidos de alta calidad, innovadores y competitivos en el mercado, preservando las técnica","u":"Asistencia técnica","f":"Privado-Subvención","a":1,"at":20,"p":16100.0,"r":[]},{"c":"CITE CHULUCANAS","m":"Transferencia Tecnológica","t":"4. Asistencia técnica","n":"Asistencia tecnica para la mejora  de talleres artesanales de la ruta turistica.","o":"Contar con el servicio de personal para atención del punto de ventas y    servicios de CITE cerámica Chulucanas, responsable de almacén,   y  monitoreo de plant","u":"Asistencia técnica","f":"Privado-Subvención","a":1,"at":12,"p":40400.0,"r":[]},{"c":"CITE CHULUCANAS","m":"Transferencia Tecnológica","t":"4. Asistencia técnica","n":"Diseño y desarrollo de nuevos productos de Cerámica y fibra vegetal.","o":" .-Crear piezas innovadoras y sostenibles que combinen tradición y modernidad .-Ampliar la oferta de productos eco-amigables en el mercado. .-Satisfacer las nec","u":"Colección","f":"Privado-Subvención","a":2,"at":25,"p":23800.0,"r":[]},{"c":"CITE CHULUCANAS","m":"Transferencia Tecnológica","t":"11. Pasantía/intercambio","n":"Pasantia Técnológica en la linea de ceramica con artesanos ceramistas de Chulucanas y de Valencia-Es","o":"","u":"Pasantía","f":"","a":1,"at":6,"p":20800.0,"r":[]},{"c":"CITE CHULUCANAS","m":"Transferencia Tecnológica","t":"4. Asistencia técnica","n":"Servicio de provisión de materia prima mejorada e insumos","o":"","u":"Servicio","f":"","a":12,"at":180,"p":89600.0,"r":[]},{"c":"CITE CHULUCANAS","m":"Transferencia Tecnológica","t":"4. Asistencia técnica","n":"Servicios de optimización y mejora de proceso de quema de productos de ceramica con uso de horno a g","o":"","u":"Servicio","f":"","a":12,"at":12,"p":0.0,"r":[]},{"c":"CITE HUANCAVELICA","m":"Articulación","t":"5. Articulación comercial turístico-artesanal","n":"ACOMPAÑAMIENTO EN LA CERTIFICACIÓN DE MARCAS COLECTIVAS Y/O INDIVIDUALES","o":"EL ACOMPAÑAMIENTO EN LA CERTIFICACIÓN DE MARCAS (COLECTIVAS O INDIVIDUALES) BUSCA FORMALIZAR, PROTEGER Y POTENCIAR LOS PRODUCTOS O SERVICIOS DE PRODUCTORES Y AR","u":"Servicio","f":"Privado-Subvención","a":1,"at":3,"p":10100.0,"r":[]},{"c":"CITE HUANCAVELICA","m":"Articulación","t":"4. Articulación networking y negociación ","n":"DESARROLLO DE ESTRATEGIA DE COMERCIALIZACIÓN Y MARKETING DIGITAL","o":"DESARROLLO E IMPLEMENTACIÓN DE LA TIENDA VIRTUAL Y CONJUNTO DE SERVICIOS TÉCNICOS Y DE ATENCIÓN AL CLIENTE QUE ASEGURAN QUE LA TIENDA ONLINE FUNCIONE SIN INTERR","u":"Servicio","f":"Privado-Subvención","a":1,"at":12,"p":33100.0,"r":[]},{"c":"CITE HUANCAVELICA","m":"Articulación","t":"1. Articulación institucional y gobernanza","n":"FORMULACIÓN DE PROYECTOS PARA EL ACCESO A LA COOPERACIÓN INTERNACIONAL","o":"EL OBJETIVO DE LA FORMULACIÓN DE PROYECTOS PARA LA COOPERACIÓN INTERNACIONAL ES ESTRUCTURAR INICIATIVAS VIABLES Y TÉCNICAMENTE SÓLIDAS QUE RESUELVAN PROBLEMAS C","u":"Proyecto","f":"Privado-Subvención","a":1,"at":0,"p":25000.0,"r":[]},{"c":"CITE HUANCAVELICA","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":"GESTIÓN COMERCIAL Y ACCESO A MERCADOS","o":"EL OBJETIVO DE LA GESTIÓN COMERCIAL ES IMPULSAR LAS VENTAS, MAXIMIZAR LA RENTABILIDAD Y ASEGURAR LA FIDELIZACIÓN DEL CLIENTE MEDIANTE TÉCNICAS ORGANIZADAS. EL A","u":"Informe","f":"Privado-Subvención","a":8,"at":45,"p":20000.0,"r":[]},{"c":"CITE HUANCAVELICA","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":"MISIÓN COMERCIAL INTERNACIONAL (ARTIGIANO - ITALIA)","o":"EL OBJETIVO DE UNA MISIÓN COMERCIAL ES INTERNACIONALIZAR PRODUCTOS ARTESANALES, CONECTANDO DIRECTAMENTE CON COMPRADORES, DISTRIBUIDORES Y ALIADOS ESTRATÉGICOS E","u":"Feria","f":"Privado-Subvención","a":1,"at":0,"p":47000.0,"r":[]},{"c":"CITE HUANCAVELICA","m":"Articulación","t":"5. Articulación comercial turístico-artesanal","n":"PARTICIPACIÓN EN FERIA NACIONAL DE ARTESANÍA \"DE NUESTRAS MANOS\"","o":"EL OBJETIVO DE LA FERIA NACIONAL DE ARTESANÍA \"DE NUESTRAS MANOS\" ES FORTALECER LA COMERCIALIZACIÓN DIRECTA, POSICIONAMIENTO Y VALORACIÓN CULTURAL DE LA ARTESAN","u":"Feria","f":"Privado-Subvención","a":1,"at":9,"p":28000.0,"r":[]},{"c":"CITE HUANCAVELICA","m":"Articulación","t":"5. Articulación comercial turístico-artesanal","n":"PARTICIPACIÓN EN FESTIVAL DE INNOVACIÓN DE CITES DE ARTESANÍA Y TURISMO \"EXHIBE PERÚ\"","o":"EL OBJETIVO DEL FESTIVAL DE INNOVACIÓN DE CITES DE ARTESANÍA Y TURISMO \"EXHIBE PERÚ\" ES PROMOVER, DIFUNDIR Y COMERCIALIZAR LOS PRODUCTOS ELABORADOS POR ARTESANO","u":"Feria","f":"Privado-Subvención","a":2,"at":24,"p":11000.0,"r":[]},{"c":"CITE HUANCAVELICA","m":"Articulación","t":"5. Articulación comercial turístico-artesanal","n":"Participación en la Feria \"Expo Peru los Andes-2026\"","o":"EL OBJETIVO PRINCIPAL DE LA EXPO PERÚ LOS ANDES 2026 EN HUANCAVELICA ES IMPULSAR LA REACTIVACIÓN ECONÓMICA, LA COMPETITIVIDAD Y LA INTERNACIONALIZACIÓN DE LAS E","u":"Feria","f":"Privado-Subvención","a":1,"at":15,"p":10200.0,"r":[]},{"c":"CITE HUANCAVELICA","m":"Articulación","t":"5. Articulación comercial turístico-artesanal","n":"PARTICIPACIÓN EN LA FERIA DE EXHIBICIÓN CASACOR","o":"EL OBJETIVO DE PARTICIPAR EN CASACOR ES POSICIONAR MARCAS, ARQUITECTOS Y DISEÑADORES EN EL MERCADO DE LUJO, EXHIBIENDO INNOVACIÓN Y TENDENCIAS EN ARQUITECTURA, ","u":"Evento","f":"Privado-Subvención","a":1,"at":2,"p":4000.0,"r":[]},{"c":"CITE HUANCAVELICA","m":"Articulación","t":"1. Articulación institucional y gobernanza","n":"PARTICIPACIÓN Y REPRESENTACIÓN EN REUNIONES INSTITUCIONALES","o":"EL OBJETIVO PRINCIPAL DE LA PARTICIPACIÓN Y REPRESENTACIÓN EN REUNIONES INSTITUCIONALES ES INCIDIR EN LA TOMA DE DECISIONES, GARANTIZANDO QUE LAS VOCES DE LOS M","u":"Reunión","f":"Privado-Subvención","a":4,"at":0,"p":15000.0,"r":[]},{"c":"CITE HUANCAVELICA","m":"Articulación","t":"1. Articulación institucional y gobernanza","n":"PROCESO DE ACREDITACIÓN DEL CITE PARA REALIZAR CERTIFICACIÓN DE COMPETENCIAS LABORALES","o":"EL OBJETIVO DEL PROCESO DE ACREDITACIÓN DEL CITE PARA LA CERTIFICACIÓN DE COMPETENCIAS LABORALES ES RECONOCER FORMALMENTE LOS CONOCIMIENTOS, HABILIDADES Y EXPER","u":"Servicio","f":"Privado-Subvención","a":1,"at":0,"p":30000.0,"r":[]},{"c":"CITE HUANCAVELICA","m":"Articulación","t":"5. Articulación comercial turístico-artesanal","n":"PROMOCIÓN DE LA FERIA ARTESANAL REGIONAL Y/O LOCAL","o":"EL OBJETIVO DE LA PROMOCIÓN DE FERIAS ARTESANALES REGIONALES O LOCALES ES FORTALECER EL SECTOR ARTESANAL, IMPULSANDO LA COMERCIALIZACIÓN DIRECTA PARA MEJORAR LO","u":"Feria","f":"Privado-Subvención","a":3,"at":222,"p":36718.55,"r":[]},{"c":"CITE HUANCAVELICA","m":"Capacitación","t":"2. Talleres","n":"CAPACITACIÓN EN HILADOS ARTESANALES EN BASE A FIBRA DE ALPACA","o":"EL OBJETIVO DE LA CAPACITACIÓN EN HILADOS ARTESANALES DE FIBRA DE ALPACA ES FORTALECER LAS CAPACIDADES TÉCNICAS DE LOS PRODUCTORES Y ARTESANOS. BUSCA MEJORAR LA","u":"Taller","f":"Privado-Subvención","a":2,"at":150,"p":7150.0,"r":[]},{"c":"CITE HUANCAVELICA","m":"Capacitación","t":"4. Programas de capacitación","n":"CAPACITACIÓN Y EVALUACIÓN DE ARTESANOS PARA LA CERTIFICACIÓN DE COMPETENCIAS LABORALES","o":"EL OBJETIVO ES RECONOCER FORMALMENTE LA EXPERIENCIA, CONOCIMIENTOS Y HABILIDADES TÉCNICAS DE LOS ARTESANOS, MEJORANDO SU EMPLEABILIDAD, PRODUCTIVIDAD Y COMPETIT","u":"Taller","f":"Privado-Subvención","a":2,"at":6,"p":6000.0,"r":[]},{"c":"CITE HUANCAVELICA","m":"Capacitación","t":"2. Talleres","n":"CURSO TALLER EN GESTIÓN DE LA INNOVACIÓN CON ARTESANOS TEXTILES","o":"EL OBJETIVO DE UN CURSO TALLER EN GESTIÓN DE LA INNOVACIÓN PARA ARTESANOS TEXTILES ES FORTALECER LA COMPETITIVIDAD DEL SECTOR MEDIANTE LA ARTICULACIÓN DEL DISEÑ","u":"Curso","f":"Privado-Subvención","a":1,"at":45,"p":7250.0,"r":[]},{"c":"CITE HUANCAVELICA","m":"Capacitación","t":"2. Talleres","n":"MEJORAMIENTO DE CAPACIDADES EN TEJIDO A PUNTO","o":"EL OBJETIVO DE CAPACITAR EN TÉCNICAS DE TEJIDO A PUNTO ES MEJORAR LAS CAPACIDADES PRODUCTIVAS, TÉCNICAS Y COMPETITIVAS DE LOS ARTESANOS O TÉCNICOS TEXTILES. EST","u":"Taller","f":"Privado-Subvención","a":4,"at":1080,"p":31800.0,"r":[]},{"c":"CITE HUANCAVELICA","m":"Capacitación","t":"2. Talleres","n":"MEJORAMIENTO DE CAPACIDADES EN TEJIDO A TELAR","o":"FORTALECER LAS CAPACIDADES TÉCNICAS PRODUCTIVAS PARA RESPONDER A LAS NECESIDADES DEL MERCADO, LAS EMPRESAS PRODUCTORAS DE ARTESANÍA TEXTIL A TELAR DEBEN OBTENER","u":"Taller","f":"Privado-Subvención","a":2,"at":200,"p":8300.0,"r":[]},{"c":"CITE HUANCAVELICA","m":"Capacitación","t":"2. Talleres","n":"MEJORAMIENTO DE TÉCNICAS DE TEÑIDO NATURAL DE FIBRA DE ALPACA","o":"EL OBJETIVO DEL MEJORAMIENTO DE TÉCNICAS DE TEÑIDO NATURAL EN FIBRA DE ALPACA ES INCREMENTAR LA CALIDAD, SOSTENIBILIDAD Y VALOR COMERCIAL DE LOS TEXTILES. ESTO ","u":"Taller","f":"Privado-Subvención","a":2,"at":200,"p":7100.0,"r":[]},{"c":"CITE HUANCAVELICA","m":"Capacitación","t":"4. Programas de capacitación","n":"PROGRAMA DE CAPACITACIÓN EN COMERCIO EXTERIOR","o":"EL OBJETIVO DE UN PROGRAMA DE CAPACITACIÓN EN COMERCIO EXTERIOR ES FORTALECER LAS COMPETENCIAS TÉCNICAS Y ESTRATÉGICAS DE LOS PARTICIPANTES PARA GESTIONAR EFICA","u":"Servicio","f":"Privado-Subvención","a":1,"at":10,"p":21000.0,"r":[]},{"c":"CITE HUANCAVELICA","m":"Difusión de Información","t":"2. Campañas informativas","n":"CAMPAÑA DE INSCRIPCIÓN Y/O ACTUALIZACIÓN DE RNA","o":"EL OBJETIVO DE LA CAMPAÑA DE INSCRIPCIÓN Y ACTUALIZACIÓN DEL REGISTRO NACIONAL DEL ARTESANO (RNA) ES FORMALIZAR, IDENTIFICAR Y VISIBILIZAR A LOS ARTESANOS PERUA","u":"Campaña","f":"Privado-Recurso Propios (RP)","a":3,"at":60,"p":0.0,"r":[]},{"c":"CITE HUANCAVELICA","m":"Difusión de Información","t":"2. Investigaciones","n":"PROMOCIÓN Y DIFUSIÓN INSTITUCIONAL DE CITE","o":"EL OBJETIVO DE LA PROMOCIÓN Y DIFUSIÓN INSTITUCIONAL DEL CITE ES INCREMENTAR LA COMPETITIVIDAD, PRODUCTIVIDAD Y VALOR AGREGADO DE LAS EMPRESAS ARTESANALES Y SEC","u":"Servicio","f":"Privado-Subvención","a":1,"at":5,"p":40680.0,"r":[]},{"c":"CITE HUANCAVELICA","m":"Difusión de Información","t":"2. Investigaciones","n":"TALLERES DE DIFUSIÓN DE LAS NORMAS TÉCNICAS PERUANAS (NTP) SOBRE LA FIBRA DE ALPACA.","o":"OBJETIVO ES CAPACITAR A PRODUCTORES Y ACTORES DE LA CADENA TEXTIL EN ESTÁNDARES DE CALIDAD (ESQUILA, CLASIFICACIÓN Y MEDICIÓN) PARA MEJORAR LA COMPETITIVIDAD, V","u":"Taller de difusión","f":"Privado-Subvención","a":2,"at":200,"p":9300.0,"r":[]},{"c":"CITE HUANCAVELICA","m":"I + D + i","t":"2. Investigaciones","n":"INVESTIGACIÓN DE LA IDENTIDAD ICONOGRÁFICA DE LA ARTESANÍA DE HUANCAVELICA","o":"EL OBJETIVO DE INVESTIGAR LA IDENTIDAD ICONOGRÁFICA DE LA ARTESANÍA DE HUANCAVELICA ES ANALIZAR Y PRESERVAR LOS SÍMBOLOS ANCESTRALES (FLORA, FAUNA, COSMOGONÍA) ","u":"Investigación","f":"Privado-Subvención","a":1,"at":0,"p":25900.0,"r":[]},{"c":"CITE HUANCAVELICA","m":"I + D + i","t":"2. Investigaciones","n":"INVESTIGACIÓN DE USO DE PLANTAS NATURALES TINTÓREAS PARA TEÑIDO NATURAL","o":"EL OBJETIVO DE INVESTIGAR EL USO DE PLANTAS TINTÓREAS ES DESARROLLAR ALTERNATIVAS SOSTENIBLES, ECOLÓGICAS Y NO TÓXICAS A LOS TINTES SINTÉTICOS, REVALORIZANDO SA","u":"Investigación","f":"Privado-Subvención","a":1,"at":0,"p":39900.0,"r":[]},{"c":"CITE HUANCAVELICA","m":"I + D + i","t":"2. Investigaciones","n":"PARTICIPACIÓN EN SEMINARIO DE INNOVACIÓN","o":"EL OBJETIVO DE PARTICIPAR EN UN SEMINARIO DE INNOVACIÓN ES ADQUIRIR CONOCIMIENTOS, HERRAMIENTAS Y METODOLOGÍAS TRANSFORMAR PROCESOS, FOMENTAR UNA CULTURA CREATI","u":"Evento","f":"Privado-Subvención","a":1,"at":30,"p":5000.0,"r":[]},{"c":"CITE HUANCAVELICA","m":"Transferencia Tecnológica","t":"4. Asistencia técnica","n":"Asistencia técnica en el desarrollo de productos turísticos","o":"LA ASISTENCIA TÉCNICA EN EL DESARROLLO DE PRODUCTOS TURÍSTICOS ES FUNDAMENTAL PARA GARANTIZAR LA CALIDAD, SOSTENIBILIDAD Y COMPETITIVIDAD DE LA OFERTA, ELEVANDO","u":"Informe","f":"Privado-Subvención","a":9,"at":18,"p":33800.0,"r":[]},{"c":"CITE HUANCAVELICA","m":"Transferencia Tecnológica","t":"4. Asistencia técnica","n":"Asistencia técnica en mejora de proceso productivo textil","o":"ASISTENCIA TÉCNICA EN PROCESO PRODUCTIVO TEXTIL EN EL CITE HUANCAVELICA ES FUNDAMENTAL PARA ELEVAR LA COMPETITIVIDAD, CALIDAD Y EFICIENCIA DE LOS ARTESANOS, ASO","u":"Informe","f":"Privado-Subvención","a":12,"at":60,"p":60500.0,"r":[]},{"c":"CITE HUANCAVELICA","m":"Transferencia Tecnológica","t":"4. Asistencia técnica","n":"Asistencia técnica en packing de productos artesanales","o":"ASISTENCIA TÉCNICA EN LABORATORIOS DE EMPAQUE (PACKING) Y CONTROL DE CALIDAD ES CRUCIAL PARA ASEGURAR LA PRECISIÓN, FIABILIDAD Y REPRODUCIBILIDAD DE LOS RESULTA","u":"Informe","f":"Privado-Subvención","a":3,"at":20,"p":19000.0,"r":[]},{"c":"CITE HUANCAVELICA","m":"Transferencia Tecnológica","t":"5. Desarrollo de productos","n":"Diseño y desarrollo de colección de moda de artesanía textil","o":"ELABORACION DE COLECCIONES DE MODA","u":"Colección","f":"Privado-Subvención","a":3,"at":15,"p":36900.0,"r":[]},{"c":"CITE HUANCAVELICA","m":"Transferencia Tecnológica","t":"6. Desarrollo de servicios","n":"Mejoramiento de la gestión de calidad de talleres artesanales textiles (5 S)","o":"CON EL ENFOQUE DE FORTALECER Y RESPONDER A LAS NECESIDADES DEL MERCADO, LAS EMPRESAS PRODUCTORAS DE ARTESANÍA TEXTIL, DEBEN CONOCER HERRAMIENTAS DE GESTIÓN COMO","u":"Asistencia","f":"Privado-Subvención","a":8,"at":56,"p":16200.0,"r":[]},{"c":"CITE HUANCAVELICA","m":"Transferencia Tecnológica","t":"11. Pasantía/intercambio","n":"Pasantía a la Red de Fab Lab de Lima","o":"CONTAR CON EL SERVICIO DE UN PROFESIONAL PARA EL DESARROLLO DE LA PASANTÍA A LA RED DE FAB LAB DE LIMA ES FUNDAMENTAL, ES LA ENCARGADA DE GUIAR, COORDINAR Y POT","u":"Pasantía","f":"Privado-Subvención","a":1,"at":8,"p":10240.0,"r":[]},{"c":"CITE SIPÁN","m":"Articulación","t":"6. Articulación regulatoria y de reconocimiento instituciona","n":"Coordinaciones y trámites para que el CITE sea un Centro de competencias laborales","o":"Gestionar las autorizaciones para que el CITE sea un Centro de Competencias laborales ","u":"Acción","f":"Público-Recursos Externos (RE)","a":1,"at":0,"p":0.0,"r":[]},{"c":"CITE SIPÁN","m":"Articulación","t":"2. Articulación para el desarrollo de iniciativas","n":"Exhibición de muestra de líneas artesanales de la región Lambayeque.","o":"Llevar a cabo una exposición temporal de las líneas artesanales del CITE, con el fin de difundir y promover la importancia de la artesanía lambayecana, las comu","u":"muestra","f":"Público-Recursos Externos (RE)","a":1,"at":20,"p":0.0,"r":[]},{"c":"CITE SIPÁN","m":"Articulación","t":"1. Articulación institucional y gobernanza","n":"Gestión de Convenio de colaboración institucional","o":"Formalizar una alianza estratégica para aunar esfuerzos, recursos, conocimientos que contribuyan a la competitividad del sector artesanal","u":"convenio","f":"Público-Recursos Externos (RE)","a":1,"at":0,"p":0.0,"r":[]},{"c":"CITE SIPÁN","m":"Articulación","t":"2. Articulación para el desarrollo de iniciativas","n":"Implementación y/o gestión de canales de comercialización. (físicos y virtuales)","o":"Promover la implementación, gestión y/o seguimiento de canales de comercialización para la venta de productos artesanales.","u":"Acción","f":"Público-Recursos Externos (RE)","a":4,"at":190,"p":11500.0,"r":[]},{"c":"CITE SIPÁN","m":"Articulación","t":"4. Articulación networking y negociación","n":"Organización de evento Showroom y/o rueda de negocios","o":"Presentar productos innovadores a clientes potenciales con la finalidad de establecer contactos comerciales y concretizar ventas futuras.","u":"Evento","f":"Público- Recursos Directamente Recaudados (RDR)","a":1,"at":35,"p":28000.0,"r":[]},{"c":"CITE SIPÁN","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":"Organización de eventos de promoción comercial en la región Lambayeque.","o":"Realizar la organización de eventos de promoción, venta y exhibición de los productos artesanales ","u":"Evento","f":"Público- Recursos Directamente Recaudados (RDR)","a":3,"at":120,"p":54166.0,"r":[]},{"c":"CITE SIPÁN","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":"Participación en Desfile de Modas","o":"Promocionar la oferta artesanal que está ligada directamente al diseño de moda, prendas elaboradas teniendo en cuenta las líneas artesanales de la Región  Lamba","u":"Evento","f":"Público-Recursos Externos (RE)","a":1,"at":10,"p":0.0,"r":[]},{"c":"CITE SIPÁN","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":"Participación en eventos de promoción y exhibición venta de artesanía.","o":"Promocionar la oferta artesanal de la región Lambayeque en eventos comerciales a fin de impulsar la visibilidad, valoración y comercialización de productos arte","u":"Evento","f":"Público- Recursos Directamente Recaudados (RDR)","a":5,"at":180,"p":20000.0,"r":[]},{"c":"CITE SIPÁN","m":"Articulación","t":"1. Articulación institucional y gobernanza","n":"Participación en Reunión de Directores ejecutivos","o":"Participar de las reuniones de directores ejecutivos y coordinadores de los CITE con el fin de exponer los avances y las acciones a ejecutar por los CITE de Art","u":"Reunión","f":"Público-Recursos Externos (RE)","a":3,"at":0,"p":0.0,"r":[]},{"c":"CITE SIPÁN","m":"Articulación","t":"1. Articulación institucional y gobernanza","n":"Participación en reuniones de coordinación con gobierno regional y/o local y/o instituciones.","o":"Coordinar con instituciones públicas y/o privadas la realización de actividades que contribuyan a la mejora del sector artesanal.","u":"informe","f":"Público-Recursos Externos (RE)","a":4,"at":0,"p":0.0,"r":[]},{"c":"CITE SIPÁN","m":"Capacitación","t":"3. Cursos","n":"Curso en Fotografía","o":"Capacitar a los artesanos en el dominio de la cámara o celular para capturar imágenes de alta calidad que permitan promocionar los productos artesanales en digi","u":"Curso","f":"Público-Recursos Externos (RE)","a":1,"at":30,"p":0.0,"r":[]},{"c":"CITE SIPÁN","m":"Capacitación","t":"5. Formación especializada","n":"Formación especializada \"Programa de innovación empresarial\"","o":" Fortalecer la competitividad y adaptabilidad de las empresas, desarrollando nuevos modelos de negocio y aumentar la rentabilidad","u":"Formación especializada","f":"Público-Recursos Externos (RE)","a":1,"at":30,"p":0.0,"r":[]},{"c":"CITE SIPÁN","m":"Capacitación","t":"5. Formación especializada","n":"Formación especializada en emprendimiento y plan de negocio","o":"Fortalecer las capacidades de los artesanos para la gestión eficiente de sus emprendimientos.","u":"Formación especializada","f":"Público-Recursos Externos (RE)","a":1,"at":30,"p":0.0,"r":[]},{"c":"CITE SIPÁN","m":"Capacitación","t":"5. Formación especializada","n":"Formación especializada en engaste  de piedras para artesanos de joyería","o":"Fortalecer las capacidades de los artesanos de joyería en engaste de piedras. ","u":"Formación especializada","f":"Público- Recursos Directamente Recaudados (RDR)","a":1,"at":20,"p":15000.0,"r":[]},{"c":"CITE SIPÁN","m":"Capacitación","t":"5. Formación especializada","n":"Formación especializada en gestión empresarial","o":"Fortalecer las capacidades de los artesanos de la región Lambayeque en gestión empresarial para un mejor funcionamiento de sus negocios","u":"Formación especializada","f":"Público-Recursos Externos (RE)","a":1,"at":30,"p":0.0,"r":[]},{"c":"CITE SIPÁN","m":"Capacitación","t":"5. Formación especializada","n":"Formación especializada en herramientas digitales para la comercialización","o":"Capacitar en el uso estratégico de tecnologías para optimizar procesos comerciales, mejorar la experiencia del cliente y maximizar las ventas.","u":"Formación especializada","f":"Público-Recursos Externos (RE)","a":2,"at":50,"p":0.0,"r":[]},{"c":"CITE SIPÁN","m":"Capacitación","t":"2. Talleres","n":"Taller en habilidades blandas: \"Empodérate Artesano\"  en el marco de la celebración del día del arte","o":"Promover el trabajo en equipo, liderazgo, la solución de conflictos entre los miembros de las asociaciones de artesanos participantes que les permitan mejorar s","u":"Taller","f":"Público- Recursos Directamente Recaudados (RDR)","a":1,"at":200,"p":20000.0,"r":[]},{"c":"CITE SIPÁN","m":"Capacitación","t":"2. Talleres","n":"Talleres virtuales en mejora de la productividad y calidad.","o":"Mejorar y/o conocer los procesos de elaboración de productos artesanales en la técnica de amigurumi y tejido shicra con el fin de ampliar la oferta artesanal.","u":"Taller","f":"Público-Recursos Externos (RE)","a":2,"at":100,"p":0.0,"r":[]},{"c":"CITE SIPÁN","m":"Difusión de Información","t":"1. Generación de información estratégica","n":"Actualización de padrón de beneficiarios del CITE Sipán.","o":"Contar con información de los beneficiarios atendidos como resultado de las actividades ejecutadas por el CITE Sipán","u":"Documento","f":"Público-Recursos Externos (RE)","a":4,"at":0,"p":0.0,"r":[]},{"c":"CITE SIPÁN","m":"Difusión de Información","t":"2. Campañas informativas","n":"Atenciones de inscripción y/o actualización del RNA","o":"Realizar el Registro en el RNA de artesanos beneficiarios del CITE Sipán","u":"Acción","f":"Público-Recursos Externos (RE)","a":4,"at":60,"p":0.0,"r":[]},{"c":"CITE SIPÁN","m":"Difusión de Información","t":"3. Espacios de difusión técnica","n":"Desarrollo del Festival de Innovación en Artesanía en la región Lambayeque.","o":"Organizar y ejecutar el evento Festival de Innovación en Artesanía en la región Lambayeque con la finalidad de promover la innovación tecnológica para las línea","u":"Evento","f":"Público- Recursos Directamente Recaudados (RDR)","a":1,"at":100,"p":40000.0,"r":[]},{"c":"CITE SIPÁN","m":"Difusión de Información","t":"3. Espacios de difusión técnica","n":"Difusión de los servicios del CITE, concursos, investigaciones y/o estudios a sus beneficiarios.","o":"Lograr que los artesanos accedan a información sobre los servicios, concursos, estudios desarrollados por el CITE Sipán o con aliados estratégicos.","u":"Acción","f":"Público-Recursos Externos (RE)","a":10,"at":600,"p":0.0,"r":[]},{"c":"CITE SIPÁN","m":"Difusión de Información","t":"1. Generación de información estratégica","n":"Levantamiento de línea base de artesanos con potencial comercial ","o":"Identificar a los artesanos con potencial comercial para la mejora de la toma de decisiones en los servicios a ofrecer para el grupo beneficiario.","u":"Documento","f":"Público-Recursos Externos (RE)","a":1,"at":0,"p":0.0,"r":[]},{"c":"CITE SIPÁN","m":"Difusión de Información","t":"3. Espacios de difusión técnica","n":"Orientación a artesanos para participación en concursos de diseño e innovación.","o":"Consolidar la postulación de artesanos beneficiarios del CITE Sipán concursos de innovación o diseño  ","u":"Documento","f":"Público-Recursos Externos (RE)","a":1,"at":20,"p":0.0,"r":[]},{"c":"CITE SIPÁN","m":"Difusión de Información","t":"3. Espacios de difusión técnica","n":"Participación en Seminario de innovación","o":"Participar en evento organizado por la DCITAT con la finalidad de adquirir conocimientos que contribuyan al desarrollo de procesos innovadores en la región.","u":"Evento","f":"Público-Recursos Externos (RE)","a":1,"at":0,"p":0.0,"r":[]},{"c":"CITE SIPÁN","m":"Difusión de Información","t":"3. Espacios de difusión técnica","n":"Promoción de postulación y/o admisión a fondos concursables (asesorías, acompañamiento a artesano)","o":"Promover la competitividad de unidades económicas artesanales a nivel nacional, a través del cofinanciamiento de capital de trabajo para la ejecución de proyect","u":"Acción","f":"Público-Recursos Externos (RE)","a":1,"at":25,"p":0.0,"r":[]},{"c":"CITE SIPÁN","m":"Difusión de Información","t":"1. Generación de información estratégica","n":"Realización de Encuesta Anual a artesanos beneficiarios del CITE en el 2025.","o":"Contar con información de la percepción de los artesanos de los servicios brindado por el CITE e información de temas productivos y ventas","u":"Documento","f":"Público-Recursos Externos (RE)","a":1,"at":0,"p":0.0,"r":[]},{"c":"CITE SIPÁN","m":"I + D + i","t":"1. Estudio técnico","n":"Estudio técnico de la cadena de valor de la fibra vegetal del junco","o":"Determinar la viabilidad técnica-operativa para el trabajo con esta materia prima en productos artesanales de manera eficiente y sostenible.","u":"Estudio","f":"Público-Recursos Externos (RE)","a":1,"at":0,"p":18000.0,"r":[]},{"c":"CITE SIPÁN","m":"Transferencia Tecnológica","t":"4. Asistencia técnica","n":"Asistencia técnica en desarrollo de productos en crochet","o":"Mejorar los procesos y acabados de los productos textiles en tejido de punto a crochet.","u":"Asistencia técnica","f":"Público- Recursos Directamente Recaudados (RDR)","a":12,"at":80,"p":25000.0,"r":[]},{"c":"CITE SIPÁN","m":"Transferencia Tecnológica","t":"4. Asistencia técnica","n":"Asistencia técnica en mejora de procesos productivos de cerámica","o":"Mejorar los procesos de elaboración de productos en cerámica con la técnica del colado.","u":"Asistencia técnica","f":"Público- Recursos Directamente Recaudados (RDR)","a":1,"at":20,"p":12000.0,"r":[]},{"c":"CITE SIPÁN","m":"Transferencia Tecnológica","t":"4. Asistencia técnica","n":"Asistencia técnica para Desarrollo de experiencias turísticas artesanales","o":"Brindar asistencia técnica a los artesanos que se encuentran en la plataforma Y Tu que Planes sobre experiencia turística artesanal.","u":"Asistencia técnica","f":"Público-Recursos Externos (RE)","a":1,"at":14,"p":0.0,"r":[]},{"c":"CITE SIPÁN","m":"Transferencia Tecnológica","t":"4. Asistencia técnica","n":"Asistencia técnica para el desarrollo de souvenirs para la ruta del Papa","o":"Contar con oferta artesanal de souvenirs para ser insertados en la Ruta del Papa.","u":"Asistencia técnica","f":"Público- Recursos Directamente Recaudados (RDR)","a":5,"at":50,"p":25000.0,"r":[]},{"c":"CITE SIPÁN","m":"Transferencia Tecnológica","t":"4. Asistencia técnica","n":"Asistencias técnicas en mejora de procesos productivos en fibras vegetales","o":"Mejorar los procesos de elaboración de productos en FIBRAS VEGETALES, reduciendo tiempos.","u":"Asistencia técnica","f":"Público- Recursos Directamente Recaudados (RDR)","a":5,"at":40,"p":9000.0,"r":[]},{"c":"CITE SIPÁN","m":"Transferencia Tecnológica","t":"4. Asistencia técnica","n":"Asistencias técnicas y seguimiento para desarrollo de productos para promoción","o":"Contar con productos innovadores para participar en los eventos nacionales de promoción comercial programados en el PAA.","u":"Asistencia técnica","f":"Público- Recursos Directamente Recaudados (RDR)","a":5,"at":20,"p":25000.0,"r":[]},{"c":"CITE SIPÁN","m":"Transferencia Tecnológica","t":"5. Desarrollo de productos","n":"Diseño de productos corporativos","o":"Desarrollar una colección de 15 productos corporativos para promoción - venta en eventos comerciales como ferias, show room programados en el PAA del CITE. ","u":"Colección","f":"Público- Recursos Directamente Recaudados (RDR)","a":1,"at":30,"p":19500.0,"r":[]},{"c":"CITE SIPÁN","m":"Transferencia Tecnológica","t":"6. Desarrollo de servicios","n":"Diseño e implementación de experiencias turísticas en potenciales talleres artesanales de la región ","o":"Desarrollar e implementar experiencias turísticas en los talleres artesanales ","u":"Experiencia Turística","f":"Público- Recursos Directamente Recaudados (RDR)","a":4,"at":20,"p":14005.0,"r":[]},{"c":"CITE SIPÁN","m":"Transferencia Tecnológica","t":"5. Desarrollo de productos","n":"Diseño y desarrollo de Colección de prendas de vestir y accesorios en líneas priorizadas.","o":"Desarrollar una colección de 6 outfit de prendas de vestir para desfile de modas a realizarse en el marco de la Feria De Nuestras Manos 2026.","u":"Colección","f":"Público- Recursos Directamente Recaudados (RDR)","a":1,"at":20,"p":30000.0,"r":[]},{"c":"CITE SIPÁN","m":"Transferencia Tecnológica","t":"1. Laboratorio de cocreación (Living Lab)","n":"Laboratorios de Cocreación y validación de productos artesanales","o":"Generar espacios entre diseñador y artesanos para la creación de manera conjunta de nuevos productos y/o procesos.","u":"Laboratorio","f":"Público- Recursos Directamente Recaudados (RDR)","a":2,"at":50,"p":0.0,"r":[]},{"c":"CITE SIPÁN","m":"Transferencia Tecnológica","t":"11. Pasantía/intercambio","n":"Pasantía: \"Intercambio de experiencias entre artesanos de Perú, Brasil y Paraguay\"","o":"Intercambio de experiencia de artesanas de Perú, Brasil y Paraguay de la línea de textiles","u":"Pasantía","f":"Público-Recursos Externos (RE)","a":1,"at":50,"p":0.0,"r":[]},{"c":"CITE SIPÁN","m":"Transferencia Tecnológica","t":"10. Aceleración empresarial","n":"Programa de incubación de emprendimientos artesanales","o":"Impulsar y/o fortalecer  los nuevos emprendimientos artesanales, reduciendo los riesgos mediante el acompañamiento y formación.","u":"Programa","f":"Público-Recursos Externos (RE)","a":2,"at":40,"p":0.0,"r":[]},{"c":"CITE UCAYALI","m":"Articulación","t":"1. Articulación institucional y gobernanza","n":"Articulación para la revalorización de la artesanía en instituciones educativas","o":"Articulación para la revalorización de la artesanía en instituciones educativas ","u":"Evento","f":"Público-Recursos Ordinarios (RO)","a":2,"at":40,"p":0.0,"r":[]},{"c":"CITE UCAYALI","m":"Articulación","t":"1. Articulación institucional y gobernanza","n":"Coordinación interinstitucional en promoción del turismo y la artesanía para la gestión del CITE Uca","o":"Coordinación interinstitucional en promoción del turismo y la artesanía para la gestión del CITE Ucayali","u":"Informe","f":"Público-Recursos Ordinarios (RO)","a":9,"at":0,"p":32000.0,"r":[]},{"c":"CITE UCAYALI","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":"Diseño y elaboración de Catálogo de productos desarrollados por el CITE","o":"Catalogo artesanal","u":"Catálogo","f":"Público-Recursos Ordinarios (RO)","a":1,"at":0,"p":15000.0,"r":[]},{"c":"CITE UCAYALI","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":"Ferias locales (Organizador)","o":"'Ferias locales (Organizador)","u":"Feria","f":"Público-Recursos Ordinarios (RO)","a":5,"at":65,"p":0.0,"r":[]},{"c":"CITE UCAYALI","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":"Ferias nacionales (Participación)","o":"Ferias nacionales (Participación) ","u":"Feria","f":"Público-Recursos Ordinarios (RO)","a":3,"at":10,"p":0.0,"r":[]},{"c":"CITE UCAYALI","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":"Ferias regionales (Organizador)","o":"Ferias regionales (Organizador)","u":"Feria","f":"Público-Recursos Ordinarios (RO)","a":3,"at":45,"p":75000.0,"r":[]},{"c":"CITE UCAYALI","m":"Articulación","t":"1. Articulación institucional y gobernanza","n":"Servicio para la organización, seguimiento y difusión de actividades de articulación comercial de lo","o":"Organización, seguimiento y difusión de actividades de articulación comercial de los beneficiarios del CITE Artesanía Ucayali.","u":"Servicio","f":"Público-Recursos Ordinarios (RO)","a":11,"at":0,"p":44000.0,"r":[]},{"c":"CITE UCAYALI","m":"Capacitación","t":"3. Cursos","n":"Capacitación en Diseño e Iconografía de los Pueblos Shipibo-Konibo, Asháninka, Isconawa y Yine","o":"Revalorización de la cultura étnica","u":"Curso","f":"Público-Recursos Ordinarios (RO)","a":4,"at":80,"p":0.0,"r":[]},{"c":"CITE UCAYALI","m":"Capacitación","t":"3. Cursos","n":"Curso de capacitación en análisis de tendencias internacionales y paletas de color el desarrollo de ","o":"Producir artesanías de acuerdo al mercado y a las tendencias.","u":"Curso","f":"Público-Recursos Ordinarios (RO)","a":2,"at":40,"p":4000.0,"r":[]},{"c":"CITE UCAYALI","m":"Capacitación","t":"3. Cursos","n":"Curso de capacitación en gestión de merma y valorización de materiales en la elaboración de producto","o":"Incentivar la economía circular","u":"Curso","f":"Público-Recursos Ordinarios (RO)","a":2,"at":40,"p":0.0,"r":[]},{"c":"CITE UCAYALI","m":"Capacitación","t":"3. Cursos","n":"Curso de capacitación en Gestión Empresarial","o":"mejorar la Gestión Empresarial","u":"Curso","f":"Público-Recursos Ordinarios (RO)","a":3,"at":60,"p":0.0,"r":[]},{"c":"CITE UCAYALI","m":"Capacitación","t":"3. Cursos","n":"Curso de capacitación en identificación de nichos de mercado para productos artesanales","o":"búsqueda de mercados ","u":"Curso","f":"Público-Recursos Ordinarios (RO)","a":2,"at":40,"p":4000.0,"r":[]},{"c":"CITE UCAYALI","m":"Capacitación","t":"3. Cursos","n":"Curso de capacitación en uso de herramientas digitales para la gestión de productos y negocios artes","o":"Uso de nuevas tecnologías","u":"Curso","f":"Público-Recursos Ordinarios (RO)","a":2,"at":40,"p":8000.0,"r":[]},{"c":"CITE UCAYALI","m":"Capacitación","t":"5. Formación especializada","n":"Gestión de perfiles en estándares de competencias laborales","o":"obtener 02 nuevos ECL.","u":"Gestión","f":"Público-Recursos Ordinarios (RO)","a":2,"at":0,"p":0.0,"r":[]},{"c":"CITE UCAYALI","m":"Capacitación","t":"2. Talleres","n":"Taller en la elaboración y uso de fichas técnicas para productos artesanales","o":"mejorar el proceso de producción artesanal","u":"Taller","f":"Público-Recursos Ordinarios (RO)","a":2,"at":30,"p":0.0,"r":[]},{"c":"CITE UCAYALI","m":"Capacitación","t":"2. Talleres","n":"Taller en la mejora de procesos con 5S y Normas Técnicas Peruanas (NTP)","o":"implementación de procesos y normas técnicas","u":"Taller","f":"Público-Recursos Ordinarios (RO)","a":2,"at":30,"p":0.0,"r":[]},{"c":"CITE UCAYALI","m":"Difusión de Información","t":"2. Campañas informativas","n":"Difusión y acompañamiento de artesanos en Concursos de reconocimiento, innovación y emprendimiento","o":"Difusión y acompañamiento de artesanos en Concursos de reconocimiento, innovación y emprendimiento","u":"Servicio","f":"Público-Recursos Ordinarios (RO)","a":4,"at":33,"p":0.0,"r":[]},{"c":"CITE UCAYALI","m":"Difusión de Información","t":"6. Posicionamiento institucional y de marca","n":"Difusión, promoción y posicionamiento de las rutas turísticas artesanales","o":"Difusión, promoción y posicionamiento de las rutas turísticas artesanales","u":"Evento","f":"Público-Recursos Ordinarios (RO)","a":1,"at":0,"p":0.0,"r":[]},{"c":"CITE UCAYALI","m":"Difusión de Información","t":"3. Espacios de difusión técnica","n":"Organización de evento de innovación en artesanía","o":"Organización de evento de innovación en artesanía ","u":"Evento","f":"Público-Recursos Ordinarios (RO)","a":1,"at":100,"p":32000.0,"r":[]},{"c":"CITE UCAYALI","m":"Difusión de Información","t":"1. Generación de información estratégica","n":"Servicio de recopilación, sistematización, seguimiento y difusión de las actividades programadas del","o":"recopilación, sistematización, seguimiento y difusión de las actividades programadas del Plan Anual de Actividades","u":"Informe","f":"Público-Recursos Ordinarios (RO)","a":3,"at":0,"p":12000.0,"r":[]},{"c":"CITE UCAYALI","m":"I + D + i","t":"2. Investigaciones","n":"Investigación de tintes naturales a partir de especies maderables y no maderables","o":"Caracterizar los productos maderables y no maderables que sean usados en el teñido de telas.","u":"Investigación","f":"Público-Recursos Ordinarios (RO)","a":1,"at":0,"p":40000.0,"r":[]},{"c":"CITE UCAYALI","m":"Transferencia Tecnológica","t":"4. Asistencia técnica","n":"Asistencia técnica especializada para el perfeccionamiento de acabados en bordados de la línea texti","o":"Mejoramiento de acabados en bordados","u":"Asistencia técnica","f":"Público-Recursos Ordinarios (RO)","a":1,"at":15,"p":6300.0,"r":[]},{"c":"CITE UCAYALI","m":"Transferencia Tecnológica","t":"4. Asistencia técnica","n":"Asistencia técnica para la mejora y estandarización de procesos productivos en la elaboración de tex","o":"Manejo de maquinas de coser","u":"Asistencia técnica","f":"Público-Recursos Ordinarios (RO)","a":7,"at":70,"p":17500.0,"r":[]},{"c":"CITE UCAYALI","m":"Transferencia Tecnológica","t":"5. Desarrollo de productos","n":"Cocreación y diseño de productos artesanales innovadores","o":"Reproducción de colección realizada.","u":"Colección","f":"Público-Recursos Ordinarios (RO)","a":3,"at":30,"p":4866.0,"r":[]},{"c":"CITE UCAYALI","m":"Transferencia Tecnológica","t":"5. Desarrollo de productos","n":"Diseño y desarrollo de colección de prendas de vestir y accesorios","o":"Crear una nueva colección","u":"Colección","f":"Público- Recursos Directamente Recaudados (RDR)","a":1,"at":10,"p":32000.0,"r":[]},{"c":"CITE UCAYALI","m":"Transferencia Tecnológica","t":"5. Desarrollo de productos","n":"Diseño y mejora de la presentación de productos","o":"Creación de packagin según producto artesanal.","u":"Diseño","f":"Público-Recursos Ordinarios (RO)","a":1,"at":15,"p":10000.0,"r":[]},{"c":"CITE UCAYALI","m":"Transferencia Tecnológica","t":"11. Pasantía/intercambio","n":"Experiencia práctica de pasantía en procesos productivos","o":"Mejora de procesos productivos","u":"Pasantía","f":"Público-Recursos Ordinarios (RO)","a":1,"at":10,"p":30000.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Articulación","t":"1. Articulación institucional y gobernanza","n":" Acompañamiento para la creación de marca denominación de origen y registro de marcas colectivas  ","o":"Brindar acompañamiento técnico para la creación de marca, obtención de denominación de origen y registro de marcas colectivas, fortaleciendo la identidad, difer","u":"Informe","f":"Privado-Subvención","a":1,"at":50,"p":10000.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Articulación","t":"4. Articulación networking y negociación","n":" Desarrollo de una rueda de negocios nacional ","o":"Desarrollar una rueda de negocio para buscar y articular una cartera de clientes sostenibles para las unidades productoras artesanales","u":"Informe","f":"Privado-Subvención","a":2,"at":140,"p":24000.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":" Desarrollo y manejo de sitios Web Ecommerce  ","o":"Implementar y gestionar una plataforma de e-commerce de artesanía para ampliar el acceso a mercados, incrementar las ventas y fortalecer la presencia digital de","u":"informe","f":"Privado-Subvención","a":3,"at":600,"p":18500.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":" Feria Internacional (participación en feria) ","o":"Fortalecer la promoción y comercialización de productos artesanales mediante la participación en ferias.","u":"Evento","f":"Privado-Subvención","a":1,"at":20,"p":20500.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":" Feria Nacional de Artesanía \"De Nuestros Manos\" ","o":"crear espacios para mejorar la articulación comercial de productos artesanales.","u":"Evento","f":"Privado-Subvención","a":1,"at":80,"p":16500.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":" Feria Nacional de Artesanía \"Ruraq Maki\" ","o":"Fortalecer la promoción y comercialización de productos artesanales mediante la participación en ferias. ","u":"Evento","f":"Privado-Subvención","a":1,"at":20,"p":6900.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":" Festival de Innovación de CITEs de Artesanía y Turismo \"Exhibe Perú\" ","o":"Fortalecer la promoción y comercialización de productos artesanales mediante la participación en ferias.","u":"Evento","f":"Privado-Subvención","a":1,"at":70,"p":27000.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Articulación","t":"4. Articulación networking y negociación","n":" Gestión comercial de los productos y servicios del Cite. ","o":"Fortalecer la gestión comercial mediante la implementación de un gestor comercial que impulse la promoción, articulación con mercados y el incremento de ventas ","u":"informe","f":"Privado-Subvención","a":9,"at":720,"p":30600.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Articulación","t":"1. Articulación institucional y gobernanza","n":" Participación en la Reunión Anual de Directores Ejecutivos - RADE  ","o":"Participar en la Reunión Anual de Directores Ejecutivos (RADE) para fortalecer la articulación institucional, intercambiar experiencias y definir estrategias qu","u":"Informe","f":"Privado-Subvención","a":3,"at":0,"p":12000.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":" Promoción de artesanías a través de punto de venta física (Amazonas, Cusco, Lima, Aeropuertos. Etc.","o":"Implementar y fortalecer puntos de venta físicos de artesanía para mejorar la comercialización, visibilidad y acceso al mercado de los productos artesanales.","u":"Punto de comercialización","f":"Privado-Subvención","a":10,"at":930,"p":105500.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Articulación","t":"1. Articulación institucional y gobernanza","n":" Promoción de la inversión privada ","o":"Promover la inversión privada para fortalecer el desarrollo, innovación y competitividad del sector artesanal.","u":"Informe","f":"Privado-Subvención","a":2,"at":600,"p":12000.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Articulación","t":"1. Articulación institucional y gobernanza","n":"Formulación de planes negocio para la obtención de fuentes de financiamiento","o":"Formular planes de negocio que faciliten el acceso a fuentes de financiamiento, fortaleciendo la sostenibilidad y crecimiento de las iniciativas artesanales.","u":"Planes de negocio","f":"Privado-Subvención","a":4,"at":120,"p":12000.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Articulación","t":"1. Articulación institucional y gobernanza","n":"Gestión para la suscripción de convenio con institución pública y/o Privada.","o":"","u":"Informe","f":"","a":1,"at":200,"p":0.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":"Participación a Casacor Perú","o":"","u":"Evento","f":"","a":1,"at":20,"p":4000.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Articulación","t":"3. Articulación comercial y de acceso a mercados","n":"Participación de otras ferias locales y nacionales. (Expoinnovacion artesanal )","o":"Fortalecer la promoción y comercialización de productos artesanales mediante la participación en ferias.","u":"Evento","f":"Privado-Subvención","a":3,"at":220,"p":47000.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Capacitación","t":"4. Programas de capacitación","n":" Capacitación en manejo de redes sociales para la comercialización ","o":"artesanos capacitados para el desarrollo de habilidades en el manejo de redes sociales","u":"Curso","f":"Privado-Subvención","a":4,"at":280,"p":13200.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Capacitación","t":"3. Cursos","n":" Capacitación en mercado, tendencias y comercialización avanzada ","o":"fortalecer capacidades a artesanos para la búsqueda de nuevos nichos comerciales. ","u":"Curso","f":"Privado-Subvención","a":3,"at":170,"p":9900.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Capacitación","t":"4. Programas de capacitación","n":" Capacitación en nuevas técnicas de producción de artesanía en madera ","o":"fortalecimiento de capacidades en el desarrollo de artesanía de buena calidad bajo estándares de innovación ","u":"Curso","f":"Privado-Subvención","a":6,"at":335,"p":25200.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Capacitación","t":"4. Programas de capacitación","n":" Capacitación en nuevas técnicas de producción en bisutería","o":"Fortalecer capacidades en los artesanos en la mejora de la producción de artesanía en la Línea de bisutería ","u":"Curso","f":"Privado-Subvención","a":3,"at":90,"p":24600.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Capacitación","t":"3. Cursos","n":" Capacitación en sensibilización turística  ","o":"fortalecer capacidades a los artesanos sobre el desarrollo de la Ruta Turística UTKU","u":"Taller","f":"Privado-Subvención","a":3,"at":170,"p":9900.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Capacitación","t":"4. Programas de capacitación","n":"Capacitación en gestión empresarial  ","o":"fortalecer capacidades en artesanos en la mejora de la producción artesanal con enfoque empresarial. ","u":"Curso","f":"Privado-Subvención","a":6,"at":345,"p":19700.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Capacitación","t":"4. Programas de capacitación","n":"Capacitación en técnicas en acabados  y control de calidad de prendas y accesorios  de vestir","o":"Fortalecer capacidades a los artesanos en la mejora de la producción artesanal de la línea textil para su articulación comercial. ","u":"Curso","f":"Privado-Subvención","a":4,"at":255,"p":16700.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Capacitación","t":"3. Cursos","n":"Capacitación en tecnologias aplicadas (manejo de 3D impresión y scaneo)","o":"fortalecer a artesanos en el manejo técnico y uso de tecnologías de scaneo e impresión para el uso de prototipos artesanales.","u":"Curso","f":"Privado-Subvención","a":2,"at":30,"p":10000.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Capacitación","t":"4. Programas de capacitación","n":"Programa de evaluación de artesanos para la certificación de competencias laborales en los perfiles ","o":"desarrollo de herramientas metodológica para la obtención de certificación de los artesanos ","u":"Informe","f":"Privado-Subvención","a":1,"at":67,"p":7000.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Difusión de Información","t":"3. Espacios de difusión técnica","n":" Acompañamiento a artesanos para postulación y presentación de proyectos en fondos concursables. ","o":"apoyar a los artesanos en la presentación de sus propuestas económicas para la presentación a fondos no reembolsables con la asesoría del CITE Utcubamba ","u":"Informe","f":"Privado-Subvención","a":1,"at":50,"p":5500.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Difusión de Información","t":"6. Posicionamiento institucional y de marca","n":" Desarrollo y manejo de redes sociales  ","o":"posicionamiento estratégico de las actividades de las unidades productoras y el CITE Utcubamba ","u":"Informe","f":"Privado-Subvención","a":8,"at":640,"p":20400.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Difusión de Información","t":"1. Generación de información estratégica","n":" Implementación y actualización de base de datos de información relevante de las UEA para su interve","o":"desarrollo de información estadística para un análisis detallado en la mejora de la competitividad de la cadena productiva de la artesanía ","u":"Informe","f":"Privado-Subvención","a":1,"at":65,"p":7000.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Difusión de Información","t":"6. Posicionamiento institucional y de marca","n":" Realización y difusión de material promocional físico y virtual (catálogos, banners y otros). ","o":"desarrollo de material promocionar a favor de los artesanos de la región Amazonas, con la finalidad de mejorar su presentación y posicionamiento en la articulac","u":"Informe","f":"Privado-Subvención","a":9,"at":950,"p":29700.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Difusión de Información","t":"3. Espacios de difusión técnica","n":"Desarrollo de concurso de proyectos  tecnologicos","o":"Fortalecer y difundir proyectos que mejoren los procesos productivos de los artesanos, bajo estándares de innovación. ","u":"Informe","f":"Privado-Subvención","a":1,"at":40,"p":11600.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Difusión de Información","t":"4. Exhibición/Exposición","n":"Seminario de Innovación aplicado a  actividades artesanales ","o":"creación de espacio para difundir investigaciones, exposiciones que busquen mejorar los conocimientos de nuestros artesanos para la mejora de la cadena de valor","u":"Informe","f":"Privado-Subvención","a":1,"at":80,"p":12000.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"I + D + i","t":"2. Investigaciones","n":"Servicio de Investigación  en desarrollo de herramientas y equipos tecnológicos para la estandarizac","o":"desarrollar un proyecto de investigación para fortalecer capacidades a los artesanos en el manejo técnico de sus actividades, con enfoque tradicional y cultural","u":"Investigación","f":"Privado-Subvención","a":1,"at":80,"p":28500.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Transferencia Tecnológica","t":"4. Asistencia técnica","n":" Asistencia técnica en desarrollo de productos artesanales en CNC y bordado computarizado ","o":"fortalecer capacidades en el desarrollo de productos, trabajados con la tecnología 3D en tallado y bordado computarizado","u":"Asistencia técnica","f":"Privado-Subvención","a":8,"at":304,"p":41200.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Transferencia Tecnológica","t":"4. Asistencia técnica","n":" Asistencia técnica en manejo de máquinas de proceso de la línea textil  ","o":"Fortalecer capacidades en el desarrollo de productos a base de maquinas rectas, remalladoras, etc.","u":"Asistencia técnica","f":"Privado-Subvención","a":8,"at":125,"p":26400.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Transferencia Tecnológica","t":"1. Laboratorio de cocreación (Living Lab)","n":" Desarrollo de propuesta de Implementación de un laboratorio piloto de cocreación Living lab Turísti","o":"Desarrollar una propuesta técnica sobre la creación de un Laboratorio Living Turístico para la creación de productos artesanales  ","u":"Informe","f":"Privado-Subvención","a":1,"at":80,"p":7000.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Transferencia Tecnológica","t":"4. Asistencia técnica","n":"Asistencia tecnica para el adecuado teñido de tintes naturales","o":"Fortalecer capacidades en  el adecuado teñido de tintes naturales para mejorar el proceso de teñido en las prendas artesanales y materia prima  ","u":"Asistencia técnica","f":"Privado-Subvención","a":2,"at":60,"p":6800.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Transferencia Tecnológica","t":"5. Desarrollo de productos","n":"Diseño y desarrollo de productos en las diferentes líneas artesanales ","o":"Desarrollar nuevas colecciones a través de innovación de productos artesanales para nuevos nichos de mercado","u":"Colección","f":"Privado-Subvención","a":3,"at":305,"p":111900.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Transferencia Tecnológica","t":"4. Asistencia técnica","n":"Implementación de programas de calidad (Buenas Prácticas de Manufacturas - BPM,5S y otros) ","o":"Mejorar y estandarizar los talleres artesanales para una mejora de producción y presentación frente a visitantes a sus talleres artesanales ","u":"informe","f":"Privado-Subvención","a":3,"at":210,"p":18500.0,"r":[]},{"c":"CITE UTCUMBAMBA","m":"Transferencia Tecnológica","t":"11. Pasantía/intercambio","n":"Pasantías para artesanos en procesos productivos y comercialización / Intercambio de experiencias ","o":"Fortalecer el intercambio cultural y mejora de proceso productivo en nuevos conocimientos y experiencias. ","u":"Pasantía","f":"Privado-Subvención","a":1,"at":25,"p":30100.0,"r":[]}];
+
+const UNITS=["Evento","Evento","Evento","Evento","Evento","Evento","Evento","Reunión","Curso","Curso","Curso","Curso","Curso","Curso","Curso","Taller","Taller","Programa","Programa","Campaña","Estudio","Estudio","Asistencia técnica","Servicio","Servicio","Servicio","Servicio","Evento","Programa","Evento","Evento","Evento","Evento","Evento","Programa","Evento","Reunión","Campaña","Exhibición","Informe","Evento","Estudio","Estudio","Asistencia técnica","Asistencia técnica","Asistencia técnica","Colección","Colección","Colección","Pasantía","Estudio","Estudio","Curso","Curso","Curso","Curso","Asistencia técnica","Colección","Certificación","Programa","Programa","Programa","Seminario","Seminario","Seminario","Seminario","Estudio","Estudio","Estudio","Estudio","Asistencia técnica","Servicio","Colección","Colección","Colección","Laboratorio","Implementación","Asistencia técnica","Evento","Estudio","Programa","Evento","Estudio","Servicio","Informe","Informe","Informe","Evento","Evento","Evento","Estudio","Curso","Curso","Curso","Taller","Programa","Taller","Campaña","Programa","Implementación","Implementación","Taller","Taller","Taller","Taller","Taller","Programa","Taller","Taller","Concurso","Campaña","Campaña","Evento","Evento","Evento","Evento","Informe","Campaña","Asistencia técnica","Asistencia técnica","Asistencia técnica","Colección","Colección","Asistencia técnica","Asistencia técnica","Pasantía","Asistencia técnica","Asistencia técnica","Colección","Colección","Colección","Pasantía","Pasantía","Programa","Programa","Campaña","Programa","Taller","Asistencia técnica","Asistencia técnica","Asistencia técnica","Asistencia técnica","Asistencia técnica","Colección","Servicio","Colección","Pasantía","Servicio","Programa","Programa","Programa","Programa","Programa","Programa","Asistencia técnica","Asistencia técnica","Asistencia técnica","Asistencia técnica","Laboratorio","Asistencia técnica","Pasantía","Campaña","Programa","Programa","Programa","Programa","Programa","Programa","Programa","Taller","Taller","Campaña","Campaña","Asistencia técnica","Asistencia técnica","Colección","Colección","Colección","Pasantía","Asistencia técnica","Asistencia técnica","Colección","Colección","Colección","Pasantía","Asistencia técnica","Asistencia técnica","Colección","Colección","Pasantía","Pasantía","Programa","Asistencia técnica","Asistencia técnica","Asistencia técnica","Asistencia técnica","Laboratorio","Asistencia técnica","Colección","Pasantía"];
+ACTS.forEach((a,i)=>{if(UNITS[i])a.u=UNITS[i];});
+
+// ── STATIC DATA ──
+const D = {
+  cites:['CITE AREQUIPA','CITE AYACUCHO','CITE CAMÉLIDOS SUDAMERICANOS','CITE CHULUCANAS','CITE HUANCAVELICA','CITE SIPÁN','CITE UCAYALI','CITE UTCUMBAMBA'],
+  short:['Arequipa','Ayacucho','Camélidos','Chulucanas','Huancavelica','Sipán','Ucayali','Utcumbamba'],
+  colors:['#1557a0','#d63031','#8e44ad','#c0392b','#1d8348','#d68910','#6d4c41','#154360'],
+  tipo:['Privado','Público','Privado','Privado','Privado','Público','Público','Privado'],
+  act:[144,72,284,87,84,99,79,123],
+  aten:[1748,1050,2796,880,2495,2284,803,8546],
+  benef:[1313,1050,2794,801,700,802,557,1200],
+  presTec:[831450.51,366666,852634.52,715335,656138.55,366171,366666,839300],
+  gop:[210630,235272.49,253246.83,220410.76,215806.37,259399.65,233345.95,224047.46],
+  presTotal:[1042080.51,601938.49,1105881.35,935745.76,871944.92,625570.65,600011.95,1063347.46],
+  months:['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
+  mAct:{
+    'CITE AREQUIPA':[1,2,7,7,26,24,18,15,20,8,8,8],
+    'CITE AYACUCHO':[0,1,7,5,13,7,13,7,8,4,3,4],
+    'CITE CAMÉLIDOS SUDAMERICANOS':[0,1,4,6,66,48,20,30,54,12,5,38],
+    'CITE CHULUCANAS':[2,4,5,7,9,7,12,12,6,13,6,4],
+    'CITE HUANCAVELICA':[1,2,4,11,18,10,7,7,8,7,4,5],
+    'CITE SIPÁN':[2,3,11,7,16,21,12,5,11,4,1,6],
+    'CITE UCAYALI':[1,1,8,3,10,12,8,7,9,8,6,6],
+    'CITE UTCUMBAMBA':[0,0,2,4,12,16,17,18,24,11,7,12]
+  },
+  mAten:{
+    'CITE AREQUIPA':[10,16,53,65,395,273,230,185,293,70,95,63],
+    'CITE AYACUCHO':[0,0,132,75,170,115,195,50,135,38,35,105],
+    'CITE CAMÉLIDOS SUDAMERICANOS':[0,1,27,34,301,359,544,579,364,303,70,214],
+    'CITE CHULUCANAS':[16,17,17,88,152,57,164,86,67,152,47,17],
+    'CITE HUANCAVELICA':[5,13,179,360,274,489,42,262,488,325,33,25],
+    'CITE SIPÁN':[14,170,440,185,305,325,210,115,235,85,50,150],
+    'CITE UCAYALI':[0,15,98,0,122,210,52,50,84,100,60,12],
+    'CITE UTCUMBAMBA':[0,0,90,290,720,1399,895,1125,1762,590,500,1175]
+  },
+  mPres:{
+    'CITE AREQUIPA':[5800,9000,9000,24471,142890,218940,108900,68650,100350,77100,34000,32350],
+    'CITE AYACUCHO':[0,0,6500,49000,94666,25500,81250,33250,19000,6500,12500,38500],
+    'CITE CAMÉLIDOS SUDAMERICANOS':[0,24575,9630,19360,93132,188620,172866,119900,85400,78612,17560,42980],
+    'CITE CHULUCANAS':[3630,8760,15160,40160,84460,142710,105495,116760,82870,88910,15760,10660],
+    'CITE HUANCAVELICA':[6500,16740,21400,134280,80075,135710,62000,57284,32600,37750,12400,59400],
+    'CITE SIPÁN':[0,0,20000,88602,92104,62300,19500,38300,7200,38166,0,0],
+    'CITE UCAYALI':[0,0,8000,8000,45600,170700,41366,10500,45500,10500,10500,16000],
+    'CITE UTCUMBAMBA':[0,0,10200,16100,58100,128500,106400,135500,165100,63800,68100,87500]
+  },
+  mGop:{
+    'CITE AREQUIPA':[1463,2925,10239,10239,38030,35105,26329,21941,29254,11702,11702,11702],
+    'CITE AYACUCHO':[0,3268,22874,16338,42480,22874,42480,22874,26141,13071,9803,13071],
+    'CITE CAMÉLIDOS SUDAMERICANOS':[0,892,3567,5350,58853,42802,17834,26751,48153,10701,4459,33885],
+    'CITE CHULUCANAS':[5067,10134,12667,17734,22801,17734,30401,30401,15201,32935,15201,10134],
+    'CITE HUANCAVELICA':[2569,5138,10276,28260,46244,25691,17984,17984,20553,17984,10276,12846],
+    'CITE SIPÁN':[5240,7861,28822,18341,41923,55024,31442,13101,28822,10481,2620,15721],
+    'CITE UCAYALI':[2954,2954,23630,8861,29537,35445,23630,20676,26584,23630,17722,17722],
+    'CITE UTCUMBAMBA':[0,0,3643,7286,21858,29144,30966,32787,43717,20037,12751,21858]
+  },
+  modal:{
+    'CITE AREQUIPA':{art:16,cap:79,dif:15,idi:2,tt:32},
+    'CITE AYACUCHO':{art:19,cap:32,dif:11,idi:2,tt:8},
+    'CITE CAMÉLIDOS SUDAMERICANOS':{art:37,cap:140,dif:73,idi:4,tt:30},
+    'CITE CHULUCANAS':{art:29,cap:6,dif:20,idi:3,tt:29},
+    'CITE HUANCAVELICA':{art:25,cap:14,dif:6,idi:3,tt:36},
+    'CITE SIPÁN':{art:24,cap:10,dif:24,idi:1,tt:40},
+    'CITE UCAYALI':{art:34,cap:21,dif:9,idi:1,tt:14},
+    'CITE UTCUMBAMBA':{art:43,cap:32,dif:21,idi:1,tt:26}
+  },
+  fin:{
+    'CITE AREQUIPA':{'Privado-Subvención':141,'Privado-RP':3},
+    'CITE AYACUCHO':{'Público-RO':72},
+    'CITE CAMÉLIDOS SUDAMERICANOS':{'Privado-Subvención':284},
+    'CITE CHULUCANAS':{'Privado-Subvención':30},
+    'CITE HUANCAVELICA':{'Privado-Subvención':81,'Privado-RP':3},
+    'CITE SIPÁN':{'Público-RE':51,'Público-RDR':48},
+    'CITE UCAYALI':{'Público-RO':78,'Público-RDR':1},
+    'CITE UTCUMBAMBA':{'Privado-Subvención':121}
+  },
+  finColors:{'Privado-Subvención':'#1557a0','Privado-RP':'#2e7dd4','Público-RO':'#1d8348','Público-RE':'#4a8c1c','Público-RDR':'#d68910'},
+  // Region acts from "Actividades por región" — validated against Actividades column
+  // Totals per CITE match exactly: AREQUIPA=144, AYACUCHO=72, CAMÉLIDOS=284,
+  // CHULUCANAS=87, HUANCAVELICA=84, SIPÁN=99, UCAYALI=79, UTCUMBAMBA=123
+  regionActs:{
+    'CITE AREQUIPA':{'AREQUIPA':139,'LIMA':5},
+    'CITE AYACUCHO':{'AYACUCHO':72},
+    'CITE CAMÉLIDOS SUDAMERICANOS':{'PUNO':273,'LIMA':10,'AREQUIPA':1},
+    'CITE CHULUCANAS':{'PIURA':87},
+    'CITE HUANCAVELICA':{'HUANCAVELICA':84},
+    'CITE SIPÁN':{'LAMBAYEQUE':99},
+    'CITE UCAYALI':{'UCAYALI':79},
+    'CITE UTCUMBAMBA':{'AMAZONAS':123}
+  },
+  // Dept name → canonical region mapping (for TopoJSON)
+  deptToRegion:{
+    'Amazonas':'AMAZONAS','Áncash':'ANCASH','Ancash':'ANCASH',
+    'Arequipa':'AREQUIPA','Ayacucho':'AYACUCHO','Cajamarca':'CAJAMARCA',
+    'Callao':'CALLAO','Cusco':'CUSCO','Huancavelica':'HUANCAVELICA',
+    'Huánuco':'HUANUCO','Ica':'ICA','Junín':'JUNIN','Junin':'JUNIN',
+    'La Libertad':'LA LIBERTAD','Lambayeque':'LAMBAYEQUE',
+    'Lima':'LIMA','Lima Province':'LIMA','Loreto':'LORETO',
+    'Madre de Dios':'MADRE DE DIOS','Moquegua':'MOQUEGUA','Pasco':'PASCO',
+    'Piura':'PIURA','Puno':'PUNO','San Martín':'SAN MARTIN',
+    'San Martin':'SAN MARTIN','Tacna':'TACNA','Tumbes':'TUMBES','Ucayali':'UCAYALI'
+  }
+};
+
+// ── STATE ──
+let selCite='ALL', selModal='ALL', activeReport='resumen';
+let charts={}, mapSvg=null, mapFeatures=null, mapPath=null;
+
+// ── HELPERS ──
+const fmt=n=>Math.round(n).toLocaleString('es-PE');
+const fmtM=n=>n>=1e6?'S/ '+(n/1e6).toFixed(2)+'M':'S/ '+Math.round(n/1000)+'K';
+function getActiveCites(){return selCite==='ALL'?D.cites:[selCite];}
+function getModalFactor(c){
+  if(selModal==='ALL')return 1;
+  const m=D.modal[c],total=(m.art+m.cap+m.dif+m.idi+m.tt)||1;
+  const sel=selModal==='art'?m.art:selModal==='cap'?m.cap:selModal==='dif'?m.dif:selModal==='idi'?m.idi:m.tt;
+  return sel/total;
+}
+function getMonthly(cites,field){
+  const r=new Array(12).fill(0);
+  cites.forEach(c=>{const arr=D[field][c];if(arr)arr.forEach((v,i)=>r[i]+=v);});
+  return r;
+}
+
+// ── CHIPS ──
+function initChips(){
+  const cc=document.getElementById('chips-cite');
+  const allCites=['ALL',...D.cites], cLabels=['Todos',...D.short];
+  allCites.forEach((c,i)=>{
+    const el=document.createElement('span');
+    el.className='chip'+(c==='ALL'?' active':'');
+    el.textContent=cLabels[i];
+    el.dataset.cite=c;
+    el.onclick=function(){setCite(this.dataset.cite,this);};
+    cc.appendChild(el);
+  });
+  const cm=document.getElementById('chips-modal');
+  [{k:'ALL',l:'Todas'},{k:'art',l:'Articulación'},{k:'cap',l:'Capacitación'},{k:'dif',l:'Difusión'},{k:'idi',l:'I + D + i'},{k:'tt',l:'Trans. Tecnológica'}].forEach(m=>{
+    const el=document.createElement('span');
+    el.className='chip chip-modal'+(m.k==='ALL'?' active':'');
+    el.textContent=m.l;
+    el.dataset.mod=m.k;
+    el.onclick=function(){setModal(this.dataset.mod,this);};
+    cm.appendChild(el);
+  });
+}
+function setCite(c,el){selCite=c;document.querySelectorAll('#chips-cite .chip').forEach(x=>x.classList.remove('active'));el.classList.add('active');updateAll();}
+function setModal(m,el){
+  selModal=m;
+  document.querySelectorAll('#chips-modal .chip').forEach(x=>{x.className='chip chip-modal';});
+  el.classList.add('active');
+  if(m!=='ALL')el.classList.add('active-'+m);
+  updateAll();
+}
+
+// ── KPIs ──
+function updateKPIs(cites){
+  let act=0,aten=0,benef=0,pres=0,gop=0,tot=0;
+  cites.forEach(c=>{
+    const i=D.cites.indexOf(c),f=getModalFactor(c);
+    act+=Math.round(D.act[i]*f); aten+=Math.round(D.aten[i]*f); benef+=Math.round(D.benef[i]*f);
+    pres+=D.presTec[i]*f; gop+=D.gop[i]*f; tot+=D.presTotal[i]*f;
+  });
+  document.getElementById('kpi-act').textContent=fmt(act);
+  document.getElementById('kpi-aten').textContent=fmt(aten);
+  document.getElementById('kpi-benef').textContent=fmt(benef);
+  document.getElementById('kpi-pres').textContent=fmtM(pres);
+  document.getElementById('kpi-gop').textContent=fmtM(gop);
+  document.getElementById('kpi-total').textContent=fmtM(tot);
+  const lbl=cites.length===8?'8 CITEs · 2026':cites.length+' CITE seleccionado';
+  ['kpi-act-s','kpi-aten-s','kpi-benef-s','kpi-pres-s','kpi-gop-s','kpi-total-s'].forEach(id=>document.getElementById(id).textContent=lbl);
+  const mLabel=selModal==='ALL'?'todas las modalidades':{art:'Articulación',cap:'Capacitación',dif:'Difusión',idi:'I+D+i',tt:'Trans. Tecnológica'}[selModal];
+  document.getElementById('fb-info').textContent=(cites.length===8?'Todos los CITEs':selCite.replace('CITE ',''))+' · '+mLabel+' · '+fmt(act)+' actividades';
+}
+
+// ── MONTHLY CHARTS ──
+function updateMonthly(cites){
+  const act=getMonthly(cites,'mAct');
+  const aten=getMonthly(cites,'mAten');
+  const pres=getMonthly(cites,'mPres');
+  const gop=getMonthly(cites,'mGop');
+  const presTotal=pres.map((v,i)=>v+(gop[i]||0));
+  if(selModal!=='ALL'){
+    const f=cites.reduce((s,c)=>s+getModalFactor(c),0)/cites.length;
+    act.forEach((_,i)=>act[i]=Math.round(act[i]*f));
+    aten.forEach((_,i)=>aten[i]=Math.round(aten[i]*f));
+  }
+  const peakAct=Math.max(...act),peakM=D.months[act.indexOf(peakAct)];
+  document.getElementById('cs-monthly').textContent=`Mayor actividad en ${peakM} (${peakAct} actividades) — mayo a septiembre concentra la mayor carga del año`;
+  if(charts.mAct)charts.mAct.destroy();
+  charts.mAct=new Chart(document.getElementById('ch-monthly-act'),{
+    type:'bar',
+    data:{labels:D.months,datasets:[
+      {label:'Actividades',data:act,backgroundColor:'rgba(21,87,160,0.72)',borderRadius:3,yAxisID:'y',order:2},
+      {label:'Atenciones',data:aten,type:'line',borderColor:'#4a8c1c',backgroundColor:'rgba(74,140,28,0.1)',tension:0.4,fill:true,pointRadius:4,pointBackgroundColor:'#4a8c1c',yAxisID:'y2',order:1}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString('es-PE')}`}}},
+      scales:{
+        y:{position:'left',grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:10}},title:{display:true,text:'Actividades',font:{size:9},color:'#1557a0'}},
+        y2:{position:'right',grid:{display:false},ticks:{font:{size:10},callback:v=>v>=1000?(v/1000).toFixed(1)+'k':v},title:{display:true,text:'Atenciones',font:{size:9},color:'#4a8c1c'}},
+        x:{grid:{display:false},ticks:{autoSkip:false,font:{size:10}}}
+      }
+    }
+  });
+  let acum=0;
+  const presAcum=presTotal.map(v=>{acum+=v;return Math.round(acum/1000);});
+  const peakPres=Math.max(...presTotal),peakPM=D.months[presTotal.indexOf(peakPres)];
+  document.getElementById('cs-pres').textContent=`Mayor inversión en ${peakPM}: S/ ${Math.round(peakPres/1000)}K — acumulado anual S/ ${Math.round(acum/1000)}K`;
+  if(charts.mPres)charts.mPres.destroy();
+  charts.mPres=new Chart(document.getElementById('ch-monthly-pres'),{
+    type:'bar',
+    data:{labels:D.months,datasets:[
+      {label:'Presupuesto',data:presTotal.map(v=>Math.round(v/1000)),backgroundColor:'rgba(200,114,14,0.72)',borderRadius:3,yAxisID:'y'},
+      {label:'Acumulado',data:presAcum,type:'line',borderColor:'rgba(122,66,0,0.55)',backgroundColor:'transparent',tension:0.4,pointRadius:2,borderDash:[4,3],yAxisID:'y2'}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        y:{ticks:{callback:v=>`S/${v}K`,font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}},
+        y2:{position:'right',ticks:{callback:v=>`${v}K`,font:{size:9}},grid:{display:false}},
+        x:{grid:{display:false},ticks:{autoSkip:false,font:{size:10}}}
+      }
+    }
+  });
+}
+
+// ── PRESUPUESTO STACKED ──
+function updatePresStk(cites){
+  const data=cites.map(c=>{
+    const i=D.cites.indexOf(c),f=getModalFactor(c);
+    return {name:D.short[i],tec:Math.round(D.presTec[i]*f/1000),gop:Math.round(D.gop[i]*f/1000),tot:Math.round(D.presTotal[i]*f/1000)};
+  }).sort((a,b)=>b.tot-a.tot);
+  if(charts.presStk)charts.presStk.destroy();
+  Chart.register(ChartDataLabels);
+  charts.presStk=new Chart(document.getElementById('ch-pres-stk'),{
+    type:'bar',
+    data:{labels:data.map(d=>d.name),datasets:[
+      {label:'Act. técnicas',data:data.map(d=>d.tec),backgroundColor:'rgba(21,87,160,0.78)',borderRadius:3},
+      {label:'Gastos op.',data:data.map(d=>d.gop),backgroundColor:'rgba(200,114,14,0.72)',borderRadius:3}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:ctx=>{
+          const d=ctx.chart.data.datasets;
+          const tec=d[0].data[ctx.dataIndex],gop=d[1].data[ctx.dataIndex];
+          const tot=tec+gop,pct=tot?Math.round(ctx.parsed.x/tot*100):0;
+          return `${ctx.dataset.label}: S/ ${ctx.parsed.x}K (${pct}%)`;
+        }}},
+        datalabels:{display:true,color:'#fff',font:{size:9,weight:'600'},
+          formatter:(v,ctx)=>{
+            const d=ctx.chart.data.datasets;
+            const tec=d[0].data[ctx.dataIndex],gop=d[1].data[ctx.dataIndex];
+            const tot=tec+gop,pct=tot?Math.round(v/tot*100):0;
+            return v>50?`${pct}%`:'';
+          }
+        }
+      },
+      scales:{
+        x:{stacked:true,ticks:{callback:v=>`S/${v}K`,font:{size:10}},grid:{color:'rgba(0,0,0,0.04)'}},
+        y:{stacked:true,grid:{display:false},ticks:{font:{size:11}}}
+      }
+    }
+  });
+  Chart.unregister(ChartDataLabels);
+}
+
+// ── EFICIENCIA ──
+function updateEff(cites){
+  const data=cites.map(c=>{
+    const i=D.cites.indexOf(c),f=getModalFactor(c);
+    const aten=Math.max(1,Math.round(D.aten[i]*f));
+    return {name:D.short[i],color:D.colors[i],costo:Math.round(D.presTotal[i]*f/aten),aten};
+  }).sort((a,b)=>a.costo-b.costo);
+  const mx=Math.max(...data.map(d=>d.costo));
+  document.getElementById('eff-bars').innerHTML=data.map(d=>
+    `<div class="brow"><div class="blbl">${d.name}</div>
+    <div class="btrk"><div class="bfil" style="width:${Math.round(d.costo/mx*100)}%;background:${d.color}"></div></div>
+    <div class="bval">S/ ${fmt(d.costo)} <span style="opacity:.55">(${fmt(d.aten)} aten.)</span></div></div>`
+  ).join('');
+}
+
+// ── MODALIDADES ──
+function updateModal(cites){
+  const totals={art:0,cap:0,dif:0,idi:0,tt:0};
+  cites.forEach(c=>{const m=D.modal[c],f=getModalFactor(c);Object.keys(totals).forEach(k=>totals[k]+=Math.round(m[k]*f));});
+  const order=[{k:'cap',l:'Capacitación',c:'rgba(46,125,212,0.78)'},{k:'art',l:'Articulación',c:'rgba(21,87,160,0.78)'},
+    {k:'tt',l:'Trans. Tecnológica',c:'rgba(86,48,168,0.72)'},{k:'dif',l:'Difusión',c:'rgba(29,131,72,0.72)'},{k:'idi',l:'I + D + i',c:'rgba(200,114,14,0.78)'}];
+  const sorted=[...order].sort((a,b)=>totals[b.k]-totals[a.k]);
+  const total=Object.values(totals).reduce((s,v)=>s+v,0)||1;
+  document.getElementById('cs-modal').textContent=`${sorted[0].l} concentra la mayor cantidad de actividades (${Math.round(totals[sorted[0].k]/total*100)}%)`;
+  if(charts.modal)charts.modal.destroy();
+  charts.modal=new Chart(document.getElementById('ch-modal'),{
+    type:'bar',
+    data:{labels:sorted.map(s=>s.l),datasets:[{data:sorted.map(s=>totals[s.k]),backgroundColor:sorted.map(s=>s.c),borderRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.parsed.x} actividades (${Math.round(ctx.parsed.x/total*100)}%)`}}},
+      scales:{x:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:10}}},y:{grid:{display:false},ticks:{font:{size:11}}}}
+    }
+  });
+}
+
+// ── FINANCIAMIENTO ──
+function updateFin(cites){
+  const totals={};
+  cites.forEach(c=>{const f=getModalFactor(c);Object.entries(D.fin[c]||{}).forEach(([k,v])=>{totals[k]=(totals[k]||0)+Math.round(v*f);});});
+  const keys=Object.keys(totals).filter(k=>totals[k]>0);
+  const vals=keys.map(k=>totals[k]);
+  const colors=keys.map(k=>D.finColors[k]||'#888');
+  const total=vals.reduce((s,v)=>s+v,0)||1;
+  document.getElementById('legend-fin').innerHTML=keys.map((k,i)=>`<div class="li"><div class="ld" style="background:${colors[i]}"></div>${k} (${Math.round(vals[i]/total*100)}%)</div>`).join('');
+  document.getElementById('cs-fin').textContent=keys.length===1?`${keys[0]} es la única fuente registrada`:`${keys[0]}: ${Math.round(vals[0]/total*100)}% · ${keys.length} fuentes`;
+  if(charts.fin)charts.fin.destroy();
+  charts.fin=new Chart(document.getElementById('ch-fin'),{
+    type:'doughnut',
+    data:{labels:keys,datasets:[{data:vals,backgroundColor:colors,borderWidth:2,borderColor:'white'}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'55%',
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${ctx.parsed} act. (${Math.round(ctx.parsed/total*100)}%)`}}}
+    }
+  });
+}
+
+// ── MAP ──
+function initMap(){
+  const container=document.getElementById('d3map');
+  const W=container.clientWidth||440,H=Math.round(W*1.08);
+  mapSvg=d3.select('#d3map').append('svg').attr('viewBox',`0 0 ${W} ${H}`).attr('width','100%').style('display','block');
+  const proj=d3.geoMercator().center([-75.5,-9.2]).scale(W*2.35).translate([W/2,H/2]);
+  mapPath=d3.geoPath().projection(proj);
+  const tip=d3.select('body').append('div')
+    .style('position','fixed').style('background','rgba(13,27,46,0.94)').style('color','#fff')
+    .style('padding','7px 11px').style('border-radius','7px').style('font-size','11px')
+    .style('pointer-events','none').style('display','none').style('z-index','9999').style('max-width','240px').style('line-height','1.5');
+  d3.json('https://cdn.jsdelivr.net/npm/datamaps@0.5.10/src/js/data/per.topo.json').then(topo=>{
+    const key=Object.keys(topo.objects)[0];
+    mapFeatures=topojson.feature(topo,topo.objects[key]).features;
+    // Fix TopoJSON bug: feature named 'Callao' at ~lon=-70,lat=-16 is actually PUNO
+    // Real Callao is ~lon=-77, lat=-12. Detect by centroid longitude.
+    const proj0=d3.geoMercator().center([-75.5,-9.2]).scale(100).translate([50,50]);
+    const path0=d3.geoPath().projection(proj0);
+    mapFeatures.forEach(f=>{
+      if(f.properties.name==='Callao'){
+        const c=path0.centroid(f);
+        // Project back to geo coords to check longitude
+        const geo=proj0.invert([c[0],c[1]]);
+        if(geo&&geo[0]>-73){
+          // East of -73° → this is Puno (southeast Peru, ~lon=-70)
+          f.properties.name='Puno';
+          f.properties._fixed=true;
+          f.properties._label='Puno (antes: Callao en TopoJSON)';
+        }
+      }
+      // Also fix 'Lima Province' → 'Lima' (the region, not the metro)
+      if(f.properties.name==='Lima Province') f.properties.name='Lima';
+    });
+    mapSvg.selectAll('path.dept').data(mapFeatures).join('path').attr('class','dept')
+      .attr('d',mapPath).attr('stroke','#fff').attr('stroke-width',0.5)
+      .on('mouseover',function(event,d){
+        const nm=d.properties.name||'';
+        const displayNm=d.properties._fixed?'Puno':nm;
+        const regionKey=D.deptToRegion[displayNm]||displayNm.toUpperCase();
+        const info=getCiteInfoForRegion(regionKey);
+        if(info.length){
+          const totalActs=info.reduce((s,x)=>s+x.acts,0);
+          const rows=info.map(x=>`<span style="color:${x.color}">&#9679;</span> ${x.cite}: <strong>${x.acts}</strong> act.`).join('<br>');
+          tip.style('display','block').html(`<strong>${displayNm}</strong><div style="font-size:10px;opacity:.65;margin-bottom:4px">Región · Actividades por región</div>${rows}<div style="margin-top:5px;border-top:1px solid rgba(255,255,255,0.2);padding-top:4px;font-size:11px">Total: <strong>${totalActs}</strong> actividades</div>`);
+        } else {
+          tip.style('display','block').html('<strong>'+displayNm+'</strong><br><span style="opacity:.55;font-size:10px">Sin actividades programadas</span>');
+        }
+        d3.select(this).attr('stroke','#C8720E').attr('stroke-width',1.5);
+      })
+      .on('mousemove',event=>tip.style('left',(event.clientX+12)+'px').style('top',(event.clientY-30)+'px'))
+      .on('mouseout',function(){tip.style('display','none');d3.select(this).attr('stroke','#fff').attr('stroke-width',0.5);});
+    updateMapFill();
+  }).catch(()=>renderMapFallback());
+}
+
+function getCiteInfoForRegion(regionKey){
+  const cites=getActiveCites();
+  const result=[];
+  cites.forEach(c=>{
+    const ra=D.regionActs[c]||{};
+    let acts=ra[regionKey]||0;
+    if(!acts){
+      Object.entries(ra).forEach(([k,v])=>{if(k.toUpperCase()===regionKey.toUpperCase())acts+=v;});
+    }
+    if(acts>0)result.push({cite:c.replace('CITE ',''),acts,color:D.colors[D.cites.indexOf(c)]});
+  });
+  return result;
+}
+
+function getMaxActsForRegion(regionKey,cites){
+  return cites.reduce((s,c)=>{
+    const ra=D.regionActs[c]||{};
+    let acts=ra[regionKey]||0;
+    if(!acts)Object.entries(ra).forEach(([k,v])=>{if(k.toUpperCase()===regionKey.toUpperCase())acts=v;});
+    return s+acts;
+  },0);
+}
+
+function updateMapFill(){
+  if(!mapSvg||!mapFeatures)return;
+  const cites=getActiveCites();
+  // Collect all region totals across active cites
+  const allRegionTotals={};
+  cites.forEach(c=>{Object.entries(D.regionActs[c]||{}).forEach(([r,v])=>{allRegionTotals[r]=(allRegionTotals[r]||0)+v;});});
+  const maxActs=Math.max(1,...Object.values(allRegionTotals));
+
+  mapSvg.selectAll('path.dept').each(function(d){
+    const nm=d.properties.name||'';
+    // Use corrected name (Puno was mislabeled as Callao in TopoJSON)
+    const displayNm=d.properties._fixed?'Puno':nm;
+    const regionKey=D.deptToRegion[displayNm]||displayNm.toUpperCase();
+    const info=getCiteInfoForRegion(regionKey);
+    let fillColor='#e8e6de';
+    if(info.length){
+      // Use color of primary CITE (most activities in this region)
+      const primary=info.sort((a,b)=>b.acts-a.acts)[0];
+      const totalActs=info.reduce((s,x)=>s+x.acts,0);
+      const opacity=0.25+0.75*(totalActs/maxActs);
+      const base=d3.color(primary.color);
+      if(base){base.opacity=opacity;fillColor=base.toString();}
+    }
+    d3.select(this).attr('fill',fillColor);
+  });
+
+  // Labels
+  mapSvg.selectAll('text.dept-lbl').remove();
+  if(mapFeatures){
+    mapFeatures.forEach(d=>{
+      const nm=d.properties.name||'';
+      const regionKey=D.deptToRegion[nm]||nm.toUpperCase();
+      const info=getCiteInfoForRegion(regionKey);
+      if(!info.length)return;
+      const centroid=mapPath.centroid(d);
+      if(!centroid||isNaN(centroid[0])||isNaN(centroid[1]))return;
+      const corrName=d.properties._fixed?'Puno':nm;
+      const short=corrName.length>8?corrName.substring(0,8):corrName;
+      const totalActs=info.reduce((s,x)=>s+x.acts,0);
+      // Region name label
+      mapSvg.append('text').attr('class','dept-lbl')
+        .attr('x',centroid[0]).attr('y',centroid[1]-5)
+        .attr('text-anchor','middle')
+        .style('font-size','7.5px').style('font-weight','700').style('fill','white')
+        .style('pointer-events','none').style('text-shadow','0 1px 3px rgba(0,0,0,0.9)')
+        .text(short);
+      // Activity count label
+      mapSvg.append('text').attr('class','dept-lbl')
+        .attr('x',centroid[0]).attr('y',centroid[1]+6)
+        .attr('text-anchor','middle')
+        .style('font-size','7px').style('font-weight','600').style('fill','rgba(255,255,255,0.9)')
+        .style('pointer-events','none').style('text-shadow','0 1px 2px rgba(0,0,0,0.9)')
+        .text(totalActs+' act.');
+    });
+  }
+}
+
+function renderMapFallback(){
+  const container=document.getElementById('d3map');
+  const W=container.clientWidth||440,H=Math.round(W*1.08);
+  if(!mapSvg)mapSvg=d3.select('#d3map').append('svg').attr('viewBox',`0 0 ${W} ${H}`).attr('width','100%');
+  mapSvg.selectAll('*').remove();
+  mapSvg.append('rect').attr('width',W).attr('height',H).attr('fill','#f0efe9').attr('rx',8);
+  mapSvg.append('text').attr('x',W/2).attr('y',22).attr('text-anchor','middle').style('font-size','10px').style('fill','#888').text('Perú — Actividades por región');
+  const pts=[
+    {n:'Amazonas',x:.58,y:.12,c:'CITE UTCUMBAMBA'},{n:'Lambayeque',x:.27,y:.23,c:'CITE SIPÁN'},
+    {n:'Piura',x:.22,y:.13,c:'CITE CHULUCANAS'},{n:'Ucayali',x:.65,y:.5,c:'CITE UCAYALI'},
+    {n:'Ayacucho',x:.47,y:.62,c:'CITE AYACUCHO'},{n:'Huancavelica',x:.37,y:.55,c:'CITE HUANCAVELICA'},
+    {n:'Arequipa',x:.36,y:.78,c:'CITE AREQUIPA'},{n:'Puno',x:.55,y:.82,c:'CITE CAMÉLIDOS SUDAMERICANOS'}
+  ];
+  const activeCites=getActiveCites();
+  const mxActs=Math.max(...D.cites.map(c=>Object.values(D.regionActs[c]||{}).reduce((s,v)=>s+v,0)));
+  pts.filter(p=>activeCites.includes(p.c)).forEach(p=>{
+    const i=D.cites.indexOf(p.c);
+    const totalActs=Object.values(D.regionActs[p.c]||{}).reduce((s,v)=>s+v,0);
+    const r=12+22*(totalActs/mxActs);
+    const x=p.x*W,y=p.y*H;
+    mapSvg.append('circle').attr('cx',x).attr('cy',y).attr('r',r).attr('fill',D.colors[i]+'BB').attr('stroke',D.colors[i]).attr('stroke-width',1.5);
+    mapSvg.append('text').attr('x',x).attr('y',y-2).attr('text-anchor','middle').style('font-size','8px').style('font-weight','700').style('fill','white').text(p.n.substring(0,7));
+    mapSvg.append('text').attr('x',x).attr('y',y+9).attr('text-anchor','middle').style('font-size','7px').style('fill','rgba(255,255,255,.8)').text(`${totalActs} act.`);
+  });
+}
+
+// ── PANEL ──
+function openPanel(){document.getElementById('panel-act').classList.add('open');renderPanel();}
+function closePanel(){document.getElementById('panel-act').classList.remove('open');}
+function renderPanel(){
+  const q=document.getElementById('panel-search').value.toLowerCase();
+  const sort=document.getElementById('panel-sort').value;
+  const pmod=document.getElementById('panel-mod').value;
+  const cites=getActiveCites();
+  let items=ACTS.filter(a=>{
+    if(!cites.includes(a.c))return false;
+    if(pmod!=='ALL'&&a.m!==pmod)return false;
+    if(q&&!a.n.toLowerCase().includes(q)&&!a.o.toLowerCase().includes(q))return false;
+    return true;
+  });
+  if(sort==='pres_desc')items.sort((a,b)=>b.p-a.p);
+  else if(sort==='act_desc')items.sort((a,b)=>b.a-a.a);
+  else if(sort==='aten_desc')items.sort((a,b)=>b.at-a.at);
+  else items.sort((a,b)=>a.n.localeCompare(b.n));
+  document.getElementById('panel-count').textContent=`${items.length} actividades`;
+  const mColors={'Articulación':'#1557a0','Capacitación':'#2e7dd4','Difusión de Información':'#1d8348','I + D + i':'#c8720e','Transferencia Tecnológica':'#5630a8'};
+  const mBg={'Articulación':'#deeaf8','Capacitación':'#e8f3fc','Difusión de Información':'#e3f0d4','I + D + i':'#fdf0dc','Transferencia Tecnológica':'#ece8f9'};
+  document.getElementById('panel-body').innerHTML=items.slice(0,80).map(a=>{
+    const mc=mColors[a.m]||'#888',mb=mBg[a.m]||'#f0f0f0';
+    const cite=a.c.replace('CITE ','');
+    return `<div class="act-card">
+      <span class="act-badge" style="background:${mb};color:${mc}">${a.m}</span>
+      <span class="act-badge" style="background:#f0efe9;color:#595850;margin-left:4px">${cite}</span>
+      <div class="act-title">${a.n||'Sin nombre'}</div>
+      <div class="act-tipo">${a.t||''}</div>
+      <div class="act-obj">${a.o||''}</div>
+      <div class="act-meta">
+        <span class="act-tag">${a.a} act.</span>
+        <span class="act-tag">${fmt(a.at)} aten.</span>
+        <span class="act-tag">S/ ${fmt(a.p)}</span>
+        ${a.u?`<span class="act-tag blue">Unidad: ${a.u}</span>`:''}
+      </div>
+    </div>`;
+  }).join('')+(items.length>80?`<div style="text-align:center;padding:12px;font-size:11px;color:#888">Mostrando 80 de ${items.length} actividades</div>`:'');
+}
+
+// ── REPORT ──
+function selReport(type){
+  activeReport=type;
+  document.querySelectorAll('.ropt').forEach(el=>el.classList.remove('sel'));
+  document.getElementById('ropt-'+type).classList.add('sel');
+}
+function openReport(){document.getElementById('modal-report').classList.add('open');}
+function closeReport(){document.getElementById('modal-report').classList.remove('open');}
+
+function generateExcel(){
+  const cites=getActiveCites();
+  let rows=[],fn='';
+  if(activeReport==='resumen'||activeReport==='financ'){
+    rows=[['CITE','Tipo','Actividades','Atenciones','Beneficiarios','Pres. Técnico (S/)','Gastos Op. (S/)','Total (S/)']];
+    cites.forEach(c=>{const i=D.cites.indexOf(c);rows.push([c,D.tipo[i],D.act[i],D.aten[i],D.benef[i],D.presTec[i],D.gop[i],D.presTotal[i]]);});
+    fn='PAA2026_resumen.xlsx';
+  } else if(activeReport==='detalle'){
+    rows=[['CITE','Modalidad','Tipo de actividad','Nombre','Objetivo','Actividades','Atenciones','Presupuesto (S/)','Unidad','Financiamiento']];
+    ACTS.filter(a=>cites.includes(a.c)).forEach(a=>{rows.push([a.c,a.m,a.t,a.n,a.o,a.a,a.at,a.p,a.u||'',a.f||'']);});
+    fn='PAA2026_actividades.xlsx';
+  } else {
+    rows=[['CITE','Mes','Actividades','Atenciones','Presupuesto (S/)']];
+    cites.forEach(c=>{D.months.forEach((m,i)=>{rows.push([c,m,(D.mAct[c]||[])[i]||0,(D.mAten[c]||[])[i]||0,(D.mPres[c]||[])[i]||0]);});});
+    fn='PAA2026_mensual.xlsx';
+  }
+  if(typeof XLSX==='undefined'){alert('Librería no disponible. Intente de nuevo.');return;}
+  const wb=XLSX.utils.book_new();
+  const ws=XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols']=rows[0].map((_,i)=>({wch:i===3||i===4?45:i===0?28:16}));
+  XLSX.utils.book_append_sheet(wb,ws,'PAA 2026');
+  XLSX.writeFile(wb,fn);
+  closeReport();
+}
+
+function generatePDF(){
+  const chartIds=['ch-monthly-act','ch-monthly-pres','ch-pres-stk','ch-modal','ch-fin'];
+  const chartTitles=['Actividades y Atenciones por mes','Presupuesto mensualizado','Presupuesto total por CITE','Modalidades de intervención','Fuentes de financiamiento'];
+  let html=`<html><head><meta charset="UTF-8"><style>
+    body{font-family:Arial,sans-serif;margin:0;background:#fff;color:#18180f}
+    .cover{background:#0d1b2e;color:#fff;padding:50px;border-bottom:4px solid #C8720E}
+    .cover .org{font-size:12px;color:#f0c080;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;font-weight:600}
+    .cover h1{font-size:26px;margin-bottom:6px;font-weight:700}
+    .cover .sub{font-size:14px;color:rgba(255,255,255,0.75);margin-top:4px}
+    .cover .date{font-size:11px;color:rgba(255,255,255,0.45);margin-top:14px}
+    .section{padding:24px 40px}
+    .chart-title{font-size:13px;font-weight:600;margin-bottom:10px;border-bottom:2px solid #C8720E;padding-bottom:5px;color:#18180f}
+    .chart-wrap{text-align:center;margin-bottom:24px;page-break-inside:avoid}
+    .chart-wrap img{max-width:100%;border:1px solid #eee;border-radius:6px}
+    .filter-badge{font-size:10px;color:#1557a0;background:#deeaf8;padding:3px 10px;border-radius:4px;display:inline-block;margin-bottom:16px}
+    .footer{text-align:center;font-size:10px;color:#888;padding:16px;border-top:1px solid #eee}
+  </style></head><body>
+  <div class="cover">
+    <div class="org">Ministerio de Comercio Exterior y Turismo</div>
+    <h1>CITEs de Artesanía y Turismo</h1>
+    <div class="sub">Plan Anual de Actividades (PAA) 2026</div>
+    <div class="date">Reporte generado: ${new Date().toLocaleDateString('es-PE',{year:'numeric',month:'long',day:'numeric'})}</div>
+  </div>
+  <div class="section">
+    <div class="filter-badge">Filtro: ${selCite==='ALL'?'Todos los CITEs':selCite}</div>`;
+  chartIds.forEach((id,i)=>{
+    const canvas=document.getElementById(id);
+    if(!canvas)return;
+    html+=`<div class="chart-wrap"><div class="chart-title">${chartTitles[i]}</div><img src="${canvas.toDataURL('image/png')}"></div>`;
+  });
+  html+=`<div class="footer">Dirección de Centros de Innovación Tecnológica de Artesanía y Turismo (DCITAT) · PAA 2026</div></div></body></html>`;
+  const win=window.open('','_blank');
+  if(!win){alert('Permita ventanas emergentes para generar el PDF.');return;}
+  win.document.write(html);
+  win.document.close();
+  setTimeout(()=>win.print(),800);
+  closeReport();
+}
+
+// ── INSIGHTS DINÁMICOS ────────────────────────────────────────────────────
+function generateInsights() {
+  const container = document.getElementById('insights-container');
+  if (!container) return;
+
+  const isSingleCite = selCite !== 'ALL';
+  const acts = isSingleCite ? ACTS.filter(a => a.c === selCite) : ACTS;
+  const insights = [];
+
+  if (acts.length === 0) {
+    container.innerHTML = '<div class="ins tend" style="grid-column:1/-1"><p>Sin datos disponibles para el filtro seleccionado.</p></div>';
+    return;
+  }
+
+  const totalActs = acts.reduce((s,a) => s + (a.a||0), 0);
+  const totalAt   = acts.reduce((s,a) => s + (a.at||0), 0);
+  const totalPres = acts.reduce((s,a) => s + (a.p||0), 0);
+  const fmt = n => n >= 1e6 ? (n/1e6).toFixed(2)+'M' : n >= 1e3 ? (n/1e3).toFixed(1)+'K' : n.toString();
+  const fmtS = n => 'S/ ' + fmt(n);
+
+  // ── 1. MODALIDAD DOMINANTE ─────────────────────────────────────────────
+  const modalMap = {};
+  acts.forEach(a => { modalMap[a.m] = (modalMap[a.m]||0) + (a.a||0); });
+  const topModal = Object.entries(modalMap).sort((x,y)=>y[1]-x[1])[0];
+  if (topModal) {
+    const pct = Math.round(topModal[1]/totalActs*100);
+    const ctx = isSingleCite ? `En ${selCite}` : 'En el conjunto de CITEs';
+    insights.push({cls:'tend', ico:'📈', title:'Modalidad dominante',
+      txt: `${ctx}, <strong>${topModal[0]}</strong> concentra el mayor número de actividades: <strong>${topModal[1]} de ${totalActs} (${pct}%)</strong>. ${pct>40?'Alta especialización en esta línea de intervención.':'Distribución relativamente equilibrada entre modalidades.'}`});
+  }
+
+  // ── 2. RANKING DE CITEs POR ACTIVIDADES (solo vista global) ───────────
+  if (!isSingleCite) {
+    const citeMap = {};
+    ACTS.forEach(a => {
+      if (!citeMap[a.c]) citeMap[a.c] = {a:0, at:0, p:0, recs:0};
+      citeMap[a.c].a  += a.a||0;
+      citeMap[a.c].at += a.at||0;
+      citeMap[a.c].p  += a.p||0;
+      citeMap[a.c].recs++;
+    });
+    const arr = Object.entries(citeMap).map(([c,v])=>({c,...v})).sort((a,b)=>b.a-a.a);
+    const top = arr[0], bot = arr[arr.length-1];
+    if (top && bot && top.c !== bot.c) {
+      const topPct = Math.round(top.a/totalActs*100);
+      insights.push({cls:'tend', ico:'🏆', title:'CITE con mayor volumen de actividades',
+        txt: `<strong>${top.c}</strong> lidera con <strong>${top.a} actividades programadas (${topPct}% del total)</strong> y <strong>${top.at.toLocaleString()} atenciones</strong>, con un presupuesto de <strong>${fmtS(top.p)}</strong>. En el extremo opuesto, <strong>${bot.c}</strong> programa <strong>${bot.a} actividades</strong>.`});
+    }
+    // Ranking completo
+    const rankLines = arr.map((d,i) => `<strong>${i+1}. ${d.c}</strong>: ${d.a} act. · ${d.at.toLocaleString()} atenciones · ${fmtS(d.p)}`).join('<br>');
+    insights.push({cls:'info', ico:'📊', title:'Ranking de CITEs — actividades programadas',
+      txt: rankLines});
+  }
+
+  // ── 3. EFICIENCIA POR CITE (atenciones/actividad) ─────────────────────
+  if (!isSingleCite) {
+    const citeEff = {};
+    ACTS.forEach(a => {
+      if (!citeEff[a.c]) citeEff[a.c] = {at:0, a:0, p:0};
+      citeEff[a.c].at += a.at||0;
+      citeEff[a.c].a  += a.a||0;
+      citeEff[a.c].p  += a.p||0;
+    });
+    const effArr = Object.entries(citeEff).map(([c,v])=>({c, ratio: v.a>0?Math.round(v.at/v.a):0, ...v})).sort((a,b)=>b.ratio-a.ratio);
+    const best = effArr[0], worst = effArr[effArr.length-1];
+    if (best && worst && best.c !== worst.c) {
+      insights.push({cls:'info', ico:'⚡', title:'Eficiencia: atenciones por actividad',
+        txt: `<strong>${best.c}</strong> es el CITE más eficiente con <strong>${best.ratio} atenciones por actividad</strong>. <strong>${worst.c}</strong> registra el ratio más bajo con <strong>${worst.ratio} atenciones por actividad</strong>. El promedio general es <strong>${Math.round(totalAt/totalActs)} atenciones/actividad</strong>.`});
+    }
+  }
+
+  // ── 4. ANÁLISIS CITE INDIVIDUAL (cuando se selecciona uno) ────────────
+  if (isSingleCite) {
+    // Comparar con el total global
+    const globalActs = ACTS.reduce((s,a)=>s+(a.a||0),0);
+    const globalPres = ACTS.reduce((s,a)=>s+(a.p||0),0);
+    const sharePct = globalActs > 0 ? Math.round(totalActs/globalActs*100) : 0;
+    const sharePres = globalPres > 0 ? Math.round(totalPres/globalPres*100) : 0;
+    insights.push({cls:'info', ico:'🔍', title:`${selCite} — posición en el conjunto`,
+      txt: `Este CITE aporta <strong>${totalActs} actividades (${sharePct}% del PAA)</strong> y representa <strong>${sharePres}% del presupuesto total</strong> con <strong>${fmtS(totalPres)}</strong>. Promedio: <strong>${Math.round(totalAt/Math.max(totalActs,1))} atenciones por actividad</strong>.`});
+
+    // Modalidades del CITE
+    const modLines = Object.entries(modalMap).sort((a,b)=>b[1]-a[1])
+      .map(([m,v])=>`<strong>${m}</strong>: ${v} act. (${Math.round(v/totalActs*100)}%)`).join(' · ');
+    insights.push({cls:'tend', ico:'📋', title:`Distribución por modalidad — ${selCite}`,
+      txt: modLines});
+  }
+
+  // ── 5. PRESUPUESTO POR CITE ────────────────────────────────────────────
+  if (!isSingleCite) {
+    const presMap = {};
+    ACTS.forEach(a => { presMap[a.c] = (presMap[a.c]||0) + (a.p||0); });
+    const presArr = Object.entries(presMap).sort((a,b)=>b[1]-a[1]);
+    const topPres = presArr[0];
+    if (topPres) {
+      const pct = Math.round(topPres[1]/totalPres*100);
+      insights.push({cls:'warn', ico:'💰', title:'Concentración presupuestal',
+        txt: `<strong>${topPres[0]}</strong> concentra el mayor presupuesto: <strong>${fmtS(topPres[1])} (${pct}% del total)</strong>. Distribución por CITE:<br>${presArr.map(([c,v])=>`<strong>${c}</strong>: ${fmtS(v)} (${Math.round(v/totalPres*100)}%)`).join('<br>')}`});
+    }
+  }
+
+  // ── 6. FINANCIAMIENTO ─────────────────────────────────────────────────
+  const finMap = {};
+  acts.forEach(a => { if(a.f) finMap[a.f] = (finMap[a.f]||0) + (a.p||0); });
+  const finArr = Object.entries(finMap).sort((a,b)=>b[1]-a[1]);
+  if (finArr.length > 0) {
+    const topFin = finArr[0];
+    const pctFin = Math.round(topFin[1]/totalPres*100);
+    insights.push({cls:'warn', ico:'🏦', title:'Fuente de financiamiento principal',
+      txt: `<strong>${topFin[0]}</strong> financia el <strong>${pctFin}% del presupuesto</strong> con <strong>${fmtS(topFin[1])}</strong>. ${finArr.length > 1 ? 'Otras fuentes: '+finArr.slice(1).map(([f,v])=>`${f} (${Math.round(v/totalPres*100)}%)`).join(', ')+'.' : 'Fuente única de financiamiento.'}`});
+  }
+
+  // ── 7. CONCENTRACIÓN TEMPORAL ─────────────────────────────────────────
+  const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const mesesShort = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Set','Oct','Nov','Dic'];
+  const selMeses = acts.filter(a => a.m && a.n);
+  if (selMeses.length > 0 && acts[0] && acts[0].r) {
+    const mesCount = {};
+    acts.forEach(a => { if(a.r) a.r.forEach(m => { mesCount[m]=(mesCount[m]||0)+1; }); });
+    const topMes = Object.entries(mesCount).sort((a,b)=>b[1]-a[1])[0];
+    if (topMes) insights.push({cls:'tend', ico:'📅', title:'Mes de mayor concentración',
+      txt: `<strong>${topMes[0]}</strong> es el mes con mayor número de actividades programadas (<strong>${topMes[1]}</strong>). Planifica recursos y seguimiento con anticipación.`});
+  }
+
+  container.innerHTML = insights.map(ins =>
+    `<div class="ins ${ins.cls}"><div class="ititle">${ins.ico} ${ins.title}</div><p>${ins.txt}</p></div>`
+  ).join('');
+}
+
+
+// ── MAIN UPDATE ──
+function updateAll(){
+  const cites=getActiveCites();
+  updateKPIs(cites);
+  updateMonthly(cites);
+  updatePresStk(cites);
+  updateEff(cites);
+  updateModal(cites);
+  updateFin(cites);
+  updateMapFill();
+  generateInsights();
+  if(document.getElementById('panel-act').classList.contains('open'))renderPanel();
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  // Render con datos embebidos inmediatamente
+  initChips();
+  initMap();
+  updateAll();
+
+  // Cuando lleguen datos del Sheet, re-renderizar
+  var _checkOverride = setInterval(function(){
+    if (window.ACTS_OVERRIDE && window.ACTS_OVERRIDE.length > 0) {
+      // Destruir todos los charts antes de re-renderizar
+      Object.keys(charts).forEach(function(k){
+        if (charts[k] && typeof charts[k].destroy === 'function') {
+          charts[k].destroy();
+          charts[k] = null;
+        }
+      });
+      ACTS.length = 0;
+      window.ACTS_OVERRIDE.forEach(function(d){ ACTS.push(d); });
+      updateAll();
+      clearInterval(_checkOverride);
+    }
+  }, 500);
+  // Dejar de esperar después de 10 segundos
+  setTimeout(function(){ clearInterval(_checkOverride); }, 10000);
+});
+</script>
+</body>
+</html>

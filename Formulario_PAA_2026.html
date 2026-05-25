@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Formulario PAA 2026 — CITE Artesanía y Turismo</title>
+<style>
+/* ─── RESET & VARIABLES ─── */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1a2744;--navy2:#243352;--gold:#d4a94c;--gold2:#e8c76d;
+  --cream:#faf8f3;--white:#ffffff;--border:#ddd5c8;
+  --text:#2c2c2c;--muted:#6b6b6b;--light:#f0ece5;
+  --accent:#c08a3e;--red:#c0392b;--green:#27ae60;--blue:#2980b9;
+  --shadow:0 2px 12px rgba(26,39,68,.12);--shadow-lg:0 6px 30px rgba(26,39,68,.18);
+  --radius:8px;--radius-sm:5px;
+}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--cream);color:var(--text);min-height:100vh;line-height:1.5}
+
+/* ─── HEADER ─── */
+.site-header{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);color:#fff;padding:0}
+.header-top{display:flex;align-items:center;justify-content:space-between;padding:10px 32px;border-bottom:1px solid rgba(255,255,255,.12)}
+.header-top .logo-area{display:flex;align-items:center;gap:14px}
+.logo-circle{width:44px;height:44px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--navy);font-size:15px;letter-spacing:.5px;flex-shrink:0}
+.header-top h1{font-size:18px;font-weight:600;letter-spacing:.3px}
+.header-top .sub{font-size:11px;opacity:.7;letter-spacing:.8px;text-transform:uppercase}
+.header-main{padding:24px 32px 20px;text-align:center}
+.header-main h2{font-size:24px;font-weight:300;letter-spacing:1.5px;margin-bottom:6px}
+.year-badge{display:inline-block;background:var(--gold);color:var(--navy);font-weight:700;font-size:13px;padding:3px 14px;border-radius:20px;letter-spacing:1px}
+
+/* ─── CONTAINER ─── */
+.container{max-width:980px;margin:28px auto;padding:0 18px}
+
+/* ─── BANDEJA ─── */
+.tray-panel{background:var(--white);border:2px solid var(--gold);border-radius:12px;margin-bottom:20px;overflow:hidden;box-shadow:var(--shadow)}
+.tray-header{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;padding:13px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.tray-header h3{font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px}
+.tray-badge{background:var(--gold);color:var(--navy);font-weight:700;font-size:12px;padding:2px 10px;border-radius:20px;min-width:26px;text-align:center}
+.tray-body{padding:14px 18px}
+.tray-empty{text-align:center;padding:22px;color:var(--muted);font-size:13px;font-style:italic;background:var(--light);border-radius:var(--radius);border:1px dashed var(--border)}
+.tray-list{display:flex;flex-direction:column;gap:8px;max-height:300px;overflow-y:auto;padding-right:4px}
+.tray-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius);background:var(--light);transition:all .2s;position:relative}
+.tray-item:hover{border-color:var(--blue);background:#f0f7ff}
+.ti-num{min-width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px}
+.ti-info{flex:1;min-width:0}
+.ti-name{font-size:13px;font-weight:600;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ti-meta{font-size:11px;color:var(--muted);margin-top:2px;display:flex;flex-wrap:wrap;gap:6px}
+.ti-tag{background:rgba(41,128,185,.12);color:var(--blue);padding:1px 8px;border-radius:10px;font-size:10px;font-weight:600}
+.ti-tag.green{background:rgba(39,174,96,.12);color:var(--green)}
+.ti-tag.gold{background:rgba(212,169,76,.18);color:var(--accent)}
+.ti-status{font-size:10px;font-weight:700;padding:2px 9px;border-radius:10px;flex-shrink:0;align-self:flex-start}
+.ti-status.pending{background:#fff3cd;color:#856404;border:1px solid #ffc107}
+.ti-status.sent{background:#d5f4e6;color:var(--green);border:1px solid #a8e6c8}
+.ti-status.error{background:#fdecea;color:var(--red);border:1px solid #f5c6cb}
+.btn-ti-del{background:none;border:none;cursor:pointer;padding:3px;color:var(--muted);transition:color .2s;flex-shrink:0}
+.btn-ti-del:hover{color:var(--red)}
+.tray-actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;align-items:center}
+.btn-send-all{background:var(--green);color:#fff;border:none;border-radius:var(--radius);padding:10px 22px;font-size:13px;font-weight:600;cursor:pointer;transition:background .2s;display:inline-flex;align-items:center;gap:7px}
+.btn-send-all:hover{background:#219a52}
+.btn-send-all:disabled{background:#7dba8e;cursor:not-allowed}
+.btn-clear-tray{background:none;border:1px solid var(--red);color:var(--red);border-radius:var(--radius);padding:9px 16px;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-clear-tray:hover{background:var(--red);color:#fff}
+.tray-summary{font-size:12px;color:var(--muted);margin-left:auto;text-align:right}
+.tray-progress{display:none;align-items:center;gap:10px;padding:10px 14px;background:#e8f4fd;border-radius:var(--radius);border:1px solid #b8ddf0;margin-top:8px;font-size:12px;color:var(--blue)}
+.tray-progress.show{display:flex}
+.prog-bar-wrap{flex:1;background:rgba(41,128,185,.15);border-radius:10px;height:8px;overflow:hidden}
+.prog-bar{height:100%;background:var(--blue);border-radius:10px;transition:width .3s}
+
+/* ─── FORM CARD ─── */
+.form-card{background:var(--white);border-radius:12px;box-shadow:var(--shadow);margin-bottom:20px;overflow:hidden;border:1px solid var(--border)}
+.form-counter{display:flex;align-items:center;gap:8px;padding:10px 16px;background:linear-gradient(90deg,#e8f4fd,#f0f8ff);border-bottom:2px solid var(--blue);font-size:12px;color:var(--blue);font-weight:600}
+
+/* ─── SECTIONS ─── */
+.section{padding:16px 20px}
+.section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.4px;color:var(--accent);border-bottom:2px solid var(--light);padding-bottom:6px;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.section-title svg{width:16px;height:16px;color:var(--accent)}
+.section+.section{border-top:1px solid var(--light)}
+
+/* ─── GRID ─── */
+.grid{display:grid;gap:14px}
+.grid-2{grid-template-columns:1fr 1fr}
+.grid-3{grid-template-columns:1fr 1fr 1fr}
+.grid-4{grid-template-columns:1fr 1fr 1fr 1fr}
+@media(max-width:700px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}}
+@media(max-width:900px){.grid-3{grid-template-columns:1fr 1fr}.grid-4{grid-template-columns:1fr 1fr}}
+
+/* ─── FIELDS ─── */
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:12px;font-weight:600;color:var(--navy);letter-spacing:.3px}
+.field label .req{color:var(--red);margin-left:2px}
+.field input,.field select,.field textarea{border:1px solid var(--border);border-radius:var(--radius);padding:8px 10px;font-size:13px;background:var(--white);color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;width:100%;font-family:inherit}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(41,128,185,.15)}
+.field input[readonly],.field input.auto-filled{background:var(--light);color:var(--muted);cursor:default}
+.field input.auto-filled{font-style:italic;font-weight:600;color:var(--accent)}
+.field .hint{font-size:10px;color:var(--muted);font-style:italic}
+.field .field-err{font-size:11px;color:var(--red);margin-top:2px;display:none}
+.field .field-err.show{display:block}
+
+/* ─── TIPO BADGE ─── */
+.tipo-display{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:var(--radius);background:var(--light);border:1px solid var(--border);min-height:36px}
+.tipo-badge{display:inline-block;padding:2px 12px;border-radius:14px;font-size:12px;font-weight:700;letter-spacing:.5px}
+.tipo-badge.público,.tipo-badge.publico{background:#e8f4fd;color:var(--blue);border:1px solid #b8ddf0}
+.tipo-badge.privado{background:#fef3e2;color:var(--accent);border:1px solid #f0d5a8}
+
+/* ─── IDENTIFICADOR ─── */
+.id-field-wrap{background:linear-gradient(90deg,#eaf3fb,#f0f8ff);border:1.5px solid var(--blue);border-radius:var(--radius);padding:10px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.id-label{font-size:11px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.8px;white-space:nowrap}
+.id-badge{font-family:'Courier New',monospace;font-size:15px;font-weight:700;color:var(--blue);letter-spacing:2px;flex:1;background:var(--white);border:1px solid var(--blue);border-radius:var(--radius-sm);padding:6px 12px;outline:none;cursor:default;min-width:180px}
+.id-hint{font-size:10px;color:var(--muted);white-space:nowrap}
+
+/* ─── MONTHS GRID ─── */
+.month-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:12px;margin-top:10px}
+.month-item{display:flex;flex-direction:column;gap:0;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius);background:var(--light);transition:all .2s}
+.month-item:hover{border-color:var(--blue)}
+.month-item.selected{border-color:var(--green);background:#edfaf4;box-shadow:0 2px 8px rgba(39,174,96,.12)}
+.month-header{display:flex;align-items:center;gap:8px}
+.month-item input[type="checkbox"]{width:auto;accent-color:var(--green)}
+.month-label{flex:1;font-size:12px;font-weight:700;color:var(--navy);letter-spacing:.3px}
+.month-qty{width:60px;padding:5px 6px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:12px;text-align:center;background:var(--white);outline:none;transition:border-color .2s}
+.month-qty:focus{border-color:var(--blue)}
+.month-qty:disabled{background:var(--light);cursor:not-allowed;color:var(--muted)}
+.month-loc-panel{display:none;margin-top:10px;padding-top:9px;border-top:2px dashed rgba(39,174,96,.35);flex-direction:column;gap:6px}
+.month-loc-panel.visible{display:flex}
+.month-loc-label{font-size:10px;font-weight:700;color:var(--green);letter-spacing:.6px;text-transform:uppercase;display:flex;align-items:center;gap:5px;margin-bottom:2px}
+.month-sel{width:100%;padding:5px 7px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:11.5px;background:var(--white);outline:none;transition:border-color .2s;color:var(--text);cursor:pointer}
+.month-sel:focus{border-color:var(--green);box-shadow:0 0 0 2px rgba(39,174,96,.15)}
+.month-sel:disabled{background:var(--light);color:var(--muted);cursor:not-allowed}
+.month-addr{width:100%;padding:5px 7px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:11.5px;background:var(--white);outline:none;transition:border-color .2s;color:var(--text);resize:none;font-family:inherit}
+.month-addr:focus{border-color:var(--green);box-shadow:0 0 0 2px rgba(39,174,96,.15)}
+.month-addr:disabled{background:var(--light);color:var(--muted);cursor:not-allowed}
+.month-field-lbl{font-size:10px;font-weight:600;color:var(--muted);margin-bottom:2px;display:block}
+/* ─── MONTH METRICS GRID ─── */
+.month-metrics{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+.month-metric-inp{width:100%;padding:5px 7px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:11.5px;background:var(--white);outline:none;transition:border-color .2s;color:var(--text)}
+.month-metric-inp:focus{border-color:var(--blue);box-shadow:0 0 0 2px rgba(41,128,185,.12)}
+.month-metric-inp:disabled{background:var(--light);color:var(--muted);cursor:not-allowed}
+/* ─── LOCATION SECTION ─── */
+.location-section{background:var(--white);border:1.5px solid var(--gold);border-radius:var(--radius);padding:14px 16px;margin-top:16px}
+.location-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.location-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:8px;align-items:end;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--light);margin-bottom:8px}
+.location-row:last-child{margin-bottom:0}
+@media(max-width:800px){.location-row{grid-template-columns:1fr 1fr}}
+.loc-field{display:flex;flex-direction:column;gap:3px}
+.loc-lbl{font-size:10px;font-weight:600;color:var(--navy)}
+.loc-sel,.loc-inp{border:1px solid var(--border);border-radius:var(--radius-sm);padding:5px 7px;font-size:11.5px;background:var(--white);color:var(--text);outline:none;transition:border-color .2s;width:100%}
+.loc-sel:focus,.loc-inp:focus{border-color:var(--blue);box-shadow:0 0 0 2px rgba(41,128,185,.12)}
+.loc-sel:disabled{background:var(--light);color:var(--muted)}
+.btn-add-loc{background:var(--blue);color:#fff;border:none;border-radius:var(--radius-sm);padding:7px 12px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .2s}
+.btn-add-loc:hover{background:#1a6fa3}
+.btn-remove-loc{background:none;border:1px solid var(--red);color:var(--red);border-radius:var(--radius-sm);padding:5px 9px;font-size:11px;cursor:pointer;transition:all .2s;white-space:nowrap}
+.btn-remove-loc:hover{background:var(--red);color:#fff}
+/* ─── TOTALS COUNTER ─── */
+.totals-bar{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-top:16px;padding:12px 16px;background:linear-gradient(90deg,#eaf3fb,#f0f8ff);border:1.5px solid var(--blue);border-radius:var(--radius)}
+.total-card{display:flex;flex-direction:column;align-items:center;gap:3px}
+.total-card-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--navy)}
+.total-card-val{font-size:20px;font-weight:700;color:var(--blue)}
+@media(max-width:600px){.totals-bar{grid-template-columns:1fr 1fr}.month-metrics{grid-template-columns:1fr 1fr}}
+
+/* ─── WARN BOX ─── */
+.warn-box{background:#fff3cd;border:1px solid #ffc107;border-radius:var(--radius);padding:14px 18px;margin:0 0 14px;display:none;align-items:flex-start;gap:10px}
+.warn-box.show{display:flex}
+.warn-box svg{width:20px;height:20px;color:#856404;flex-shrink:0;margin-top:1px}
+.warn-box .wb-txt{font-size:12px;color:#856404}
+.warn-box .wb-txt strong{display:block;margin-bottom:2px}
+
+/* ─── BOTTOM BAR ─── */
+.bottom-bar{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px 22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;box-shadow:var(--shadow)}
+.btn-send{background:var(--green);color:#fff;border:none;border-radius:var(--radius);padding:10px 22px;font-size:13px;font-weight:600;cursor:pointer;transition:background .2s;display:inline-flex;align-items:center;gap:7px}
+.btn-send:hover{background:#219a52}
+.btn-send:disabled{background:#7dba8e;cursor:not-allowed}
+.btn-send svg{width:16px;height:16px}
+.btn-secondary{background:none;border:1px solid var(--border);color:var(--navy);border-radius:var(--radius);padding:9px 18px;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn-secondary:hover{border-color:var(--navy);background:var(--light)}
+
+/* ─── TOAST ─── */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:12px 22px;border-radius:var(--radius);box-shadow:var(--shadow-lg);font-size:13px;transform:translateY(100px);opacity:0;transition:all .35s cubic-bezier(.4,0,.2,1);z-index:999;display:flex;align-items:center;gap:10px;max-width:340px}
+.toast.show{transform:translateY(0);opacity:1}
+.toast svg{width:18px;height:18px;color:var(--gold);flex-shrink:0}
+
+/* ─── MISC ─── */
+.hidden{display:none!important}
+footer{text-align:center;padding:24px;color:var(--muted);font-size:11px;letter-spacing:.5px}
+#artisanLineContainer{scrollbar-width:thin;scrollbar-color:var(--border) transparent;border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;background:var(--white);max-height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;}
+#artisanLineContainer::-webkit-scrollbar{width:5px;}
+#artisanLineContainer::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+#artisanLineContainer label:hover{background:rgba(41,128,185,.06);border-radius:4px;padding-left:4px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{display:inline-block;width:15px;height:15px;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .55s linear infinite;vertical-align:middle}
+
+/* ─── STATUS BADGE (sincronización) ─── */
+.sync-status{font-size:10px;color:var(--muted);white-space:nowrap}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:600px){
+  .header-top{padding:10px 16px}
+  .header-main{padding:16px}
+  .header-main h2{font-size:18px}
+  .container{padding:0 10px}
+  .section{padding:14px}
+  .id-field-wrap{flex-direction:column;align-items:flex-start}
+}
+
+/* ─── LOCATION CARDS ─── */
+.loc-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:8px;transition:border-color .2s}
+.loc-card:hover{border-color:var(--blue)}
+.loc-card.foreign-card{border-color:var(--accent);background:#fef9f2}
+.loc-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.loc-card-num{min-width:36px;height:22px;border-radius:11px;background:var(--navy);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0 7px}
+.loc-card-num.foreign-num{background:var(--accent)}
+.loc-row-national{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px}
+.loc-row-foreign{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.loc-metrics-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;margin-top:8px;padding-top:8px;border-top:1px dashed var(--border)}
+.loc-metrics-lbl{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;display:block}
+@media(max-width:700px){.loc-row-national,.loc-row-foreign,.loc-metrics-row{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<header class="site-header">
+  <div class="header-top">
+    <div class="logo-area">
+      <div class="logo-circle">CITE</div>
+      <div>
+        <h1>Centros de Innovación Tecnológica (CITE) de Artesanía y Turismo</h1>
+        <div class="sub">Dirección de Centros de Innovación Tecnológica de Artesanía y Turismo (DCITAT)</div>
+      </div>
+    </div>
+  </div>
+  <div class="header-main">
+    <h2>FORMULARIO PLAN ANUAL DE ACTIVIDADES (PAA)</h2>
+    <span class="year-badge">2026</span>
+  </div>
+</header>
+
+<!-- ═══ CONTENEDOR ═══ -->
+<div class="container">
+
+  <!-- ADVERTENCIA: sistema sin URL configurada -->
+  <div class="warn-box" id="warnNoUrl">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <div class="wb-txt"><strong>Sistema no configurado</strong>El enlace no tiene la URL del servidor. El administrador debe generar el enlace correcto. Los datos se guardarán localmente en la bandeja y podrá enviarlos cuando el sistema esté disponible.</div>
+  </div>
+
+  <!-- ═══ BANDEJA DE ACTIVIDADES ═══ -->
+  <div class="tray-panel">
+    <div class="tray-header">
+      <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Bandeja de actividades
+        <span class="tray-badge" id="trayCount">0</span>
+      </h3>
+    </div>
+    <div class="tray-body">
+      <div class="tray-empty" id="trayEmpty">No hay actividades en la bandeja. Complete el formulario y use <strong>"Agregar a bandeja"</strong> para acumular varias actividades antes de enviarlas.</div>
+      <div class="tray-list" id="trayList" style="display:none"></div>
+      <div class="tray-actions" id="trayActions" style="display:none">
+        <button class="btn-send-all" id="btnSendAll" onclick="sendAll()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Enviar todo a Google Sheets
+        </button>
+        <button class="btn-clear-tray" onclick="clearTray()">Vaciar bandeja</button>
+        <span class="tray-summary" id="traySummary"></span>
+      </div>
+      <div class="tray-progress" id="trayProgress">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span id="trayProgressTxt">Enviando…</span>
+        <div class="prog-bar-wrap"><div class="prog-bar" id="trayProgBar" style="width:0%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ FORMULARIO ═══ -->
+  <div class="form-card">
+    <div class="form-counter">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Completando actividad <span id="formActivityNum" style="font-size:14px;font-weight:700;color:var(--navy);margin:0 4px">N° 1</span> — Los campos se limpian al agregar a la bandeja.
+    </div>
+    <form id="citeForm" onsubmit="addToBandeja(event)">
+
+      <!-- SEC 1: INFORMACIÓN BÁSICA -->
+      <div class="section">
+        <div class="section-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
+          Información Básica
+        </div>
+        <!-- Identificador -->
+        <div class="id-field-wrap">
+          <span class="id-label">🔑 Identificador</span>
+          <input type="text" id="identificador" class="id-badge" readonly placeholder="Se genera automáticamente…"/>
+          <span class="sync-status" id="corrSyncStatus">⏳ sincronizando…</span>
+        </div>
+        <div class="grid grid-2">
+          <div class="field">
+            <label>Año</label>
+            <input type="number" id="year" readonly class="auto-filled"/>
+          </div>
+          <div class="field">
+            <label>CITE <span class="req">*</span></label>
+            <select id="cite" required onchange="updateType()">
+              <option value="">– Seleccione –</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-2" style="margin-top:14px">
+          <div class="field">
+            <label>Tipo <span style="font-size:10px;font-weight:400;color:var(--muted)">(automático)</span></label>
+            <div class="tipo-display" id="tipoDisplay"><span class="tipo-badge" style="opacity:.4;color:var(--muted)">Pendiente</span></div>
+          </div>
+          <div class="field">
+            <label>Responsable <span class="req">*</span></label>
+            <span class="hint">Nombres y apellidos completos</span>
+            <input type="text" id="responsable" required maxlength="100" placeholder="Nombres y apellidos"/>
+          </div>
+        </div>
+        <div class="grid grid-2" style="margin-top:14px">
+          <div class="field">
+            <label>Modalidad de intervención <span class="req">*</span></label>
+            <select id="intervention_mode" required onchange="updateSpecificActivity();toggleProjectedSales()">
+              <option value="">– Seleccione –</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Tipo de actividad <span class="req">*</span></label>
+            <select id="specific_activity" required disabled onchange="computeIdentificador()">
+              <option value="">Primero selecciona modalidad</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEC 2: DESCRIPCIÓN -->
+      <div class="section">
+        <div class="section-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          Descripción de la Actividad
+        </div>
+        <div class="grid grid-2">
+          <div class="field">
+            <label>Código de actividad <span class="req">*</span></label>
+            <span class="hint">Máximo 8 caracteres</span>
+            <input type="text" id="activity_code" required maxlength="8" placeholder="Ej: ACT-0001" style="text-transform:uppercase" oninput="this.value=this.value.toUpperCase()"/>
+          </div>
+          <div class="field">
+            <label>Nombre de la actividad <span class="req">*</span></label>
+            <span class="hint">Máximo 250 caracteres</span>
+            <input type="text" id="activity_name" required maxlength="250" placeholder="Nombre descriptivo de la actividad"/>
+          </div>
+        </div>
+        <div class="field" style="margin-top:14px">
+          <label>Unidad de medida <span class="req">*</span></label>
+          <select id="unit_of_measure" required>
+            <option value="">– Seleccione –</option>
+            <option>Acción</option>
+            <option>Acreditaciones obtenidas por el CITE</option>
+            <option>Artesano certificado</option>
+            <option>Artesano asesorado</option>
+            <option>Asistencia</option>
+            <option>Asistencia técnica</option>
+            <option>Autorización otorgada</option>
+            <option>Campaña</option>
+            <option>Catálogo</option>
+            <option>Certificación</option>
+            <option>Colección</option>
+            <option>Concurso</option>
+            <option>Convenio</option>
+            <option>Curso</option>
+            <option>Diseño</option>
+            <option>Documento</option>
+            <option>EPAS</option>
+            <option>Estudio</option>
+            <option>Evento</option>
+            <option>Evento de innovación</option>
+            <option>Experiencia Turística</option>
+            <option>Fam trip</option>
+            <option>Feria</option>
+            <option>Formación especializada</option>
+            <option>Gestión</option>
+            <option>Informe</option>
+            <option>Informe / Acta</option>
+            <option>Investigación</option>
+            <option>Laboratorio</option>
+            <option>Laboratorio implementado</option>
+            <option>Manuales</option>
+            <option>Marcas colectivas registradas</option>
+            <option>Material Producido</option>
+            <option>Muestra</option>
+            <option>Muestra o Exposición</option>
+            <option>Panel</option>
+            <option>Pasantía</option>
+            <option>Personas atendidas</option>
+            <option>Planes de negocio</option>
+            <option>Postulaciones</option>
+            <option>Producto</option>
+            <option>Programa</option>
+            <option>Programa de Capacitación</option>
+            <option>Programa ejecutado</option>
+            <option>Prototipo Empaque</option>
+            <option>Prototipo validado</option>
+            <option>Proyecto</option>
+            <option>Publicación</option>
+            <option>Punto de comercialización</option>
+            <option>Punto de venta</option>
+            <option>Reunión</option>
+            <option>Seminario</option>
+            <option>Servicio</option>
+            <option>Servicio Especializado</option>
+            <option>Socialización</option>
+            <option>Taller</option>
+            <option>Taller de difusión</option>
+            <option>Talleres artesanales</option>
+            <option>Unidades productivas asistidas</option>
+          </select>
+        </div>
+        <div class="field" style="margin-top:14px">
+          <label>Objetivo de la actividad <span class="req">*</span></label>
+          <span class="hint">Máximo 500 caracteres</span>
+          <textarea id="activity_objective" required maxlength="500" rows="3" placeholder="Describa el objetivo principal..."></textarea>
+        </div>
+        <div class="field" style="margin-top:14px">
+          <label>Línea artesanal <span style="font-size:10px;font-weight:400;color:var(--muted)">(seleccione una o más)</span></label>
+          <div id="artisanLineContainer"></div>
+          <div id="artisanLineOtherGroup" style="display:none;margin-top:8px">
+            <label style="font-size:12px;font-weight:600;color:var(--navy)">Especificar artesanía nueva <span class="req">*</span></label>
+            <input type="text" id="artisan_line_other" maxlength="150" placeholder="Describa la línea artesanal..."/>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEC 3: PROVEEDOR -->
+      <div class="section">
+        <div class="section-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-7 8-7s8 3 8 7"/></svg>
+          Información del Proveedor Propuesto
+        </div>
+        <!-- Proveedor 1 -->
+        <div style="border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:12px;background:var(--light)">
+          <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:12px">Proveedor propuesto Nro. 1</div>
+          <div class="field">
+            <label>Nombre completo <span class="req">*</span></label>
+            <input type="text" id="service_provider" required maxlength="100" placeholder="Nombre completo del proveedor"/>
+          </div>
+          <div class="grid grid-3" style="margin-top:12px">
+            <div class="field">
+              <label>DNI</label>
+              <input type="text" id="provider_dni" maxlength="8" placeholder="12345678" oninput="this.value=this.value.replace(/\D/g,'');validateNum(this,'dniErr',8,'DNI: 8 dígitos')"/>
+              <span class="field-err" id="dniErr"></span>
+            </div>
+            <div class="field">
+              <label>RUC</label>
+              <input type="text" id="provider_ruc" maxlength="11" placeholder="12345678901" oninput="this.value=this.value.replace(/\D/g,'');validateNum(this,'rucErr',11,'RUC: 11 dígitos')"/>
+              <span class="field-err" id="rucErr"></span>
+            </div>
+            <div class="field">
+              <label>Celular</label>
+              <input type="text" id="provider_phone" maxlength="9" placeholder="987654321" oninput="this.value=this.value.replace(/\D/g,'');validateNum(this,'phoneErr',9,'Celular: 9 dígitos')"/>
+              <span class="field-err" id="phoneErr"></span>
+            </div>
+          </div>
+          <div class="grid grid-2" style="margin-top:12px">
+            <div class="field"><label>Correo electrónico</label><input type="email" id="provider_email" placeholder="correo@ejemplo.com"/></div>
+            <div class="field"><label>Temática</label><input type="text" id="specialty" maxlength="150" placeholder="Temática principal"/></div>
+          </div>
+        </div>
+        <!-- Proveedor 2 -->
+        <div style="border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:12px;background:var(--light)">
+          <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:12px">Proveedor propuesto Nro. 2</div>
+          <div class="field"><label>Nombre completo</label><input type="text" id="service_provider_2" maxlength="100" placeholder="Nombre completo"/></div>
+          <div class="grid grid-3" style="margin-top:12px">
+            <div class="field"><label>DNI</label><input type="text" id="provider_dni_2" maxlength="8" placeholder="12345678" oninput="this.value=this.value.replace(/\D/g,'');validateNum(this,'dniErr2',8,'DNI: 8 dígitos')"/><span class="field-err" id="dniErr2"></span></div>
+            <div class="field"><label>RUC</label><input type="text" id="provider_ruc_2" maxlength="11" placeholder="12345678901" oninput="this.value=this.value.replace(/\D/g,'');validateNum(this,'rucErr2',11,'RUC: 11 dígitos')"/><span class="field-err" id="rucErr2"></span></div>
+            <div class="field"><label>Celular</label><input type="text" id="provider_phone_2" maxlength="9" placeholder="987654321" oninput="this.value=this.value.replace(/\D/g,'');validateNum(this,'phoneErr2',9,'Celular: 9 dígitos')"/><span class="field-err" id="phoneErr2"></span></div>
+          </div>
+          <div class="grid grid-2" style="margin-top:12px">
+            <div class="field"><label>Correo</label><input type="email" id="provider_email_2" placeholder="correo@ejemplo.com"/></div>
+            <div class="field"><label>Temática</label><input type="text" id="specialty_2" maxlength="150" placeholder="Temática principal"/></div>
+          </div>
+        </div>
+        <!-- Proveedor 3 -->
+        <div style="border:1px solid var(--border);border-radius:var(--radius);padding:14px;background:var(--light)">
+          <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:12px">Proveedor propuesto Nro. 3</div>
+          <div class="field"><label>Nombre completo</label><input type="text" id="service_provider_3" maxlength="100" placeholder="Nombre completo"/></div>
+          <div class="grid grid-3" style="margin-top:12px">
+            <div class="field"><label>DNI</label><input type="text" id="provider_dni_3" maxlength="8" placeholder="12345678" oninput="this.value=this.value.replace(/\D/g,'');validateNum(this,'dniErr3',8,'DNI: 8 dígitos')"/><span class="field-err" id="dniErr3"></span></div>
+            <div class="field"><label>RUC</label><input type="text" id="provider_ruc_3" maxlength="11" placeholder="12345678901" oninput="this.value=this.value.replace(/\D/g,'');validateNum(this,'rucErr3',11,'RUC: 11 dígitos')"/><span class="field-err" id="rucErr3"></span></div>
+            <div class="field"><label>Celular</label><input type="text" id="provider_phone_3" maxlength="9" placeholder="987654321" oninput="this.value=this.value.replace(/\D/g,'');validateNum(this,'phoneErr3',9,'Celular: 9 dígitos')"/><span class="field-err" id="phoneErr3"></span></div>
+          </div>
+          <div class="grid grid-2" style="margin-top:12px">
+            <div class="field"><label>Correo</label><input type="email" id="provider_email_3" placeholder="correo@ejemplo.com"/></div>
+            <div class="field"><label>Temática</label><input type="text" id="specialty_3" maxlength="150" placeholder="Temática principal"/></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEC 4: BENEFICIARIOS -->
+      <div class="section">
+        <div class="section-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Público Objetivo y Participación
+        </div>
+        <div class="grid grid-2">
+          <div class="field">
+            <label>Tipo de beneficiario <span class="req">*</span></label>
+            <select id="beneficiary_type" required onchange="toggleOtherBeneficiary()">
+              <option value="">– Seleccione –</option>
+            </select>
+          </div>
+          <div class="field" id="otherBeneficiaryGroup" style="display:none">
+            <label>Especificar otro tipo <span class="req">*</span></label>
+            <input type="text" id="other_beneficiary" maxlength="50" placeholder="Especificar..."/>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEC 5: FINANCIAMIENTO -->
+      <div class="section">
+        <div class="section-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          Programación y Financiamiento
+        </div>
+        <div class="grid grid-2" style="max-width:420px">
+          <div class="field">
+            <label>Tipo de financiamiento <span class="req">*</span></label>
+            <select id="financing_type" required>
+              <option value="">– Seleccione –</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEC 6: META MENSUAL -->
+      <div class="section">
+        <div class="section-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Meta Mensual y Ubicación de la Actividad
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:10px">Selecciona los meses en que se realizará la actividad. Para cada mes activo, indica las <strong>actividades, atenciones, beneficiarios y presupuesto</strong>.</p>
+        <div class="month-grid" id="monthGrid"></div>
+
+        <!-- SECCIÓN DE UBICACIONES -->
+        <div class="location-section" style="margin-top:18px">
+          <div class="location-section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Lugares de ejecución (máximo 6 regiones)
+          </div>
+          <p style="font-size:11px;color:var(--muted);margin-bottom:10px">Agregue hasta 6 registros de lugar. Use <strong>Ubicación nacional</strong> (región/provincia/distrito) o <strong>Actividad en el extranjero</strong> (país/ciudad). Indique métricas por lugar.</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+            <button type="button" class="btn-add-loc" id="btnAddLoc" onclick="addLocationRow('national')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" style="vertical-align:middle;margin-right:4px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              + Ubicación nacional
+            </button>
+            <button type="button" class="btn-add-loc" id="btnAddLocForeign" onclick="addLocationRow('foreign')" style="background:var(--accent)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" style="vertical-align:middle;margin-right:4px"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              + Actividad en el extranjero
+            </button>
+          </div>
+          <div id="locationRows"></div>
+        </div>
+
+        <!-- TOTALIZADOR -->
+        <div class="totals-bar" style="margin-top:18px">
+          <div class="total-card">
+            <span class="total-card-lbl">Total Actividades</span>
+            <span class="total-card-val" id="sum_actividades">0</span>
+          </div>
+          <div class="total-card">
+            <span class="total-card-lbl">Total Atenciones</span>
+            <span class="total-card-val" id="sum_atenciones">0</span>
+          </div>
+          <div class="total-card">
+            <span class="total-card-lbl">Total Beneficiarios</span>
+            <span class="total-card-val" id="sum_beneficiarios">0</span>
+          </div>
+          <div class="total-card">
+            <span class="total-card-lbl">Presupuesto Total (S/.)</span>
+            <span class="total-card-val" id="sum_presupuesto" style="font-size:15px">0.00</span>
+          </div>
+        </div>
+        <!-- Campo oculto para compatibilidad -->
+        <input type="hidden" id="total_activities"/>
+      </div>
+
+      <!-- SEC 7: VENTAS PROYECTADAS (solo Articulación) -->
+      <div class="section hidden" id="projectedSalesSection">
+        <div class="section-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Ventas Proyectadas
+        </div>
+        <div class="field" style="max-width:340px">
+          <label>Ventas proyectadas (S/.)</label>
+          <input type="number" id="projected_sales" min="0" step="0.01" placeholder="0.00"/>
+        </div>
+      </div>
+
+      <!-- SEC 8: OBSERVACIONES -->
+      <div class="section">
+        <div class="section-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Observaciones
+        </div>
+        <div class="field">
+          <label>Observaciones</label>
+          <textarea id="observations" rows="3" maxlength="500" placeholder="Comentarios adicionales (opcional)..."></textarea>
+        </div>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- BARRA INFERIOR -->
+  <div class="bottom-bar">
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <span style="font-size:13px;color:var(--muted)">Sistema de Registro <strong style="color:var(--navy)">CITE 2026</strong></span>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button type="button" class="btn-secondary" onclick="resetForm()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-5.05"/></svg>
+        Limpiar
+      </button>
+      <button type="submit" form="citeForm" class="btn-send" id="btnAdd">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Agregar a bandeja
+      </button>
+    </div>
+  </div>
+
+</div><!-- /.container -->
+
+<footer>Sistema de Registro CITE 2026 · Los datos se almacenan en Google Sheets</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="toastMsg"></span>
+</div>
+
+<!-- ═══ CATÁLOGOS DE DATOS ═══ -->
+<script>
+const citeData = [
+  'CITE AREQUIPA','CITE AYACUCHO','CITE CAMÉLIDOS SUDAMERICANOS',
+  'CITE CHULUCANAS','CITE HUANCAVELICA','CITE KORIWASI',
+  'CITE SIPÁN','CITE UCAYALI','CITE UTCUMBAMBA'
+];
+const citeTipo = {
+  'CITE AREQUIPA':'Privado',
+  'CITE AYACUCHO':'Público',
+  'CITE CAMÉLIDOS SUDAMERICANOS':'Privado',
+  'CITE CHULUCANAS':'Privado',
+  'CITE HUANCAVELICA':'Privado',
+  'CITE KORIWASI':'Privado',
+  'CITE SIPÁN':'Público',
+  'CITE UCAYALI':'Público',
+  'CITE UTCUMBAMBA':'Privado'
+};
+const modalidadesData = ['I + D + i','Transferencia Tecnológica','Capacitación','Difusión de Información','Articulación'];
+const activityOptions = {
+  "I + D + i":["1. Estudio técnico","2. Investigaciones","3. Validación de prototipos"],
+  "Transferencia Tecnológica":["1. Laboratorio de cocreación (Living Lab)","2. Demostraciones prácticas","3. Seminarios","4. Asistencia técnica","5. Desarrollo de productos","6. Desarrollo de servicios","7. Implementación de estándares y metodologías","8. Certificación","9. Soporte productivo","10. Aceleración empresarial","11. Pasantía/intercambio"],
+  "Capacitación":["1. Sensibilización","2. Talleres","3. Cursos","4. Programas de capacitación","5. Formación especializada"],
+  "Difusión de Información":["1. Generación de información estratégica","2. Campañas informativas","3. Espacios de difusión técnica","4. Exhibición/Exposición","5. Reconocimientos institucionales","6. Posicionamiento institucional y de marca"],
+  "Articulación":["1. Articulación institucional y gobernanza","2. Articulación para el desarrollo de iniciativas","3. Articulación comercial y de acceso a mercados","4. Articulación networking y negociación","5. Articulación comercial turístico-artesanal","6. Articulación regulatoria y de reconocimiento institucional"]
+};
+const artisanLines = ["01. Alfarería y cerámica","02. Bisutería","03. Cerería","04. Cueros y pieles","05. Fibras vegetales","06. Imaginería","07. Instrumentos musicales","08. Joyería y orfebrería","09. Resinas naturales","10. Mates y Huingos","11. Metalistería","12. Pintura","13. Recurso Acuícola","14. Talla","15. Textilería","16. Vidrio","17. Artesanías nuevas y otras no identificadas","No aplica"];
+const beneficiaryTypes = ["Alpaquero","Proveedores de materias primas","Proveedores de servicios técnicos","Artesanos","Unidades productivas artesanales","Asociaciones, cooperativas y comunidades artesanales","Diseñadores","Equipos creativos y técnicos especializados","Universidades, institutos y escuelas de diseño","Comercializadores de artesanía","Exportadores y operadores comerciales","Compradores institucionales","Operadores turísticos","Turistas nacionales","Turistas internacionales","Instituciones Educativas","Otro (Especificar)"];
+const financingTypesPublico = ["Público- Recursos Directamente Recaudados (RDR)","Público-Recursos Ordinarios (RO)","Público-Recursos Externos (RE)"];
+const financingTypesPrivado = ["Privado-Subvención","Privado-Recurso Propios (RP)"];
+const financingTypes = [...financingTypesPublico, ...financingTypesPrivado];
+const monthNames = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+
+// Códigos para el identificador
+const citeCodes = {'CITE AREQUIPA':'01','CITE AYACUCHO':'02','CITE CAMÉLIDOS SUDAMERICANOS':'03','CITE CHULUCANAS':'04','CITE HUANCAVELICA':'05','CITE KORIWASI':'06','CITE SIPÁN':'07','CITE UCAYALI':'08','CITE UTCUMBAMBA':'09'};
+const modalidadCodes = {'I + D + i':'01','Transferencia Tecnológica':'02','Capacitación':'03','Difusión de Información':'04','Articulación':'05'};
+const regionCodes = {'AMAZONAS':'01','ANCASH':'02','APURIMAC':'03','AREQUIPA':'04','AYACUCHO':'05','CAJAMARCA':'06','CALLAO':'07','CUSCO':'08','HUANCAVELICA':'09','HUANUCO':'10','ICA':'11','JUNIN':'12','LA LIBERTAD':'13','LAMBAYEQUE':'14','LIMA':'15','LORETO':'16','MADRE DE DIOS':'17','MOQUEGUA':'18','PASCO':'19','PIURA':'20','PUNO':'21','SAN MARTIN':'22','TACNA':'23','TUMBES':'24','UCAYALI':'25'};
+</script>
+
+<!-- UBIGEO DATA (completo del original) -->
+<script>
+const ubigeoData = {"AMAZONAS":{"CHACHAPOYAS":["CHACHAPOYAS","ASUNCION","BALSAS","CHETO","CHILIQUIN","CHUQUIBAMBA","GRANADA","HUANCAS","LA JALCA","LEIMEBAMBA","LEVANTO","MAGDALENA","MARISCAL CASTILLA","MOLINOPAMPA","MONTEVIDEO","OLLEROS","QUINJALCA","SAN FRANCISCO DE DAGUAS","SAN ISIDRO DE MAINO","SOLOCO","SONCHE"],"BAGUA":["BAGUA","ARAMANGO","COPALLIN","EL PARCO","IMAZA","LA PECA"],"BONGARA":["JUMBILLA","CHISQUILLA","CHURUJA","COROSHA","CUISPES","FLORIDA","JAZAN","RECTA","SAN CARLOS","SHIPASBAMBA","VALERA","YAMBRASBAMBA"],"CONDORCANQUI":["NIEVA","EL CENEPA","RIO SANTIAGO"],"LUYA":["LAMUD","CAMPORREDONDO","COCABAMBA","COLCAMAR","CONILA","INGUILPATA","LONGUITA","LONYA CHICO","LUYA","LUYA VIEJO","MARIA","OCALLI","OCUMAL","PISUQUIA","PROVIDENCIA","SAN CRISTOBAL","SAN FRANCISCO DEL YESO","SAN JERONIMO","SAN JUAN DE LOPECANCHA","SANTA CATALINA","SANTO TOMAS","TINGO","TRITA"],"RODRIGUEZ DE MENDOZA":["SAN NICOLAS","CHIRIMOTO","COCHAMAL","HUAMBO","LIMABAMBA","LONGAR","MARISCAL BENAVIDES","MILPUC","OMIA","SANTA ROSA","TOTORA","VISTA ALEGRE"],"UTCUBAMBA":["BAGUA GRANDE","CAJARURO","CUMBA","EL MILAGRO","JAMALCA","LONYA GRANDE","YAMON"]},"ANCASH":{"HUARAZ":["HUARAZ","COCHABAMBA","COLCABAMBA","HUANCHAY","INDEPENDENCIA","JANGAS","LA LIBERTAD","OLLEROS","PAMPAS","PARIACOTO","PIRA","TARICA"],"AIJA":["AIJA","CORIS","HUACLLAN","LA MERCED","SUCCHA"],"ANTONIO RAYMONDI":["LLAMELLIN","ACZO","CHACCHO","CHINGAS","MIRGAS","SAN JUAN DE RONTOY"],"ASUNCION":["CHACAS","ACOCHACA"],"BOLOGNESI":["CHIQUIAN","ABELARDO PARDO LEZAMETA","ANTONIO RAYMONDI","AQUIA","CAJACAY","CANIS","COLQUIOC","HUALLANCA","HUASTA","HUAYLLACAYAN","LA PRIMAVERA","MANGAS","PACLLON","SAN MIGUEL DE CORPANQUI","TICLLOS"],"CARHUAZ":["CARHUAZ","ACOPAMPA","AMASHCA","ANTA","ATAQUERO","MARCARA","PARIAHUANCA","SAN MIGUEL DE ACO","SHILLA","TINCO","YUNGAR"],"CASMA":["CASMA","BUENA VISTA ALTA","COMANDANTE NOEL","YAUTAN"],"CORONGO":["CORONGO","ACO","BAMBAS","CUSCA","LA PAMPA","YANAC","YUPAN"],"HUARI":["HUARI","ANRA","CAJAY","CHAVIN DE HUANTAR","HUACACHI","HUACCHIS","HUACHIS","HUANTAR","MASIN","PAUCAS","PONTO","RAHUAPAMPA","RAPAYAN","SAN MARCOS","SAN PEDRO DE CHANA","UCO"],"HUARMEY":["HUARMEY","COCHAPETI","CULEBRAS","HUAYAN","MALVAS"],"HUAYLAS":["CARAZ","HUALLANCA","HUATA","HUAYLAS","MATO","PAMPAROMAS","PUEBLO LIBRE","SANTA CRUZ","SANTO TORIBIO","YURACMARCA"],"MARISCAL LUZURIAGA":["PISCOBAMBA","CASCA","ELEAZAR GUZMAN BARRON","FIDEL OLIVAS ESCUDERO","LLAMA","LLUMPA","LUCMA","MUSGA"],"OCROS":["OCROS","ACAS","CAJAMARQUILLA","CARHUAPAMPA","COCHAS","CONGAS","LLIPA","SAN CRISTOBAL DE RAJAN","SAN PEDRO","SANTIAGO DE CHILCAS"],"PALLASCA":["CABANA","BOLOGNESI","CONCHUCOS","HUACASCHUQUE","HUANDOVAL","LACABAMBA","LLAPO","PALLASCA","PAMPAS","SANTA ROSA","TAUCA"],"POMABAMBA":["POMABAMBA","HUAYLLAN","PAROBAMBA","QUINUABAMBA"],"RECUAY":["RECUAY","CATAC","COTAPARACO","HUAYLLAPAMPA","LLACLLIN","MARCA","PAMPAS CHICO","PARARIN","TAPACOCHA","TICAPAMPA"],"SANTA":["CHIMBOTE","CACERES DEL PERU","COISHCO","MACATE","MORO","NEPEÑA","SAMANCO","SANTA","NUEVO CHIMBOTE"],"SIHUAS":["SIHUAS","ACOBAMBA","ALFONSO UGARTE","CASHAPAMPA","CHINGALPO","HUAYLLABAMBA","QUICHES","RAGASH","SAN JUAN","SICSIBAMBA"],"YUNGAY":["YUNGAY","CASCAPARA","MANCOS","MATACOTO","QUILLO","RANRAHIRCA","SHUPLUY","YANAMA"],"CARLOS FERMIN FITZCARRALD":["SAN LUIS","SAN NICOLAS","YAUYA"]},"APURIMAC":{"ABANCAY":["ABANCAY","CHACOCHE","CIRCA","CURAHUASI","HUANIPACA","LAMBRAMA","PICHIRHUA","SAN PEDRO DE CACHORA","TAMBURCO"],"ANDAHUAYLAS":["ANDAHUAYLAS","ANDARAPA","CHIARA","HUANCARAMA","HUANCARAY","HUAYANA","KISHUARA","PACOBAMBA","PACUCHA","PAMPACHIRI","POMACOCHA","SAN ANTONIO DE CACHI","SAN JERONIMO","SAN MIGUEL DE CHACCRAMPA","SANTA MARIA DE CHICMO","TALAVERA","TUMAY HUARACA","TURPO","KAQUIABAMBA","JOSÉ MARÍA ARGUEDAS"],"ANTABAMBA":["ANTABAMBA","EL ORO","HUAQUIRCA","JUAN ESPINOZA MEDRANO","OROPESA","PACHACONAS","SABAINO"],"AYMARAES":["CHALHUANCA","CAPAYA","CARAYBAMBA","CHAPIMARCA","COLCABAMBA","COTARUSE","HUAYLLO","JUSTO APU SAHUARAURA","LUCRE","POCOHUANCA","SAN JUAN DE CHACÑA","SAÑAYCA","SORAYA","TAPAIRIHUA","TINTAY","TORAYA","YANACA"],"COTABAMBAS":["TAMBOBAMBA","COTABAMBAS","COYLLURQUI","HAQUIRA","MARA","CHALLHUAHUACHO"],"CHINCHEROS":["CHINCHEROS","ANCO_HUALLO","COCHARCAS","HUACCANA","OCOBAMBA","ONGOY","URANMARCA","RANRACANCHA","ROCCHACC","EL PORVENIR","LOS CHANKAS"],"GRAU":["CHUQUIBAMBILLA","CURPAHUASI","GAMARRA","HUAYLLATI","MAMARA","MICAELA BASTIDAS","PATAYPAMPA","PROGRESO","SAN ANTONIO","SANTA ROSA","TURPAY","VILCABAMBA","VIRUNDO","CURASCO"]},"AREQUIPA":{"AREQUIPA":["AREQUIPA","ALTO SELVA ALEGRE","CAYMA","CERRO COLORADO","CHARACATO","CHIGUATA","JACOBO HUNTER","LA JOYA","MARIANO MELGAR","MIRAFLORES","MOLLEBAYA","PAUCARPATA","POCSI","POLOBAYA","QUEQUEÑA","SABANDIA","SACHACA","SAN JUAN DE SIGUAS","SAN JUAN DE TARUCANI","SANTA ISABEL DE SIGUAS","SANTA RITA DE SIGUAS","SOCABAYA","TIABAYA","UCHUMAYO","VITOR","YANAHUARA","YARABAMBA","YURA","JOSE LUIS BUSTAMANTE Y RIVERO"],"CAMANA":["CAMANA","JOSE MARIA QUIMPER","MARIANO NICOLAS VALCARCEL","MARISCAL CACERES","NICOLAS DE PIEROLA","OCOÑA","QUILCA","SAMUEL PASTOR"],"CARAVELI":["CARAVELI","ACARI","ATICO","ATIQUIPA","BELLA UNION","CAHUACHO","CHALA","CHAPARRA","HUANUHUANU","JAQUI","LOMAS","QUICACHA","YAUCA"],"CASTILLA":["APLAO","ANDAGUA","AYO","CHACHAS","CHILCAYMARCA","CHOCO","HUANCARQUI","MACHAGUAY","ORCOPAMPA","PAMPACOLCA","TIPAN","UÑON","URACA","VIRACO"],"CAYLLOMA":["CHIVAY","ACHOMA","CABANACONDE","CALLALLI","CAYLLOMA","COPORAQUE","HUAMBO","HUANCA","ICHUPAMPA","LARI","LLUTA","MACA","MADRIGAL","SAN ANTONIO DE CHUCA","SIBAYO","TAPAY","TISCO","TUTI","YANQUE","MAJES"],"CONDESUYOS":["CHUQUIBAMBA","ANDARAY","CAYARANI","CHICHAS","IRAY","RIO GRANDE","SALAMANCA","YANAQUIHUA"],"ISLAY":["MOLLENDO","COCACHACRA","DEAN VALDIVIA","ISLAY","MEJIA","PUNTA DE BOMBON"],"LA UNION":["COTAHUASI","ALCA","CHARCANA","HUAYNACOTAS","PAMPAMARCA","PUYCA","QUECHUALLA","SAYLA","TAURIA","TOMEPAMPA","TORO"]},"AYACUCHO":{"HUAMANGA":["AYACUCHO","ACOCRO","ACOS VINCHOS","CARMEN ALTO","CHIARA","OCROS","PACAYCASA","QUINUA","SAN JOSE DE TICLLAS","SAN JUAN BAUTISTA","SANTIAGO DE PISCHA","SOCOS","TAMBILLO","VINCHOS","JESUS NAZARENO","ANDRÉS AVELINO CÁCERES DORREGARAY"],"CANGALLO":["CANGALLO","CHUSCHI","LOS MOROCHUCOS","MARIA PARADO DE BELLIDO","PARAS","TOTOS"],"HUANCA SANCOS":["SANCOS","CARAPO","SACSAMARCA","SANTIAGO DE LUCANAMARCA"],"HUANTA":["HUANTA","AYAHUANCO","HUAMANGUILLA","IGUAIN","LURICOCHA","SANTILLANA","SIVIA","LLOCHEGUA","CANAYRE","UCHURACCAY","PUCACOLPA","CHACA"],"LA MAR":["SAN MIGUEL","ANCO","AYNA","CHILCAS","CHUNGUI","LUIS CARRANZA","SANTA ROSA","TAMBO","SAMUGARI","ANCHIHUAY","ORONCCOY"],"LUCANAS":["PUQUIO","AUCARA","CABANA","CARMEN SALCEDO","CHAVIÑA","CHIPAO","HUAC-HUAS","LARAMATE","LEONCIO PRADO","LLAUTA","LUCANAS","OCAÑA","OTOCA","SAISA","SAN CRISTOBAL","SAN JUAN","SAN PEDRO","SAN PEDRO DE PALCO","SANCOS","SANTA ANA DE HUAYCAHUACHO","SANTA LUCIA"],"PARINACOCHAS":["CORACORA","CHUMPI","CORONEL CASTAÑEDA","PACAPAUSA","PULLO","PUYUSCA","SAN FRANCISCO DE RAVACAYCO","UPAHUACHO"],"PAUCAR DEL SARA SARA":["PAUSA","COLTA","CORCULLA","LAMPA","MARCABAMBA","OYOLO","PARARCA","SAN JAVIER DE ALPABAMBA","SAN JOSE DE USHUA","SARA SARA"],"SUCRE":["QUEROBAMBA","BELEN","CHALCOS","CHILCAYOC","HUACAÑA","MORCOLLA","PAICO","SAN PEDRO DE LARCAY","SAN SALVADOR DE QUIJE","SANTIAGO DE PAUCARAY","SORAS"],"VICTOR FAJARDO":["HUANCAPI","ALCAMENCA","APONGO","ASQUIPATA","CANARIA","CAYARA","COLCA","HUAMANQUIQUIA","HUANCARAYLLA","HUAYA","SARHUA","VILCANCHOS"],"VILCAS HUAMAN":["VILCAS HUAMAN","ACCOMARCA","CARHUANCA","CONCEPCION","HUAMBALPA","INDEPENDENCIA","SAURAMA","VISCHONGO"]},"CAJAMARCA":{"CAJAMARCA":["CAJAMARCA","ASUNCION","CHETILLA","COSPAN","ENCAÑADA","JESUS","LLACANORA","LOS BAÑOS DEL INCA","MAGDALENA","MATARA","NAMORA","SAN JUAN"],"CAJABAMBA":["CAJABAMBA","CACHACHI","CONDEBAMBA","SITACOCHA"],"CELENDIN":["CELENDIN","CHUMUCH","CORTEGANA","HUASMIN","JORGE CHAVEZ","JOSE GALVEZ","MIGUEL IGLESIAS","OXAMARCA","SOROCHUCO","SUCRE","UTCO","LA LIBERTAD DE PALLAN"],"CHOTA":["CHOTA","ANGUIA","CHADIN","CHIGUIRIP","CHIMBAN","CHOROPAMPA","COCHABAMBA","CONCHAN","HUAMBOS","LAJAS","LLAMA","MIRACOSTA","PACCHA","PION","QUEROCOTO","SAN JUAN DE LICUPIS","TACABAMBA","TOCMOCHE","CHALAMARCA"],"CONTUMAZA":["CONTUMAZA","CHILETE","CUPISNIQUE","GUZMANGO","SAN BENITO","SANTA CRUZ DE TOLED","TANTARICA","YONAN"],"CUTERVO":["CUTERVO","CALLAYUC","CHOROS","CUJILLO","LA RAMADA","PIMPINGOS","QUEROCOTILLO","SAN ANDRES DE CUTERVO","SAN JUAN DE CUTERVO","SAN LUIS DE LUCMA","SANTA CRUZ","SANTO DOMINGO DE LA CAPILLA","SANTO TOMAS","SOCOTA","TORIBIO CASANOVA"],"HUALGAYOC":["BAMBAMARCA","CHUGUR","HUALGAYOC"],"JAEN":["JAEN","BELLAVISTA","CHONTALI","COLASAY","HUABAL","LAS PIRIAS","POMAHUACA","PUCARA","SALLIQUE","SAN FELIPE","SAN JOSE DEL ALTO","SANTA ROSA"],"SAN IGNACIO":["SAN IGNACIO","CHIRINOS","HUARANGO","LA COIPA","NAMBALLE","SAN JOSE DE LOURDES","TABACONAS"],"SAN MARCOS":["PEDRO GALVEZ","CHANCAY","EDUARDO VILLANUEVA","GREGORIO PITA","ICHOCAN","JOSE MANUEL QUIROZ","JOSE SABOGAL"],"SAN MIGUEL":["SAN MIGUEL","BOLIVAR","CALQUIS","CATILLUC","EL PRADO","LA FLORIDA","LLAPA","NANCHOC","NIEPOS","SAN GREGORIO","SAN SILVESTRE DE COCHAN","TONGOD","UNION AGUA BLANCA"],"SAN PABLO":["SAN PABLO","SAN BERNARDINO","SAN LUIS","TUMBADEN"],"SANTA CRUZ":["SANTA CRUZ","ANDABAMBA","CATACHE","CHANCAYBAÑOS","LA ESPERANZA","NINABAMBA","PULAN","SAUCEPAMPA","SEXI","UTICYACU","YAUYUCAN"]},"CALLAO":{"CALLAO":["CALLAO","BELLAVISTA","CARMEN DE LA LEGUA","LA PERLA","LA PUNTA","VENTANILLA","MI PERU"]},"CUSCO":{"CUSCO":["CUSCO","CCORCA","POROY","SAN JERONIMO","SAN SEBASTIAN","SANTIAGO","SAYLLA","WANCHAQ"],"ACOMAYO":["ACOMAYO","ACOPIA","ACOS","MOSOC LLACTA","POMACANCHI","RONDOCAN","SANGARARA"],"ANTA":["ANTA","ANCAHUASI","CACHIMAYO","CHINCHAYPUJIO","HUAROCONDO","LIMATAMBO","MOLLEPATA","PUCYURA","ZURITE"],"CALCA":["CALCA","COYA","LAMAY","LARES","PISAC","SAN SALVADOR","TARAY","YANATILE"],"CANAS":["YANAOCA","CHECCA","KUNTURKANKI","LANGUI","LAYO","PAMPAMARCA","QUEHUE","TUPAC AMARU"],"CANCHIS":["SICUANI","CHECACUPE","COMBAPATA","MARANGANI","PITUMARCA","SAN PABLO","SAN PEDRO","TINTA"],"CHUMBIVILCAS":["SANTO TOMAS","CAPACMARCA","CHAMACA","COLQUEMARCA","LIVITACA","LLUSCO","QUIÑOTA","VELILLE"],"ESPINAR":["ESPINAR","CONDOROMA","COPORAQUE","OCORURO","PALLPATA","PICHIGUA","SUYCKUTAMBO","ALTO PICHIGUA"],"LA CONVENCION":["SANTA ANA","ECHARATE","HUAYOPATA","MARANURA","OCOBAMBA","QUELLOUNO","KIMBIRI","SANTA TERESA","VILCABAMBA","PICHARI","INKAWASI","VILLA VIRGEN","VILLA KINTIARINA","MEGANTONI"],"PARURO":["PARURO","ACCHA","CCAPI","COLCHA","HUANOQUITE","OMACHA","PACCARITAMBO","PILLPINTO","YAURISQUE"],"PAUCARTAMBO":["PAUCARTAMBO","CAICAY","CHALLABAMBA","COLQUEPATA","HUANCARANI","KOSÑIPATA"],"QUISPICANCHI":["URCOS","ANDAHUAYLILLAS","CAMANTI","CCARHUAYO","CCATCA","CUSIPATA","HUARO","LUCRE","MARCAPATA","OCONGATE","OROPESA","QUIQUIJANA"],"URUBAMBA":["URUBAMBA","CHINCHERO","HUAYLLABAMBA","MACHUPICCHU","MARAS","OLLANTAYTAMBO","YUCAY"]},"HUANCAVELICA":{"HUANCAVELICA":["HUANCAVELICA","ACOBAMBILLA","ACORIA","CONAYCA","CUENCA","HUACHOCOLPA","HUAYLLAHUARA","IZCUCHACA","LARIA","MANTA","MARISCAL CACERES","MOYA","NUEVO OCCORO","PALCA","PILCHACA","VILCA","YAULI","ASCENSION","HUANDO"],"ACOBAMBA":["ACOBAMBA","ANDABAMBA","ANTA","CAJA","MARCAS","PAUCARA","POMACOCHA","ROSARIO"],"ANGARAES":["LIRCAY","ANCHONGA","CALLANMARCA","CCOCHACCASA","CHINCHO","CONGALLA","HUANCA-HUANCA","HUAYLLAY GRANDE","JULCAMARCA","SAN ANTONIO DE ANTAPARCO","SANTO TOMAS DE PATA","SECCLLA"],"CASTROVIRREYNA":["CASTROVIRREYNA","ARMA","AURAHUA","CAPILLAS","CHUPAMARCA","COCAS","HUACHOS","HUAMATAMBO","MOLLEPAMPA","SAN JUAN","SANTA ANA","TANTARA","TICRAPO"],"CHURCAMPA":["CHURCAMPA","ANCO","CHINCHIHUASI","EL CARMEN","LA MERCED","LOCROJA","PAUCARBAMBA","SAN MIGUEL DE MAYOCC","SAN PEDRO DE CORIS","PACHAMARCA","COSME"],"HUAYTARA":["HUAYTARA","AYAVI","CORDOVA","HUAYACUNDO ARMA","LARAMARCA","OCOYO","PILPICHACA","QUERCO","QUITO-ARMA","SAN ANTONIO DE CUSICANCHA","SAN FRANCISCO DE SANGAYAICO","SAN ISIDRO","SANTIAGO DE CHOCORVOS","SANTIAGO DE QUIRAHUARA","SANTO DOMINGO DE CAPILLAS","TAMBO"],"TAYACAJA":["PAMPAS","ACOSTAMBO","ACRAQUIA","AHUAYCHA","COLCABAMBA","DANIEL HERNANDEZ","HUACHOCOLPA","HUARIBAMBA","ÑAHUIMPUQUIO","PAZOS","QUISHUAR","SALCABAMBA","SALCAHUASI","SAN MARCOS DE ROCCHAC","SURCUBAMBA","TINTAY PUNCU","QUICHUAS","ANDAYMARCA","ROBLE","PICHOS","SANTIAGO DE TÚCUMA"]},"HUANUCO":{"HUANUCO":["HUANUCO","AMARILIS","CHINCHAO","CHURUBAMBA","MARGOS","QUISQUI","SAN FRANCISCO DE CAYRAN","SAN PEDRO DE CHAULAN","SANTA MARIA DEL VALLE","YARUMAYO","PILLCO MARCA","YACUS","SAN PABLO DE PILLAO"],"AMBO":["AMBO","CAYNA","COLPAS","CONCHAMARCA","HUACAR","SAN FRANCISCO","SAN RAFAEL","TOMAY KICHWA"],"DOS DE MAYO":["LA UNION","CHUQUIS","MARIAS","PACHAS","QUIVILLA","RIPAN","SHUNQUI","SILLAPATA","YANAS"],"HUACAYBAMBA":["HUACAYBAMBA","CANCHABAMBA","COCHABAMBA","PINRA"],"HUAMALIES":["LLATA","ARANCAY","CHAVIN DE PARIARCA","JACAS GRANDE","JIRCAN","MIRAFLORES","MONZON","PUNCHAO","PUÑOS","SINGA","TANTAMAYO"],"LEONCIO PRADO":["RUPA-RUPA","DANIEL ALOMIAS ROBLES","HERMILIO VALDIZAN","JOSE CRESPO Y CASTILLO","LUYANDO","MARIANO DAMASO BERAUN","PUCAYACU","CASTILLO GRANDE","PUEBLO NUEVO","SANTO DOMINGO DE ANDA"],"MARAÑON":["HUACRACHUCO","CHOLON","SAN BUENAVENTURA","LA MORADA","SANTA ROSA DE ALTO YANAJANCA"],"PACHITEA":["PANAO","CHAGLLA","MOLINO","UMARI"],"PUERTO INCA":["PUERTO INCA","CODO DEL POZUZO","HONORIA","TOURNAVISTA","YUYAPICHIS"],"LAURICOCHA":["JESUS","BAÑOS","JIVIA","QUEROPALCA","RONDOS","SAN FRANCISCO DE ASIS","SAN MIGUEL DE CAURI"],"YAROWILCA":["CHAVINILLO","CAHUAC","CHACABAMBA","APARICIO POMARES","JACAS CHICO","OBAS","PAMPAMARCA","CHORAS"]},"ICA":{"ICA":["ICA","LA TINGUIÑA","LOS AQUIJES","OCUCAJE","PACHACUTEC","PARCONA","PUEBLO NUEVO","SALAS","SAN JOSE DE LOS MOLINOS","SAN JUAN BAUTISTA","SANTIAGO","SUBTANJALLA","TATE","YAUCA DEL ROSARIO"],"CHINCHA":["CHINCHA ALTA","ALTO LARAN","CHAVIN","CHINCHA BAJA","EL CARMEN","GROCIO PRADO","PUEBLO NUEVO","SAN JUAN DE YANAC","SAN PEDRO DE HUACARPANA","SUNAMPE","TAMBO DE MORA"],"NAZCA":["NAZCA","CHANGUILLO","EL INGENIO","MARCONA","VISTA ALEGRE"],"PALPA":["PALPA","LLIPATA","RIO GRANDE","SANTA CRUZ","TIBILLO"],"PISCO":["PISCO","HUANCANO","HUMAY","INDEPENDENCIA","PARACAS","SAN ANDRES","SAN CLEMENTE","TUPAC AMARU INCA"]},"JUNIN":{"HUANCAYO":["HUANCAYO","CARHUACALLANGA","CHACAPAMPA","CHICCHE","CHILCA","CHONGOS ALTO","CHUPURO","COLCA","CULLHUAS","EL TAMBO","HUACRAPUQUIO","HUALHUAS","HUANCAN","HUASICANCHA","HUAYUCACHI","INGENIO","PARIAHUANCA","PILCOMAYO","PUCARA","QUICHUAY","QUILCAS","SAN AGUSTIN","SAN JERONIMO DE TUNAN","SAÑO","SAPALLANGA","SICAYA","SANTO DOMINGO DE ACOBAMBA","VIQUES"],"CONCEPCION":["CONCEPCION","ACO","ANDAMARCA","CHAMBARA","COCHAS","COMAS","HEROINAS TOLEDO","MANZANARES","MARISCAL CASTILLA","MATAHUASI","MITO","NUEVE DE JULIO","ORCOTUNA","SAN JOSE DE QUERO","SANTA ROSA DE OCOPA"],"CHANCHAMAYO":["CHANCHAMAYO","PERENE","PICHANAQUI","SAN LUIS DE SHUARO","SAN RAMON","VITOC"],"JAUJA":["JAUJA","ACOLLA","APATA","ATAURA","CANCHAYLLO","CURICACA","EL MANTARO","HUAMALI","HUARIPAMPA","HUERTAS","JANJAILLO","JULCAN","LEONOR ORDOÑEZ","LLOCLLAPAMPA","MARCO","MASMA","MASMA CHICCHE","MOLINOS","MONOBAMBA","MUQUI","MUQUIYAUYO","PACA","PACCHA","PANCAN","PARCO","POMACANCHA","RICRAN","SAN LORENZO","SAN PEDRO DE CHUNAN","SAUSA","SINCOS","TUNAN MARCA","YAULI","YAUYOS"],"JUNIN":["JUNIN","CARHUAMAYO","ONDORES","ULCUMAYO"],"SATIPO":["SATIPO","COVIRIALI","LLAYLLA","MAZAMARI","PAMPA HERMOSA","PANGOA","RIO NEGRO","RIO TAMBO","VIZCATÁN DEL ENE"],"TARMA":["TARMA","ACOBAMBA","HUARICOLCA","HUASAHUASI","LA UNION","PALCA","PALCAMAYO","SAN PEDRO DE CAJAS","TAPO"],"YAULI":["LA OROYA","CHACAPALPA","HUAY-HUAY","MARCAPOMACOCHA","MOROCOCHA","PACCHA","SANTA BARBARA DE CARHUACAYAN","SANTA ROSA DE SACCO","SUITUCANCHA","YAULI"],"CHUPACA":["CHUPACA","AHUAC","CHONGOS BAJO","HUACHAC","HUAMANCACA CHICO","SAN JUAN DE YSCOS","SAN JUAN DE JARPA","TRES DE DICIEMBRE","YANACANCHA"]},"LA LIBERTAD":{"TRUJILLO":["TRUJILLO","EL PORVENIR","FLORENCIA DE MORA","HUANCHACO","LA ESPERANZA","LAREDO","MOCHE","POROTO","SALAVERRY","SIMBAL","VICTOR LARCO HERRERA"],"ASCOPE":["ASCOPE","CHICAMA","CHOCOPE","MAGDALENA DE CAO","PAIJAN","RAZURI","SANTIAGO DE CAO","CASA GRANDE"],"BOLIVAR":["BOLIVAR","BAMBAMARCA","CONDORMARCA","LONGOTEA","UCHUMARCA","UCUNCHA"],"CHEPEN":["CHEPEN","PACANGA","PUEBLO NUEVO"],"JULCAN":["JULCAN","CALAMARCA","CARABAMBA","HUASO"],"OTUZCO":["OTUZCO","AGALLPAMPA","CHARAT","HUARANCHAL","LA CUESTA","MACHE","PARANDAY","SALPO","SINSICAP","USQUIL"],"PACASMAYO":["SAN PEDRO DE LLOC","GUADALUPE","JEQUETEPEQUE","PACASMAYO","SAN JOSE"],"PATAZ":["TAYABAMBA","BULDIBUYO","CHILLIA","HUANCASPATA","HUAYLILLAS","HUAYO","ONGON","PARCOY","PATAZ","PIAS","SANTIAGO DE CHALLAS","TAURIJA","URPAY"],"SANCHEZ CARRION":["HUAMACHUCO","CHUGAY","COCHORCO","CURGOS","MARCABAL","SANAGORAN","SARIN","SARTIMBAMBA"],"SANTIAGO DE CHUCO":["SANTIAGO DE CHUCO","ANGASMARCA","CACHICADAN","MOLLEBAMBA","MOLLEPATA","QUIRUVILCA","SANTA CRUZ DE CHUCA","SITABAMBA"],"GRAN CHIMU":["CASCAS","LUCMA","COMPIN","SAYAPULLO"],"VIRU":["VIRU","CHAO","GUADALUPITO"]},"LAMBAYEQUE":{"CHICLAYO":["CHICLAYO","CHONGOYAPE","ETEN","ETEN PUERTO","JOSE LEONARDO ORTIZ","LA VICTORIA","LAGUNAS","MONSEFU","NUEVA ARICA","OYOTUN","PICSI","PIMENTEL","REQUE","SANTA ROSA","SAÑA","CAYALTI","PATAPO","POMALCA","PUCALA","TUMAN"],"FERREÑAFE":["FERREÑAFE","CAÑARIS","INCAHUASI","MANUEL ANTONIO MESONES MURO","PITIPO","PUEBLO NUEVO"],"LAMBAYEQUE":["LAMBAYEQUE","CHOCHOPE","ILLIMO","JAYANCA","MOCHUMI","MORROPE","MOTUPE","OLMOS","PACORA","SALAS","SAN JOSE","TUCUME"]},"LIMA":{"LIMA":["LIMA","ANCON","ATE","BARRANCO","BREÑA","CARABAYLLO","CHACLACAYO","CHORRILLOS","CIENEGUILLA","COMAS","EL AGUSTINO","INDEPENDENCIA","JESUS MARIA","LA MOLINA","LA VICTORIA","LINCE","LOS OLIVOS","LURIGANCHO","LURIN","MAGDALENA DEL MAR","PUEBLO LIBRE","MIRAFLORES","PACHACAMAC","PUCUSANA","PUENTE PIEDRA","PUNTA HERMOSA","PUNTA NEGRA","RIMAC","SAN BARTOLO","SAN BORJA","SAN ISIDRO","SAN JUAN DE LURIGANCHO","SAN JUAN DE MIRAFLORES","SAN LUIS","SAN MARTIN DE PORRES","SAN MIGUEL","SANTA ANITA","SANTA MARIA DEL MAR","SANTA ROSA","SANTIAGO DE SURCO","SURQUILLO","VILLA EL SALVADOR","VILLA MARIA DEL TRIUNFO"],"BARRANCA":["BARRANCA","PARAMONGA","PATIVILCA","SUPE","SUPE PUERTO"],"CAJATAMBO":["CAJATAMBO","COPA","GORGOR","HUANCAPON","MANAS"],"CANTA":["CANTA","ARAHUAY","HUAMANTANGA","HUAROS","LACHAQUI","SAN BUENAVENTURA","SANTA ROSA DE QUIVES"],"CAÑETE":["SAN VICENTE DE CAÑETE","ASIA","CALANGO","CERRO AZUL","CHILCA","COAYLLO","IMPERIAL","LUNAHUANA","MALA","NUEVO IMPERIAL","PACARAN","QUILMANA","SAN ANTONIO","SAN LUIS","SANTA CRUZ DE FLORES","ZUÑIGA"],"HUARAL":["HUARAL","ATAVILLOS ALTO","ATAVILLOS BAJO","AUCALLAMA","CHANCAY","IHUARI","LAMPIAN","PACARAOS","SAN MIGUEL DE ACOS","SANTA CRUZ DE ANDAMARCA","SUMBILCA","VEINTISIETE DE NOVIEMBRE"],"HUAROCHIRI":["MATUCANA","ANTIOQUIA","CALLAHUANCA","CARAMPOMA","CHICLA","CUENCA","HUACHUPAMPA","HUANZA","HUAROCHIRI","LAHUAYTAMBO","LANGA","LARAOS","MARIATANA","RICARDO PALMA","SAN ANDRES DE TUPICOCHA","SAN ANTONIO","SAN BARTOLOME","SAN DAMIAN","SAN JUAN DE IRIS","SAN JUAN DE TANTARANCHE","SAN LORENZO DE QUINTI","SAN MATEO","SAN MATEO DE OTAO","SAN PEDRO DE CASTA","SAN PEDRO DE HUANCAYRE","SANGALLAYA","SANTA CRUZ DE COCACHACRA","SANTA EULALIA","SANTIAGO DE ANCHUCAYA","SANTIAGO DE TUNA","SANTO DOMINGO DE LOS OLLEROS","SURCO"],"HUAURA":["HUACHO","AMBAR","CALETA DE CARQUIN","CHECRAS","HUALMAY","HUAURA","LEONCIO PRADO","PACCHO","SANTA LEONOR","SANTA MARIA","SAYAN","VEGUETA"],"OYON":["OYON","ANDAJES","CAUJUL","COCHAMARCA","NAVAN","PACHANGARA"],"YAUYOS":["YAUYOS","ALIS","AYAUCA","AYAVIRI","AZANGARO","CACRA","CARANIA","CATAHUASI","CHOCOS","COCHAS","COLONIA","HONGOS","HUAMPARA","HUANCAYA","HUANGASCAR","HUANTAN","HUAÑEC","LARAOS","LINCHA","MADEAN","MIRAFLORES","OMAS","PUTINZA","QUINCHES","QUINOCAY","SAN JOAQUIN","SAN PEDRO DE PILAS","TANTA","TAURIPAMPA","TOMAS","TUPE","VIÑAC","VITIS"]},"LORETO":{"MAYNAS":["IQUITOS","ALTO NANAY","FERNANDO LORES","INDIANA","LAS AMAZONAS","MAZAN","NAPO","PUNCHANA","TORRES CAUSANA","BELEN","SAN JUAN BAUTISTA","PUTUMAYO","ROSA PANDURO","TENIENTE MANUEL CLAVERO","YAGUAS"],"ALTO AMAZONAS":["YURIMAGUAS","BALSAPUERTO","JEBEROS","LAGUNAS","SANTA CRUZ","TENIENTE CESAR LOPEZ ROJAS"],"LORETO":["NAUTA","PARINARI","TIGRE","TROMPETEROS","URARINAS"],"MARISCAL RAMON CASTILLA":["RAMON CASTILLA","PEBAS","YAVARI","SAN PABLO"],"REQUENA":["REQUENA","ALTO TAPICHE","CAPELO","EMILIO SAN MARTIN","MAQUIA","PUINAHUA","SAQUENA","SOPLIN","TAPICHE","JENARO HERRERA","YAQUERANA"],"UCAYALI":["CONTAMANA","INAHUAYA","PADRE MARQUEZ","PAMPA HERMOSA","SARAYACU","VARGAS GUERRA"],"DATEM DEL MARAÑON":["BARRANCA","CAHUAPANAS","MANSERICHE","MORONA","PASTAZA","ANDOAS"]},"MADRE DE DIOS":{"TAMBOPATA":["TAMBOPATA","INAMBARI","LAS PIEDRAS","LABERINTO"],"MANU":["MANU","FITZCARRALD","MADRE DE DIOS","HUEPETUHE"],"TAHUAMANU":["IÑAPARI","IBERIA","TAHUAMANU"]},"MOQUEGUA":{"MARISCAL NIETO":["MOQUEGUA","CARUMAS","CUCHUMBAYA","SAMEGUA","SAN CRISTOBAL","TORATA"],"GENERAL SANCHEZ CERR":["OMATE","CHOJATA","COALAQUE","ICHUÑA","LA CAPILLA","LLOQUE","MATALAQUE","PUQUINA","QUINISTAQUILLAS","UBINAS","YUNGA"],"ILO":["ILO","EL ALGARROBAL","PACOCHA"]},"PASCO":{"PASCO":["CHAUPIMARCA","HUACHON","HUARIACA","HUAYLLAY","NINACACA","PALLANCHACRA","PAUCARTAMBO","SAN FRANCISCO DE ASIS DE YARUSYACAN","SIMON BOLIVAR","TICLACAYAN","TINYAHUARCO","VICCO","YANACANCHA"],"DANIEL ALCIDES CARRI":["YANAHUANCA","CHACAYAN","GOYLLARISQUIZGA","PAUCAR","SAN PEDRO DE PILLAO","SANTA ANA DE TUSI","TAPUC","VILCABAMBA"],"OXAPAMPA":["OXAPAMPA","CHONTABAMBA","HUANCABAMBA","PALCAZU","POZUZO","PUERTO BERMUDEZ","VILLA RICA","CONSTITUCIÓN"]},"PIURA":{"PIURA":["PIURA","CASTILLA","CATACAOS","CURA MORI","EL TALLAN","LA ARENA","LA UNION","LAS LOMAS","TAMBO GRANDE","26 DE OCTUBRE"],"AYABACA":["AYABACA","FRIAS","JILILI","LAGUNAS","MONTERO","PACAIPAMPA","PAIMAS","SAPILLICA","SICCHEZ","SUYO"],"HUANCABAMBA":["HUANCABAMBA","CANCHAQUE","EL CARMEN DE LA FRONTERA","HUARMACA","LALAQUIZ","SAN MIGUEL DE EL FAIQUE","SONDOR","SONDORILLO"],"MORROPON":["CHULUCANAS","BUENOS AIRES","CHALACO","LA MATANZA","MORROPON","SALITRAL","SAN JUAN DE BIGOTE","SANTA CATALINA DE MOSSA","SANTO DOMINGO","YAMANGO"],"PAITA":["PAITA","AMOTAPE","ARENAL","COLAN","LA HUACA","TAMARINDO","VICHAYAL"],"SULLANA":["SULLANA","BELLAVISTA","IGNACIO ESCUDERO","LANCONES","MARCAVELICA","MIGUEL CHECA","QUERECOTILLO","SALITRAL"],"TALARA":["PARIÑAS","EL ALTO","LA BREA","LOBITOS","LOS ORGANOS","MANCORA"],"SECHURA":["SECHURA","BELLAVISTA DE LA UNION","BERNAL","CRISTO NOS VALGA","VICE","RINCONADA LLICUAR"]},"PUNO":{"PUNO":["PUNO","ACORA","AMANTANI","ATUNCOLLA","CAPACHICA","CHUCUITO","COATA","HUATA","MAÑAZO","PAUCARCOLLA","PICHACANI","PLATERIA","SAN ANTONIO","TIQUILLACA","VILQUE"],"AZANGARO":["AZANGARO","ACHAYA","ARAPA","ASILLO","CAMINACA","CHUPA","JOSE DOMINGO CHOQUEHUANCA","MUÑANI","POTONI","SAMAN","SAN ANTON","SAN JOSE","SAN JUAN DE SALINAS","SANTIAGO DE PUPUJA","TIRAPATA"],"CARABAYA":["MACUSANI","AJOYANI","AYAPATA","COASA","CORANI","CRUCERO","ITUATA","OLLACHEA","SAN GABAN","USICAYOS"],"CHUCUITO":["JULI","DESAGUADERO","HUACULLANI","KELLUYO","PISACOMA","POMATA","ZEPITA"],"EL COLLAO":["ILAVE","CAPAZO","PILCUYO","SANTA ROSA","CONDURIRI"],"HUANCANE":["HUANCANE","COJATA","HUATASANI","INCHUPALLA","PUSI","ROSASPATA","TARACO","VILQUE CHICO"],"LAMPA":["LAMPA","CABANILLA","CALAPUJA","NICASIO","OCUVIRI","PALCA","PARATIA","PUCARA","SANTA LUCIA","VILAVILA"],"MELGAR":["AYAVIRI","ANTAUTA","CUPI","LLALLI","MACARI","NUÑOA","ORURILLO","SANTA ROSA","UMACHIRI"],"MOHO":["MOHO","CONIMA","HUAYRAPATA","TILALI"],"SAN ROMAN":["JULIACA","CABANA","CABANILLAS","CARACOTO","SAN MIGUEL"],"SANDIA":["SANDIA","CUYOCUYO","LIMBANI","PATAMBUCO","PHARA","QUIACA","SAN JUAN DEL ORO","YANAHUAYA","ALTO INAMBARI","SAN PEDRO DE PUTINA PUNCO"],"YUNGUYO":["YUNGUYO","ANAPIA","COPANI","CUTURAPI","OLLARAYA","TINICACHI","UNICACHI"],"SAN ANTONIO DE PUTINA":["PUTINA","ANANEA","PEDRO VILCA APAZA","QUILCAPUNCU","SINA"]},"SAN MARTIN":{"MOYOBAMBA":["MOYOBAMBA","CALZADA","HABANA","JEPELACIO","SORITOR","YANTALO"],"BELLAVISTA":["BELLAVISTA","ALTO BIAVO","BAJO BIAVO","HUALLAGA","SAN PABLO","SAN RAFAEL"],"EL DORADO":["SAN JOSE DE SISA","AGUA BLANCA","SAN MARTIN","SANTA ROSA","SHATOJA"],"HUALLAGA":["SAPOSOA","ALTO SAPOSOA","EL ESLABON","PISCOYACU","SACANCHE","TINGO DE SAPOSOA"],"LAMAS":["LAMAS","ALONSO DE ALVARADO","BARRANQUITA","CAYNARACHI","CUÑUMBUQUI","PINTO RECODO","RUMISAPA","SAN ROQUE DE CUMBAZA","SHANAO","TABALOSOS","ZAPATERO"],"MARISCAL CACERES":["JUANJUI","CAMPANILLA","HUICUNGO","PACHIZA","PAJARILLO"],"PICOTA":["PICOTA","BUENOS AIRES","CASPISAPA","PILLUANA","PUCACACA","SAN CRISTOBAL","SAN HILARION","SHAMBOYACU","TINGO DE PONASA","TRES UNIDOS"],"RIOJA":["RIOJA","AWAJUN","ELIAS SOPLIN VARGAS","NUEVA CAJAMARCA","PARDO MIGUEL","POSIC","SAN FERNANDO","YORONGOS","YURACYACU"],"SAN MARTIN":["TARAPOTO","ALBERTO LEVEAU","CACATACHI","CHAZUTA","CHIPURANA","EL PORVENIR","HUIMBAYOC","JUAN GUERRA","LA BANDA DE SHILCAYO","MORALES","PAPAPLAYA","SAN ANTONIO","SAUCE","SHAPAJA"],"TOCACHE":["TOCACHE","NUEVO PROGRESO","POLVORA","SHUNTE","UCHIZA"]},"TACNA":{"TACNA":["TACNA","ALTO DE LA ALIANZA","CALANA","CIUDAD NUEVA","INCLAN","PACHIA","PALCA","POCOLLAY","SAMA","CORONEL GREGORIO ALBARRACIN LANCHIPA","LA YARADA-LOS PALOS"],"CANDARAVE":["CANDARAVE","CAIRANI","CAMILACA","CURIBAYA","HUANUARA","QUILAHUANI"],"JORGE BASADRE":["LOCUMBA","ILABAYA","ITE"],"TARATA":["TARATA","HEROES ALBARRACIN","ESTIQUE","ESTIQUE-PAMPA","SITAJARA","SUSAPAYA","TARUCACHI","TICACO"]},"TUMBES":{"TUMBES":["TUMBES","CORRALES","LA CRUZ","PAMPAS DE HOSPITAL","SAN JACINTO","SAN JUAN DE LA VIRGEN"],"CONTRALMIRANTE VILLA":["ZORRITOS","CASITAS","CANOAS DE PUNTA SAL"],"ZARUMILLA":["ZARUMILLA","AGUAS VERDES","MATAPALO","PAPAYAL"]},"UCAYALI":{"CORONEL PORTILLO":["CALLERIA","CAMPOVERDE","IPARIA","MASISEA","YARINACOCHA","NUEVA REQUENA","MANANTAY"],"ATALAYA":["RAYMONDI","SEPAHUA","TAHUANIA","YURUA"],"PADRE ABAD":["PADRE ABAD","IRAZOLA","CURIMANA","NESHUYA","ALEXANDER VON HUMBOLDT"],"PURUS":["PURUS"]}};
+</script>
+
+<!-- ═══ LÓGICA PRINCIPAL ═══ -->
+<script>
+// ─── ESTADO ───
+let bandeja = [];
+let _idCorrelativo = 1;
+let _editingIdentificador = null;
+let APPS_SCRIPT_URL = '';  // Se inyecta desde la URL (?u=...)
+
+// ─── INIT ───
+document.addEventListener('DOMContentLoaded', () => {
+  // Leer URL del Apps Script desde el parámetro ?u=
+  const params = new URLSearchParams(window.location.search);
+  APPS_SCRIPT_URL = params.get('u') ? decodeURIComponent(params.get('u')) : '';
+
+  if (!APPS_SCRIPT_URL) {
+    document.getElementById('warnNoUrl').classList.add('show');
+  }
+
+  document.getElementById('year').value = new Date().getFullYear();
+  populateSelectors();
+  generateMonths();
+  loadBandeja();
+  renderBandeja();
+
+  // Sincronizar correlativo si hay URL disponible
+  if (APPS_SCRIPT_URL) syncCorrelativo();
+});
+
+// ─── TOAST ───
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+// ─── POBLAR SELECTORES ───
+function populateSelectors() {
+  const addOpts = (selId, arr) => {
+    const el = document.getElementById(selId);
+    if (!el) return;
+    arr.forEach(v => { const o = document.createElement('option'); o.value = v; o.textContent = v; el.appendChild(o); });
+  };
+  addOpts('cite', citeData);
+  addOpts('intervention_mode', modalidadesData);
+  buildArtisanCheckboxes();
+  addOpts('beneficiary_type', beneficiaryTypes);
+}
+
+// ─── MESES ───
+function generateMonths() {
+  const grid = document.getElementById('monthGrid');
+  monthNames.forEach((month, i) => {
+    const item = document.createElement('div');
+    item.className = 'month-item';
+    item.id = 'mitem-' + i;
+    item.innerHTML = `
+      <div class="month-header">
+        <input type="checkbox" id="mchk-${i}" onchange="toggleMonth(${i})">
+        <span class="month-label">${month}</span>
+      </div>
+      <div class="month-loc-panel" id="mloc-${i}">
+        <div class="month-metrics">
+          <div>
+            <span class="month-field-lbl">Actividades</span>
+            <input type="number" class="month-metric-inp" id="mact-${i}" disabled min="0" placeholder="0" oninput="calcTotals()">
+          </div>
+          <div>
+            <span class="month-field-lbl">Atenciones</span>
+            <input type="number" class="month-metric-inp" id="maten-${i}" disabled min="0" placeholder="0" oninput="calcTotals()">
+          </div>
+          <div>
+            <span class="month-field-lbl">Beneficiarios</span>
+            <input type="number" class="month-metric-inp" id="mben-${i}" disabled min="0" placeholder="0" oninput="calcTotals()">
+          </div>
+          <div>
+            <span class="month-field-lbl">Presupuesto act. técnicas (S/.)</span>
+            <input type="number" class="month-metric-inp" id="mpres-${i}" disabled min="0" step="0.01" placeholder="0.00" oninput="calcTotals()">
+          </div>
+        </div>
+      </div>`;
+    grid.appendChild(item);
+  });
+  // Init location rows
+  addLocationRow('national');
+}
+
+// ─── UBICACIONES ───
+let _locCount = 0;
+const MAX_LOC = 6;
+const MAX_FOREIGN = 2;
+
+function countForeignRows() {
+  return document.querySelectorAll('.loc-card.foreign-card').length;
+}
+
+function addLocationRow(type) {
+  const rows = document.getElementById('locationRows');
+  const current = rows.querySelectorAll('.loc-card').length;
+  if (current >= MAX_LOC) { showToast('Máximo 6 registros de ubicación permitidos'); return; }
+  if (type === 'foreign' && countForeignRows() >= MAX_FOREIGN) {
+    showToast('Máximo 2 actividades en el extranjero permitidas'); return;
+  }
+  const idx = _locCount++;
+  const card = document.createElement('div');
+  const isForeign = (type === 'foreign');
+  card.className = 'loc-card' + (isForeign ? ' foreign-card' : '');
+  card.id = 'loccard-' + idx;
+  const cardNum = current + 1;
+
+  const regiones = Object.keys(ubigeoData).sort();
+  const regOpts  = regiones.map(r => `<option value="${r}">${r}</option>`).join('');
+
+  const metricsHtml = `
+    <div class="loc-metrics-row">
+      <div><span class="loc-metrics-lbl">Actividades</span>
+        <input type="number" class="loc-inp" id="lm_act-${idx}" min="0" placeholder="0" oninput="calcTotals()" style="width:100%"></div>
+      <div><span class="loc-metrics-lbl">Atenciones</span>
+        <input type="number" class="loc-inp" id="lm_aten-${idx}" min="0" placeholder="0" oninput="calcTotals()" style="width:100%"></div>
+      <div><span class="loc-metrics-lbl">Beneficiarios</span>
+        <input type="number" class="loc-inp" id="lm_ben-${idx}" min="0" placeholder="0" oninput="calcTotals()" style="width:100%"></div>
+      <div><span class="loc-metrics-lbl">Presupuesto act. técnicas (S/.)</span>
+        <input type="number" class="loc-inp" id="lm_pres-${idx}" min="0" step="0.01" placeholder="0.00" oninput="calcTotals()" style="width:100%"></div>
+    </div>`;
+
+  if (isForeign) {
+    card.innerHTML = `
+      <div class="loc-card-header">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="loc-card-num foreign-num">✈ ${cardNum}</div>
+          <span style="font-size:11px;font-weight:700;color:var(--accent)">Actividad en el extranjero</span>
+        </div>
+        <button type="button" class="btn-remove-loc" onclick="removeLocCard('loccard-${idx}')">✕ Eliminar</button>
+      </div>
+      <div class="loc-row-foreign">
+        <div class="loc-field">
+          <span class="loc-lbl">País <span style="color:var(--red)">*</span></span>
+          <input type="text" class="loc-inp" id="lf_pais-${idx}" maxlength="50" placeholder="Ej: Brasil">
+        </div>
+        <div class="loc-field">
+          <span class="loc-lbl">Ciudad (máx. 10 caracteres)</span>
+          <input type="text" class="loc-inp" id="lf_ciudad-${idx}" maxlength="10" placeholder="Ej: Bogotá">
+        </div>
+      </div>
+      ${metricsHtml}`;
+  } else {
+    card.innerHTML = `
+      <div class="loc-card-header">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="loc-card-num">📍 ${cardNum}</div>
+          <span style="font-size:11px;font-weight:700;color:var(--navy)">Ubicación nacional</span>
+        </div>
+        <button type="button" class="btn-remove-loc" onclick="removeLocCard('loccard-${idx}')">✕ Eliminar</button>
+      </div>
+      <div class="loc-row-national">
+        <div class="loc-field">
+          <span class="loc-lbl">Región</span>
+          <select class="loc-sel" id="lreg-${idx}" onchange="updateLocProv(${idx})">
+            <option value="">– Región –</option>${regOpts}
+          </select>
+        </div>
+        <div class="loc-field">
+          <span class="loc-lbl">Provincia</span>
+          <select class="loc-sel" id="lprov-${idx}" disabled onchange="updateLocDist(${idx})">
+            <option value="">– Provincia –</option>
+          </select>
+        </div>
+        <div class="loc-field">
+          <span class="loc-lbl">Distrito</span>
+          <select class="loc-sel" id="ldist-${idx}" disabled onchange="computeIdentificador()">
+            <option value="">– Distrito –</option>
+          </select>
+        </div>
+        <div class="loc-field">
+          <span class="loc-lbl">Dirección</span>
+          <input type="text" class="loc-inp" id="laddr-${idx}" maxlength="200" placeholder="Dirección del lugar">
+        </div>
+      </div>
+      ${metricsHtml}`;
+  }
+  rows.appendChild(card);
+  updateAddLocBtn();
+}
+
+function removeLocCard(cardId) {
+  const card = document.getElementById(cardId);
+  if (card) card.remove();
+  renumberLocCards();
+  updateAddLocBtn();
+  calcTotals();
+  computeIdentificador();
+}
+
+function renumberLocCards() {
+  document.querySelectorAll('.loc-card').forEach((card, i) => {
+    const numEl = card.querySelector('.loc-card-num');
+    if (numEl) {
+      const isForeign = card.classList.contains('foreign-card');
+      numEl.textContent = (isForeign ? '✈ ' : '📍 ') + (i + 1);
+    }
+  });
+}
+
+function updateAddLocBtn() {
+  const rows = document.getElementById('locationRows');
+  const btn  = document.getElementById('btnAddLoc');
+  const btnF = document.getElementById('btnAddLocForeign');
+  const total   = rows ? rows.querySelectorAll('.loc-card').length : 0;
+  const foreign = countForeignRows();
+  if (btn)  btn.style.display  = (total >= MAX_LOC) ? 'none' : '';
+  if (btnF) btnF.style.display = (total >= MAX_LOC || foreign >= MAX_FOREIGN) ? 'none' : '';
+}
+
+function updateLocProv(idx) {
+  const reg = document.getElementById('lreg-'+idx)?.value;
+  const provSel = document.getElementById('lprov-'+idx);
+  const distSel = document.getElementById('ldist-'+idx);
+  if (!provSel || !distSel) return;
+  provSel.innerHTML = '<option value="">– Provincia –</option>';
+  distSel.innerHTML = '<option value="">– Distrito –</option>';
+  distSel.disabled = true;
+  if (reg && ubigeoData[reg]) {
+    provSel.disabled = false;
+    Object.keys(ubigeoData[reg]).sort().forEach(p => { const o=document.createElement('option'); o.value=p; o.textContent=p; provSel.appendChild(o); });
+  } else { provSel.disabled = true; }
+  computeIdentificador();
+}
+
+function updateLocDist(idx) {
+  const reg = document.getElementById('lreg-'+idx)?.value;
+  const prov = document.getElementById('lprov-'+idx)?.value;
+  const distSel = document.getElementById('ldist-'+idx);
+  if (!distSel) return;
+  distSel.innerHTML = '<option value="">– Distrito –</option>';
+  if (reg && prov && ubigeoData[reg] && ubigeoData[reg][prov]) {
+    distSel.disabled = false;
+    ubigeoData[reg][prov].sort().forEach(d => { const o=document.createElement('option'); o.value=d.trim(); o.textContent=d.trim(); distSel.appendChild(o); });
+  } else { distSel.disabled = true; }
+  computeIdentificador();
+}
+// Legacy stubs (kept for compatibility)
+function updateMonthProv(i) {}
+function updateMonthDist(i) {}
+
+function toggleMonth(i) {
+  const chk = document.getElementById('mchk-' + i);
+  const item = document.getElementById('mitem-' + i);
+  const loc = document.getElementById('mloc-' + i);
+  const fields = ['mact','maten','mben','mpres'].map(p => document.getElementById(p+'-'+i));
+  if (chk.checked) {
+    item.classList.add('selected');
+    if (loc) loc.classList.add('visible');
+    fields.forEach(f => { if(f) f.disabled = false; });
+    if (fields[0]) fields[0].focus();
+  } else {
+    item.classList.remove('selected');
+    if (loc) loc.classList.remove('visible');
+    fields.forEach(f => { if(f) { f.disabled = true; f.value = ''; } });
+    calcTotals();
+  }
+}
+
+function calcTotals() {
+  let totAct=0, totAten=0, totBen=0, totPres=0;
+  monthNames.forEach((_, i) => {
+    const chk = document.getElementById('mchk-' + i);
+    if (chk && chk.checked) {
+      totAct  += parseFloat(document.getElementById('mact-'+i)?.value) || 0;
+      totAten += parseFloat(document.getElementById('maten-'+i)?.value) || 0;
+      totBen  += parseFloat(document.getElementById('mben-'+i)?.value) || 0;
+      totPres += parseFloat(document.getElementById('mpres-'+i)?.value) || 0;
+    }
+  });
+  document.querySelectorAll('.loc-card').forEach(card => {
+    const idx = card.id.replace('loccard-','');
+    totAct  += parseFloat(document.getElementById('lm_act-'+idx)?.value) || 0;
+    totAten += parseFloat(document.getElementById('lm_aten-'+idx)?.value) || 0;
+    totBen  += parseFloat(document.getElementById('lm_ben-'+idx)?.value) || 0;
+    totPres += parseFloat(document.getElementById('lm_pres-'+idx)?.value) || 0;
+  });
+  document.getElementById('sum_actividades').textContent = totAct;
+  document.getElementById('sum_atenciones').textContent = totAten;
+  document.getElementById('sum_beneficiarios').textContent = totBen;
+  document.getElementById('sum_presupuesto').textContent = totPres.toFixed(2);
+  document.getElementById('total_activities').value = totAct || '';
+}
+function calcTotal() { calcTotals(); }
+
+// ─── LÓGICA DE CAMPOS ───
+function updateType() {
+  const cite = document.getElementById('cite').value;
+  const tipo = citeTipo[cite] || '';
+  const el = document.getElementById('tipoDisplay');
+  if (tipo) {
+    el.innerHTML = `<span class="tipo-badge ${tipo.toLowerCase()}">${tipo}</span>`;
+  } else {
+    el.innerHTML = `<span class="tipo-badge" style="opacity:.4;color:var(--muted)">Pendiente</span>`;
+  }
+  // Financiamiento según tipo
+  const finSel = document.getElementById('financing_type');
+  const prevVal = finSel.value;
+  finSel.innerHTML = '<option value="">– Seleccione –</option>';
+  const opts = tipo.toLowerCase() === 'privado'
+    ? financingTypesPrivado
+    : (tipo.toLowerCase() === 'público' || tipo.toLowerCase() === 'publico')
+      ? financingTypesPublico
+      : financingTypes;
+  opts.forEach(v => { const o = document.createElement('option'); o.value = v; o.textContent = v; finSel.appendChild(o); });
+  if (prevVal && opts.includes(prevVal)) finSel.value = prevVal;
+  computeIdentificador();
+}
+
+function updateSpecificActivity() {
+  const mode = document.getElementById('intervention_mode').value;
+  const sp = document.getElementById('specific_activity');
+  sp.innerHTML = '<option value="">– Seleccione –</option>';
+  if (mode && activityOptions[mode]) {
+    sp.disabled = false;
+    activityOptions[mode].forEach(a => { const o = document.createElement('option'); o.value = a; o.textContent = a; sp.appendChild(o); });
+  } else { sp.disabled = true; sp.innerHTML = '<option value="">Primero selecciona modalidad</option>'; }
+  computeIdentificador();
+}
+
+function toggleProjectedSales() {
+  const mode = document.getElementById('intervention_mode').value;
+  const sec = document.getElementById('projectedSalesSection');
+  mode === 'Articulación' ? sec.classList.remove('hidden') : sec.classList.add('hidden');
+  if (mode !== 'Articulación') document.getElementById('projected_sales').value = '';
+}
+
+function toggleOtherBeneficiary() {
+  const val = document.getElementById('beneficiary_type').value;
+  const other = document.getElementById('otherBeneficiaryGroup');
+  if (val === 'Otro (Especificar)') {
+    other.style.display = 'flex'; other.style.flexDirection = 'column'; other.style.gap = '4px';
+    document.getElementById('other_beneficiary').required = true;
+  } else {
+    other.style.display = 'none';
+    document.getElementById('other_beneficiary').required = false;
+  }
+}
+
+function validateNum(el, errId, len, msg) {
+  const err = document.getElementById(errId);
+  if (el.value && (el.value.length !== len || !/^\d+$/.test(el.value))) {
+    err.textContent = msg; err.classList.add('show'); el.style.borderColor = 'var(--red)';
+  } else { err.textContent = ''; err.classList.remove('show'); el.style.borderColor = ''; }
+}
+
+// ─── IDENTIFICADOR ───
+function getProvCode(region, province) {
+  if (!region || !province || !ubigeoData[region]) return '00';
+  const sorted = Object.keys(ubigeoData[region]).sort();
+  const i = sorted.indexOf(province);
+  return i >= 0 ? String(i + 1).padStart(2, '0') : '00';
+}
+function getDistCode(region, province, district) {
+  if (!region || !province || !district || !ubigeoData[region] || !ubigeoData[region][province]) return '00';
+  const sorted = ubigeoData[region][province].slice().sort();
+  const i = sorted.indexOf(district);
+  return i >= 0 ? String(i + 1).padStart(2, '0') : '00';
+}
+function getUbigeo(region, province, district) {
+  if (!region || !province || !district) return '000000';
+  return (regionCodes[region] || '00') + getProvCode(region, province) + getDistCode(region, province, district);
+}
+function getActCode(actVal) {
+  if (!actVal) return '00';
+  const m = actVal.match(/^(\d+)\./);
+  return m ? String(parseInt(m[1])).padStart(2, '0') : '00';
+}
+function computeIdentificador() {
+  if (_editingIdentificador) {
+    const el = document.getElementById('identificador');
+    if (el) el.value = _editingIdentificador;
+    return;
+  }
+  const cite = document.getElementById('cite')?.value || '';
+  const modal = document.getElementById('intervention_mode')?.value || '';
+  const act = document.getElementById('specific_activity')?.value || '';
+  const cc = citeCodes[cite] || '00';
+  const mm = modalidadCodes[modal] || '00';
+  const aa = getActCode(act);
+  let ubigeo = '000000';
+  // Use first valid national location card
+  const locCards2 = document.getElementById('locationRows')?.querySelectorAll('.loc-card:not(.foreign-card)') || [];
+  for (const card of locCards2) {
+    const cIdx = card.id.replace('loccard-','');
+    const reg  = document.getElementById('lreg-'+cIdx)?.value || '';
+    const prov = document.getElementById('lprov-'+cIdx)?.value || '';
+    const dist = document.getElementById('ldist-'+cIdx)?.value || '';
+    if (reg && prov && dist) { ubigeo = getUbigeo(reg, prov, dist); break; }
+  }
+  const corr = String(_idCorrelativo).padStart(3, '0');
+  const id = `${cc}${mm}${aa}${ubigeo}${corr}`;
+  const el = document.getElementById('identificador');
+  if (el) el.value = id;
+}
+
+// ─── LÍNEA ARTESANAL ───
+function buildArtisanCheckboxes() {
+  const container = document.getElementById('artisanLineContainer');
+  artisanLines.forEach((line, i) => {
+    const wrap = document.createElement('label');
+    wrap.style.cssText = 'display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;color:var(--navy);cursor:pointer;padding:3px 0;';
+    const chk = document.createElement('input');
+    chk.type = 'checkbox'; chk.className = 'artisan-chk'; chk.value = line; chk.id = 'artchk-' + i;
+    chk.style.cssText = 'width:auto;accent-color:var(--blue);';
+    chk.addEventListener('change', toggleArtisanOther);
+    wrap.appendChild(chk); wrap.appendChild(document.createTextNode(line));
+    container.appendChild(wrap);
+  });
+}
+
+function toggleArtisanOther() {
+  const OTHER = '17. Artesanías nuevas y otras no identificadas';
+  const chk = Array.from(document.querySelectorAll('.artisan-chk')).find(c => c.value === OTHER);
+  const grp = document.getElementById('artisanLineOtherGroup');
+  const inp = document.getElementById('artisan_line_other');
+  if (chk && chk.checked) { grp.style.display = 'block'; inp.required = true; inp.focus(); }
+  else { grp.style.display = 'none'; inp.required = false; inp.value = ''; }
+}
+
+function getArtisanLineValue() {
+  const selected = Array.from(document.querySelectorAll('.artisan-chk:checked')).map(c => c.value);
+  if (!selected.length) return '';
+  const OTHER = '17. Artesanías nuevas y otras no identificadas';
+  const idx = selected.indexOf(OTHER);
+  if (idx !== -1) {
+    const spec = document.getElementById('artisan_line_other').value.trim();
+    if (spec) selected[idx] = OTHER + ': ' + spec;
+  }
+  return selected.join(' | ');
+}
+
+// ─── RECOLECTAR DATOS ───
+function collectFormData() {
+  const g = id => { const el = document.getElementById(id); return el ? el.value || '' : ''; };
+  const meses = {};
+  monthNames.forEach((m, i) => {
+    const chk = document.getElementById('mchk-' + i);
+    if (chk && chk.checked) {
+      meses[m] = {
+        actividades:  parseFloat(document.getElementById('mact-'+i)?.value) || 0,
+        atenciones:   parseFloat(document.getElementById('maten-'+i)?.value) || 0,
+        beneficiarios:parseFloat(document.getElementById('mben-'+i)?.value) || 0,
+        presupuesto:  parseFloat(document.getElementById('mpres-'+i)?.value) || 0,
+      };
+    }
+  });
+  // Recolectar ubicaciones
+  const ubicaciones = [];
+  const locCards = document.getElementById('locationRows')?.querySelectorAll('.loc-card') || [];
+  locCards.forEach(card => {
+    const idx = card.id.replace('loccard-','');
+    const isForeign = card.classList.contains('foreign-card');
+    const entry = {
+      tipo: isForeign ? 'extranjero' : 'nacional',
+      actividades:   parseFloat(document.getElementById('lm_act-'+idx)?.value)  || 0,
+      atenciones:    parseFloat(document.getElementById('lm_aten-'+idx)?.value) || 0,
+      beneficiarios: parseFloat(document.getElementById('lm_ben-'+idx)?.value)  || 0,
+      presupuesto:   parseFloat(document.getElementById('lm_pres-'+idx)?.value) || 0,
+    };
+    if (isForeign) {
+      entry.pais   = document.getElementById('lf_pais-'+idx)?.value || '';
+      entry.ciudad = document.getElementById('lf_ciudad-'+idx)?.value || '';
+    } else {
+      entry.region    = document.getElementById('lreg-'+idx)?.value  || '';
+      entry.provincia = document.getElementById('lprov-'+idx)?.value || '';
+      entry.distrito  = document.getElementById('ldist-'+idx)?.value || '';
+      entry.direccion = document.getElementById('laddr-'+idx)?.value || '';
+    }
+    if (entry.region || entry.pais || entry.actividades) ubicaciones.push(entry);
+  });
+  const benefType = g('beneficiary_type');
+  return {
+    'Identificador': g('identificador'),
+    'Año': g('year'),
+    'CITE': g('cite'),
+    'Tipo de CITE': citeTipo[g('cite')] || '',
+    'Responsable': g('responsable'),
+    'Modalidad de intervención': g('intervention_mode'),
+    'Tipo de actividad': g('specific_activity'),
+    'Código de actividad': g('activity_code'),
+    'Nombre de la actividad': g('activity_name'),
+    'Unidad de medida': g('unit_of_measure'),
+    'Objetivo de la actividad': g('activity_objective'),
+    'Línea artesanal': getArtisanLineValue(),
+    'Proveedor del servicio': g('service_provider'),
+    'DNI del proveedor': g('provider_dni'),
+    'RUC del proveedor': g('provider_ruc'),
+    'Celular proveedor': g('provider_phone'),
+    'Correo proveedor': g('provider_email'),
+    'Temática proveedor 1': g('specialty'),
+    'Proveedor propuesto 2': g('service_provider_2'),
+    'DNI proveedor 2': g('provider_dni_2'),
+    'RUC proveedor 2': g('provider_ruc_2'),
+    'Celular proveedor 2': g('provider_phone_2'),
+    'Correo proveedor 2': g('provider_email_2'),
+    'Temática proveedor 2': g('specialty_2'),
+    'Proveedor propuesto 3': g('service_provider_3'),
+    'DNI proveedor 3': g('provider_dni_3'),
+    'RUC proveedor 3': g('provider_ruc_3'),
+    'Celular proveedor 3': g('provider_phone_3'),
+    'Correo proveedor 3': g('provider_email_3'),
+    'Temática proveedor 3': g('specialty_3'),
+    'Tipo de beneficiario': benefType === 'Otro (Especificar)' ? ('Otro: ' + g('other_beneficiary')) : benefType,
+    'Tipo de financiamiento': g('financing_type'),
+    'Meses seleccionados': Object.keys(meses).join(', '),
+    'Distribución mensual': JSON.stringify(meses),
+    'Resumen programación mensual': Object.entries(meses).map(([m, v]) =>
+      `${m}: act=${v.actividades} aten=${v.atenciones} ben=${v.beneficiarios} pres=S/.${v.presupuesto.toFixed(2)}`
+    ).join(' | '),
+    'Ubicaciones': JSON.stringify(ubicaciones),
+    'Total actividades': document.getElementById('sum_actividades')?.textContent || '0',
+    'Total atenciones': document.getElementById('sum_atenciones')?.textContent || '0',
+    'Total beneficiarios': document.getElementById('sum_beneficiarios')?.textContent || '0',
+    'Total presupuesto (S/.)': document.getElementById('sum_presupuesto')?.textContent || '0.00',
+    'Ventas proyectadas (S/.)': g('projected_sales') || '',
+    'Observaciones': g('observations'),
+    'Fecha de registro': new Date().toLocaleString('es-PE'),
+    'Versión formulario': 'CITE_Actividades_2026_v14'
+  };
+}
+
+// ─── VALIDAR FORMULARIO ───
+function validateForm() {
+  const checkedMonths = document.querySelectorAll('[id^="mchk-"]:checked');
+  if (checkedMonths.length === 0) { showToast('⚠ Seleccione al menos un mes en la meta mensual'); return false; }
+  let hasMetric = false;
+  checkedMonths.forEach(chk => {
+    const idx = chk.id.replace('mchk-', '');
+    const act = document.getElementById('mact-' + idx);
+    if (act && act.value && parseInt(act.value) > 0) hasMetric = true;
+  });
+  if (!hasMetric) { showToast('⚠ Especifique las actividades para los meses seleccionados'); return false; }
+  return true;
+}
+
+// ─── BANDEJA ───
+function loadBandeja() {
+  try { bandeja = JSON.parse(localStorage.getItem('cite_bandeja_2026') || '[]'); } catch (e) { bandeja = []; }
+}
+function saveBandeja() {
+  try { localStorage.setItem('cite_bandeja_2026', JSON.stringify(bandeja)); } catch (e) {}
+}
+
+function renderBandeja() {
+  const count = bandeja.length;
+  document.getElementById('trayCount').textContent = count;
+  const emptyEl = document.getElementById('trayEmpty');
+  const listEl = document.getElementById('trayList');
+  const actionsEl = document.getElementById('trayActions');
+  document.getElementById('formActivityNum').textContent = 'N° ' + (count + 1);
+
+  if (count === 0) {
+    emptyEl.style.display = ''; listEl.style.display = 'none'; actionsEl.style.display = 'none'; return;
+  }
+  emptyEl.style.display = 'none'; listEl.style.display = 'flex'; actionsEl.style.display = 'flex';
+
+  const pending = bandeja.filter(a => a._status === 'pending').length;
+  const sent = bandeja.filter(a => a._status === 'sent').length;
+  const errored = bandeja.filter(a => a._status === 'error').length;
+  let sumTxt = [];
+  if (pending > 0) sumTxt.push(pending + ' pendiente' + (pending !== 1 ? 's' : ''));
+  if (sent > 0) sumTxt.push(sent + ' enviada' + (sent !== 1 ? 's' : ''));
+  if (errored > 0) sumTxt.push('<span style="color:var(--red)">' + errored + ' con error</span>');
+  document.getElementById('traySummary').innerHTML = sumTxt.join(' · ');
+
+  listEl.innerHTML = bandeja.map((a, i) => {
+    const st = a._status || 'pending';
+    const stLabel = { pending: '⏳ Pendiente', sent: '✓ Enviada', error: '✗ Error' }[st] || '';
+    return `<div class="tray-item">
+      <div class="ti-num">${i + 1}</div>
+      <div class="ti-info">
+        <div class="ti-name">${a['Nombre de la actividad'] || '(sin nombre)'}</div>
+        <div class="ti-meta">
+          <span class="ti-tag">${a['CITE'] || ''}</span>
+          <span class="ti-tag gold">${a['Modalidad de intervención'] || ''}</span>
+          ${a['Identificador'] ? `<span class="ti-tag" style="background:rgba(26,39,68,.1);color:var(--navy);font-family:monospace;letter-spacing:1px">${a['Identificador']}</span>` : ''}
+          <span class="ti-tag green">${a['Fecha de registro'] || ''}</span>
+        </div>
+      </div>
+      <span class="ti-status ${st}">${stLabel}</span>
+      <button class="btn-ti-del" title="Eliminar" onclick="removeFromBandeja(${i})">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>`;
+  }).join('');
+
+  const btnSendAll = document.getElementById('btnSendAll');
+  if (btnSendAll) btnSendAll.disabled = !APPS_SCRIPT_URL || pending === 0;
+}
+
+function removeFromBandeja(idx) {
+  if (!confirm('¿Eliminar esta actividad de la bandeja?')) return;
+  bandeja.splice(idx, 1);
+  saveBandeja(); renderBandeja();
+  showToast('Actividad eliminada');
+}
+
+function clearTray() {
+  if (bandeja.length === 0) { showToast('La bandeja ya está vacía'); return; }
+  if (!confirm('¿Vaciar toda la bandeja?')) return;
+  bandeja = []; saveBandeja(); renderBandeja();
+  showToast('Bandeja vaciada');
+}
+
+// ─── AGREGAR A BANDEJA ───
+async function addToBandeja(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  if (!document.getElementById('citeForm').checkValidity()) {
+    document.getElementById('citeForm').reportValidity(); return;
+  }
+  if (!validateForm()) return;
+
+  const btn = document.getElementById('btnAdd');
+  const origTxt = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Reservando ID...';
+
+  // Obtener correlativo del servidor si hay URL
+  if (APPS_SCRIPT_URL) {
+    const serverCorr = await fetchServerCorrelativo();
+    if (serverCorr) _idCorrelativo = serverCorr;
+  }
+  computeIdentificador();
+
+  const data = collectFormData();
+  data._status = 'pending';
+  data._id = 'act_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+
+  bandeja.push(data);
+  saveBandeja();
+  renderBandeja();
+  _idCorrelativo++;
+  computeIdentificador();
+
+  btn.disabled = false; btn.innerHTML = origTxt;
+  showToast('✓ Actividad agregada a la bandeja (N° ' + bandeja.length + ')');
+  resetForm();
+}
+
+// ─── ENVIAR TODA LA BANDEJA ───
+async function sendAll() {
+  if (!APPS_SCRIPT_URL) { showToast('Sin URL configurada'); return; }
+  const pending = bandeja.filter(a => a._status === 'pending');
+  if (pending.length === 0) { showToast('No hay actividades pendientes'); return; }
+
+  const btn = document.getElementById('btnSendAll');
+  btn.disabled = true;
+  const progress = document.getElementById('trayProgress');
+  const progBar = document.getElementById('trayProgBar');
+  const progTxt = document.getElementById('trayProgressTxt');
+  progress.classList.add('show');
+
+  let sent = 0;
+  for (const act of pending) {
+    progTxt.textContent = `Enviando ${sent + 1} de ${pending.length}…`;
+    progBar.style.width = (sent / pending.length * 100) + '%';
+    try {
+      const encoded = encodeURIComponent(JSON.stringify(act));
+      const resp = await fetch(APPS_SCRIPT_URL + '?action=save&data=' + encoded);
+      let ok = false;
+      try { const j = await resp.json(); ok = j.ok !== false; } catch (_) { ok = true; }
+      act._status = ok ? 'sent' : 'error';
+    } catch (err) {
+      act._status = 'error';
+    }
+    sent++;
+    saveBandeja();
+  }
+
+  progBar.style.width = '100%';
+  progTxt.textContent = `Completado: ${sent} actividades`;
+  setTimeout(() => progress.classList.remove('show'), 2000);
+
+  renderBandeja();
+  const errors = bandeja.filter(a => a._status === 'error').length;
+  if (errors > 0) {
+    showToast(`⚠ ${sent - errors} enviadas, ${errors} con error. Intente de nuevo.`);
+  } else {
+    showToast(`✓ ${sent} actividad(es) enviadas a Google Sheets correctamente`);
+  }
+  btn.disabled = false;
+}
+
+// ─── CORRELATIVO ───
+async function syncCorrelativo() {
+  const el = document.getElementById('corrSyncStatus');
+  if (!APPS_SCRIPT_URL) {
+    if (el) el.textContent = '📴 local: ' + _idCorrelativo;
+    return;
+  }
+  try {
+    const resp = await fetch(APPS_SCRIPT_URL + '?action=peek');
+    const j = await resp.json();
+    if (j.ok && j.correlativo) {
+      _idCorrelativo = j.correlativo;
+      computeIdentificador();
+      if (el) { el.textContent = '🔗 correlativo: ' + j.correlativo; el.style.color = 'var(--green)'; }
+    }
+  } catch (e) {
+    if (el) { el.textContent = '📴 local: ' + _idCorrelativo; }
+  }
+}
+
+async function fetchServerCorrelativo() {
+  if (!APPS_SCRIPT_URL) return null;
+  try {
+    const resp = await fetch(APPS_SCRIPT_URL + '?action=correlativo');
+    const j = await resp.json();
+    if (j.ok && j.correlativo) return j.correlativo;
+  } catch (e) {}
+  return null;
+}
+
+// ─── RESET ───
+function resetForm() {
+  _editingIdentificador = null;
+  document.getElementById('citeForm').reset();
+  document.getElementById('year').value = new Date().getFullYear();
+  document.getElementById('identificador').value = '';
+  document.getElementById('tipoDisplay').innerHTML = '<span class="tipo-badge" style="opacity:.4;color:var(--muted)">Pendiente</span>';
+  document.getElementById('specific_activity').disabled = true;
+  document.getElementById('specific_activity').innerHTML = '<option value="">Primero selecciona modalidad</option>';
+  document.getElementById('projectedSalesSection').classList.add('hidden');
+  document.getElementById('otherBeneficiaryGroup').style.display = 'none';
+  document.querySelectorAll('.artisan-chk').forEach(c => c.checked = false);
+  document.getElementById('artisanLineOtherGroup').style.display = 'none';
+  document.getElementById('artisan_line_other').value = '';
+  document.getElementById('artisan_line_other').required = false;
+  monthNames.forEach((_, i) => {
+    const chk = document.getElementById('mchk-' + i);
+    const item = document.getElementById('mitem-' + i);
+    const loc = document.getElementById('mloc-' + i);
+    if (chk) chk.checked = false;
+    if (item) item.classList.remove('selected');
+    if (loc) loc.classList.remove('visible');
+    ['mact','maten','mben','mpres'].forEach(p => {
+      const f = document.getElementById(p+'-'+i);
+      if (f) { f.disabled = true; f.value = ''; }
+    });
+  });
+  // Reset location rows
+  const locRows = document.getElementById('locationRows');
+  if (locRows) locRows.innerHTML = '';
+  _locCount = 0;
+  addLocationRow('national');
+  // Reset totals
+  document.getElementById('sum_actividades').textContent = '0';
+  document.getElementById('sum_atenciones').textContent = '0';
+  document.getElementById('sum_beneficiarios').textContent = '0';
+  document.getElementById('sum_presupuesto').textContent = '0.00';
+  document.getElementById('total_activities').value = '';
+  updateAddLocBtn();
+  const syncEl = document.getElementById('corrSyncStatus');
+  if (syncEl) { syncEl.textContent = '⏳ sincronizando…'; syncEl.style.color = ''; }
+  if (APPS_SCRIPT_URL) syncCorrelativo();
+  else { _idCorrelativo++; computeIdentificador(); }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
