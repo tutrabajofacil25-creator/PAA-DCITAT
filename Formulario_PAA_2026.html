@@ -780,9 +780,9 @@ let APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyvCWBcIqcdizJ28g
 
 // ─── INIT ───
 document.addEventListener('DOMContentLoaded', () => {
-  // Leer URL del Apps Script desde el parámetro ?u=
+  // Leer URL del Apps Script desde ?u= solo si viene; sino usa la hardcodeada
   const params = new URLSearchParams(window.location.search);
-  APPS_SCRIPT_URL = params.get('u') ? decodeURIComponent(params.get('u')) : '';
+  if (params.get('u')) APPS_SCRIPT_URL = decodeURIComponent(params.get('u'));
 
   if (!APPS_SCRIPT_URL) {
     document.getElementById('warnNoUrl').classList.add('show');
