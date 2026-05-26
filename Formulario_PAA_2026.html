@@ -284,12 +284,6 @@ footer{text-align:center;padding:24px;color:var(--muted);font-size:11px;letter-s
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
           Información Básica
         </div>
-        <!-- Identificador -->
-        <div class="id-field-wrap">
-          <span class="id-label">🔑 Identificador</span>
-          <input type="text" id="identificador" class="id-badge" readonly placeholder="Se genera automáticamente…"/>
-          <span class="sync-status" id="corrSyncStatus">⏳ sincronizando…</span>
-        </div>
         <div class="grid grid-2">
           <div class="field">
             <label>Año</label>
@@ -541,9 +535,9 @@ footer{text-align:center;padding:24px;color:var(--muted);font-size:11px;letter-s
         <div class="location-section" style="margin-top:18px">
           <div class="location-section-title">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Lugares de ejecución (máximo 6 regiones)
+            Lugares de ejecución (máximo 6 nacionales + 2 internacionales)
           </div>
-          <p style="font-size:11px;color:var(--muted);margin-bottom:10px">Agregue hasta 6 registros de lugar. Use <strong>Ubicación nacional</strong> (región/provincia/distrito) o <strong>Actividad en el extranjero</strong> (país/ciudad). Indique métricas por lugar.</p>
+          <p style="font-size:11px;color:var(--muted);margin-bottom:10px">Agregue hasta <strong>6 ubicaciones nacionales</strong> (región/provincia/distrito) y hasta <strong>2 actividades en el extranjero</strong> (país/ciudad). Indique métricas por lugar.</p>
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
             <button type="button" class="btn-add-loc" id="btnAddLoc" onclick="addLocationRow('national')">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" style="vertical-align:middle;margin-right:4px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -576,6 +570,19 @@ footer{text-align:center;padding:24px;color:var(--muted);font-size:11px;letter-s
             <span class="total-card-val" id="sum_presupuesto" style="font-size:15px">0.00</span>
           </div>
         </div>
+
+        <!-- PANEL DE CONSISTENCIA -->
+        <div id="consistencyPanel" style="margin-top:12px;border-radius:8px;border:1.5px solid #ddd5c8;padding:12px 16px;background:#faf8f3;display:none">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#6b6b6b;margin-bottom:10px;display:flex;align-items:center;gap:6px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            Consistencia: Meta Mensual vs. Lugares de ejecución
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px" id="consistencyGrid">
+            <!-- filled by JS -->
+          </div>
+          <div id="consistencyMsg" style="margin-top:10px;font-size:12px;border-radius:6px;padding:8px 12px;display:none"></div>
+        </div>
+
         <!-- Campo oculto para compatibilidad -->
         <input type="hidden" id="total_activities"/>
       </div>
@@ -626,6 +633,91 @@ footer{text-align:center;padding:24px;color:var(--muted);font-size:11px;letter-s
 
 </div><!-- /.container -->
 
+<!-- BOTÓN FLOTANTE EDICIÓN -->
+<button id="btnOpenEdit" onclick="openEditModal()" title="Editar registro existente"
+  style="position:fixed;bottom:24px;left:24px;z-index:900;background:#1a2744;color:#fff;border:none;border-radius:50px;padding:11px 20px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 18px rgba(26,39,68,.35);display:flex;align-items:center;gap:8px;transition:background .2s">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+  Editar registro
+</button>
+
+<!-- MODAL EDICIÓN -->
+<div id="editModal" style="display:none;position:fixed;inset:0;z-index:950;background:rgba(0,0,0,.55);overflow-y:auto;padding:24px 16px">
+  <div style="max-width:680px;margin:0 auto;background:#fff;border-radius:14px;box-shadow:0 8px 40px rgba(0,0,0,.25);overflow:hidden">
+
+    <!-- Header modal -->
+    <div style="background:linear-gradient(135deg,#1a2744,#243352);color:#fff;padding:18px 24px;display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:10px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        <div>
+          <div style="font-size:15px;font-weight:700">Editar registro en Google Sheets</div>
+          <div style="font-size:11px;opacity:.7;margin-top:1px">Busca, modifica y actualiza una actividad existente</div>
+        </div>
+      </div>
+      <button onclick="closeEditModal()" style="background:rgba(255,255,255,.15);border:none;color:#fff;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center">✕</button>
+    </div>
+
+    <div style="padding:22px 24px">
+
+      <!-- PASO 1: BUSCAR -->
+      <div id="editStep1">
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c08a3e;margin-bottom:14px">① Buscar registro</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+          <div class="field">
+            <label>Buscar por campo</label>
+            <select id="editSearchField">
+              <option value="Nombre de la actividad">Nombre de la actividad</option>
+              <option value="CITE">CITE</option>
+              <option value="Responsable">Responsable</option>
+              <option value="Tipo de actividad">Tipo de actividad</option>
+              <option value="Fecha de registro">Fecha de registro</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Valor a buscar</label>
+            <input type="text" id="editSearchValue" placeholder="Escriba para buscar…" onkeydown="if(event.key==='Enter')searchEditRecords()"/>
+          </div>
+        </div>
+        <button onclick="searchEditRecords()" id="btnEditSearch"
+          style="background:#2980b9;color:#fff;border:none;border-radius:7px;padding:9px 20px;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:7px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Buscar
+        </button>
+        <div id="editSearchStatus" style="margin-top:10px;font-size:12px;color:#6b6b6b"></div>
+        <!-- Resultados -->
+        <div id="editSearchResults" style="margin-top:12px;display:none;max-height:240px;overflow-y:auto;border:1px solid #ddd5c8;border-radius:8px"></div>
+      </div>
+
+      <!-- PASO 2: EDITAR CAMPOS -->
+      <div id="editStep2" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c08a3e">② Editar campos</div>
+          <button onclick="backToSearch()" style="background:none;border:1px solid #ddd5c8;color:#1a2744;border-radius:6px;padding:5px 12px;font-size:11px;font-weight:600;cursor:pointer">← Volver a búsqueda</button>
+        </div>
+        <div id="editRecordInfo" style="background:#f0ece5;border-radius:7px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:#2c2c2c"></div>
+
+        <!-- Campos editables -->
+        <div style="display:flex;flex-direction:column;gap:10px" id="editFieldsContainer">
+          <!-- se genera dinámicamente -->
+        </div>
+
+        <!-- Aviso consistencia si aplica -->
+        <div id="editConsistencyWarn" style="display:none;margin-top:12px;background:rgba(192,57,43,.08);border:1px solid #f5c6cb;border-radius:7px;padding:10px 14px;font-size:12px;color:#c0392b"></div>
+
+        <div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap">
+          <button onclick="saveEditRecord()" id="btnEditSave"
+            style="background:#27ae60;color:#fff;border:none;border-radius:7px;padding:10px 24px;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:7px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>
+            Guardar cambios
+          </button>
+          <button onclick="closeEditModal()" style="background:none;border:1px solid #ddd5c8;color:#6b6b6b;border-radius:7px;padding:9px 18px;font-size:12px;font-weight:600;cursor:pointer">Cancelar</button>
+          <div id="editSaveStatus" style="font-size:12px;color:#6b6b6b;align-self:center;margin-left:4px"></div>
+        </div>
+      </div>
+
+    </div><!-- /padding -->
+  </div>
+</div>
+
 <footer>Sistema de Registro CITE 2026 · Los datos se almacenan en Google Sheets</footer>
 
 <!-- TOAST -->
@@ -661,7 +753,7 @@ const activityOptions = {
   "Articulación":["1. Articulación institucional y gobernanza","2. Articulación para el desarrollo de iniciativas","3. Articulación comercial y de acceso a mercados","4. Articulación networking y negociación","5. Articulación comercial turístico-artesanal","6. Articulación regulatoria y de reconocimiento institucional"]
 };
 const artisanLines = ["01. Alfarería y cerámica","02. Bisutería","03. Cerería","04. Cueros y pieles","05. Fibras vegetales","06. Imaginería","07. Instrumentos musicales","08. Joyería y orfebrería","09. Resinas naturales","10. Mates y Huingos","11. Metalistería","12. Pintura","13. Recurso Acuícola","14. Talla","15. Textilería","16. Vidrio","17. Artesanías nuevas y otras no identificadas","No aplica"];
-const beneficiaryTypes = ["Alpaquero","Proveedores de materias primas","Proveedores de servicios técnicos","Artesanos","Unidades productivas artesanales","Asociaciones, cooperativas y comunidades artesanales","Diseñadores","Equipos creativos y técnicos especializados","Universidades, institutos y escuelas de diseño","Comercializadores de artesanía","Exportadores y operadores comerciales","Compradores institucionales","Operadores turísticos","Turistas nacionales","Turistas internacionales","Instituciones Educativas","Otro (Especificar)"];
+const beneficiaryTypes = ["Alpaquero","Artesanos","Asociaciones, cooperativas y comunidades artesanales","Comercializadores de artesanía","Compradores institucionales","Diseñadores","Equipos creativos y técnicos especializados","Exportadores y operadores comerciales","Instituciones Educativas","Operadores turísticos","Proveedores de materias primas","Proveedores de servicios técnicos","Turistas internacionales","Turistas nacionales","Unidades productivas artesanales","Universidades, institutos y escuelas de diseño","Otro (Especificar)"];
 const financingTypesPublico = ["Público- Recursos Directamente Recaudados (RDR)","Público-Recursos Ordinarios (RO)","Público-Recursos Externos (RE)"];
 const financingTypesPrivado = ["Privado-Subvención","Privado-Recurso Propios (RP)"];
 const financingTypes = [...financingTypesPublico, ...financingTypesPrivado];
@@ -684,7 +776,7 @@ const ubigeoData = {"AMAZONAS":{"CHACHAPOYAS":["CHACHAPOYAS","ASUNCION","BALSAS"
 let bandeja = [];
 let _idCorrelativo = 1;
 let _editingIdentificador = null;
-let APPS_SCRIPT_URL = '';  // Se inyecta desde la URL (?u=...)
+let APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyvCWBcIqcdizJ28gDoajCOVHLXgEaLWjHCUkn_6ylenq9HdJ9b1-gnwhB70ljEEcs-yg/exec';
 
 // ─── INIT ───
 document.addEventListener('DOMContentLoaded', () => {
@@ -767,7 +859,7 @@ function generateMonths() {
 
 // ─── UBICACIONES ───
 let _locCount = 0;
-const MAX_LOC = 6;
+const MAX_LOC = 8;
 const MAX_FOREIGN = 2;
 
 function countForeignRows() {
@@ -777,9 +869,12 @@ function countForeignRows() {
 function addLocationRow(type) {
   const rows = document.getElementById('locationRows');
   const current = rows.querySelectorAll('.loc-card').length;
-  if (current >= MAX_LOC) { showToast('Máximo 6 registros de ubicación permitidos'); return; }
+  if (current >= MAX_LOC) { showToast('Máximo 8 registros de ubicación permitidos (6 nacionales + 2 internacionales)'); return; }
   if (type === 'foreign' && countForeignRows() >= MAX_FOREIGN) {
     showToast('Máximo 2 actividades en el extranjero permitidas'); return;
+  }
+  if (type === 'national' && (current - countForeignRows()) >= 6) {
+    showToast('Máximo 6 ubicaciones nacionales permitidas'); return;
   }
   const idx = _locCount++;
   const card = document.createElement('div');
@@ -887,8 +982,9 @@ function updateAddLocBtn() {
   const btnF = document.getElementById('btnAddLocForeign');
   const total   = rows ? rows.querySelectorAll('.loc-card').length : 0;
   const foreign = countForeignRows();
-  if (btn)  btn.style.display  = (total >= MAX_LOC) ? 'none' : '';
-  if (btnF) btnF.style.display = (total >= MAX_LOC || foreign >= MAX_FOREIGN) ? 'none' : '';
+  const national = total - foreign;
+  if (btn)  btn.style.display  = (national >= 6 || total >= MAX_LOC) ? 'none' : '';
+  if (btnF) btnF.style.display = (foreign >= MAX_FOREIGN || total >= MAX_LOC) ? 'none' : '';
 }
 
 function updateLocProv(idx) {
@@ -951,18 +1047,73 @@ function calcTotals() {
       totPres += parseFloat(document.getElementById('mpres-'+i)?.value) || 0;
     }
   });
-  document.querySelectorAll('.loc-card').forEach(card => {
-    const idx = card.id.replace('loccard-','');
-    totAct  += parseFloat(document.getElementById('lm_act-'+idx)?.value) || 0;
-    totAten += parseFloat(document.getElementById('lm_aten-'+idx)?.value) || 0;
-    totBen  += parseFloat(document.getElementById('lm_ben-'+idx)?.value) || 0;
-    totPres += parseFloat(document.getElementById('lm_pres-'+idx)?.value) || 0;
-  });
   document.getElementById('sum_actividades').textContent = totAct;
   document.getElementById('sum_atenciones').textContent = totAten;
   document.getElementById('sum_beneficiarios').textContent = totBen;
   document.getElementById('sum_presupuesto').textContent = totPres.toFixed(2);
   document.getElementById('total_activities').value = totAct || '';
+
+  // ─── CONSISTENCIA: sumar métricas de lugares de ejecución ───
+  let locAct=0, locAten=0, locBen=0, locPres=0;
+  document.querySelectorAll('.loc-card').forEach(card => {
+    const idx = card.id.replace('loccard-','');
+    locAct  += parseFloat(document.getElementById('lm_act-'+idx)?.value) || 0;
+    locAten += parseFloat(document.getElementById('lm_aten-'+idx)?.value) || 0;
+    locBen  += parseFloat(document.getElementById('lm_ben-'+idx)?.value) || 0;
+    locPres += parseFloat(document.getElementById('lm_pres-'+idx)?.value) || 0;
+  });
+
+  const hasLocCards = document.querySelectorAll('.loc-card').length > 0;
+  const hasMonthData = totAct > 0 || totAten > 0 || totBen > 0 || totPres > 0;
+  const panel = document.getElementById('consistencyPanel');
+
+  if (!hasLocCards || (!hasMonthData && locAct === 0 && locAten === 0 && locBen === 0 && locPres === 0)) {
+    panel.style.display = 'none';
+    return;
+  }
+  panel.style.display = '';
+
+  const metrics = [
+    { lbl:'Actividades',      meta: totAct,  loc: locAct,  fmt: v => v },
+    { lbl:'Atenciones',       meta: totAten, loc: locAten, fmt: v => v },
+    { lbl:'Beneficiarios',    meta: totBen,  loc: locBen,  fmt: v => v },
+    { lbl:'Presupuesto (S/.)',meta: totPres, loc: locPres, fmt: v => v.toFixed(2) }
+  ];
+
+  const allOk = metrics.every(m => Math.abs(m.meta - m.loc) < 0.01);
+
+  document.getElementById('consistencyGrid').innerHTML = metrics.map(m => {
+    const ok = Math.abs(m.meta - m.loc) < 0.01;
+    const diff = m.meta - m.loc;
+    const color = ok ? '#27ae60' : '#c0392b';
+    const bg    = ok ? 'rgba(39,174,96,.08)' : 'rgba(192,57,43,.08)';
+    const icon  = ok ? '✓' : '✗';
+    const diffTxt = ok ? '' : `<div style="font-size:10px;color:${color};margin-top:2px">${diff > 0 ? '+' : ''}${m.fmt(diff)} diferencia</div>`;
+    return `<div style="border:1px solid ${color};border-radius:6px;padding:8px 10px;background:${bg}">
+      <div style="font-size:10px;font-weight:700;color:#6b6b6b;text-transform:uppercase;letter-spacing:.5px">${m.lbl}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
+        <div style="font-size:11px;color:#2c2c2c">Meta: <strong>${m.fmt(m.meta)}</strong></div>
+        <span style="font-size:13px;font-weight:700;color:${color}">${icon}</span>
+      </div>
+      <div style="font-size:11px;color:#2c2c2c">Lugares: <strong>${m.fmt(m.loc)}</strong></div>
+      ${diffTxt}
+    </div>`;
+  }).join('');
+
+  const msgEl = document.getElementById('consistencyMsg');
+  if (allOk) {
+    msgEl.style.display = '';
+    msgEl.style.background = 'rgba(39,174,96,.1)';
+    msgEl.style.border = '1px solid #a8e6c8';
+    msgEl.style.color = '#1a7a40';
+    msgEl.innerHTML = '✓ <strong>Consistencia verificada:</strong> Los totales de Meta Mensual coinciden con los Lugares de ejecución.';
+  } else {
+    msgEl.style.display = '';
+    msgEl.style.background = 'rgba(192,57,43,.08)';
+    msgEl.style.border = '1px solid #f5c6cb';
+    msgEl.style.color = '#c0392b';
+    msgEl.innerHTML = '✗ <strong>Inconsistencia detectada:</strong> Ajuste las métricas de Lugares de ejecución para que sumen igual a los totales de Meta Mensual.';
+  }
 }
 function calcTotal() { calcTotals(); }
 
@@ -1154,7 +1305,6 @@ function collectFormData() {
   });
   const benefType = g('beneficiary_type');
   return {
-    'Identificador': g('identificador'),
     'Año': g('year'),
     'CITE': g('cite'),
     'Tipo de CITE': citeTipo[g('cite')] || '',
@@ -1214,6 +1364,36 @@ function validateForm() {
     if (act && act.value && parseInt(act.value) > 0) hasMetric = true;
   });
   if (!hasMetric) { showToast('⚠ Especifique las actividades para los meses seleccionados'); return false; }
+
+  // ─── VALIDAR CONSISTENCIA META MENSUAL vs LUGARES ───
+  const locCards = document.querySelectorAll('.loc-card');
+  if (locCards.length > 0) {
+    let totAct=0,totAten=0,totBen=0,totPres=0,locAct=0,locAten=0,locBen=0,locPres=0;
+    monthNames.forEach((_,i)=>{
+      const chk=document.getElementById('mchk-'+i);
+      if(chk&&chk.checked){
+        totAct +=parseFloat(document.getElementById('mact-'+i)?.value)||0;
+        totAten+=parseFloat(document.getElementById('maten-'+i)?.value)||0;
+        totBen +=parseFloat(document.getElementById('mben-'+i)?.value)||0;
+        totPres+=parseFloat(document.getElementById('mpres-'+i)?.value)||0;
+      }
+    });
+    locCards.forEach(card=>{
+      const idx=card.id.replace('loccard-','');
+      locAct +=parseFloat(document.getElementById('lm_act-'+idx)?.value)||0;
+      locAten+=parseFloat(document.getElementById('lm_aten-'+idx)?.value)||0;
+      locBen +=parseFloat(document.getElementById('lm_ben-'+idx)?.value)||0;
+      locPres+=parseFloat(document.getElementById('lm_pres-'+idx)?.value)||0;
+    });
+    const inconsistent =
+      Math.abs(totAct-locAct)>=1 || Math.abs(totAten-locAten)>=1 ||
+      Math.abs(totBen-locBen)>=1 || Math.abs(totPres-locPres)>=0.01;
+    if (inconsistent) {
+      showToast('⚠ Los totales de Meta Mensual no coinciden con los Lugares de ejecución. Revise el panel de consistencia.');
+      document.getElementById('consistencyPanel')?.scrollIntoView({behavior:'smooth',block:'center'});
+      return false;
+    }
+  }
   return true;
 }
 
@@ -1440,6 +1620,269 @@ function resetForm() {
   else { _idCorrelativo++; computeIdentificador(); }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+// ═══════════════════════════════════════════════════════
+// MÓDULO DE EDICIÓN DE REGISTROS EN GOOGLE SHEETS
+// ═══════════════════════════════════════════════════════
+
+// Campos editables y su etiqueta para el usuario
+const EDIT_FIELDS = [
+  'Nombre de la actividad',
+  'Responsable',
+  'Objetivo de la actividad',
+  'Tipo de beneficiario',
+  'Tipo de financiamiento',
+  'Línea artesanal',
+  'Proveedor del servicio',
+  'DNI del proveedor',
+  'RUC del proveedor',
+  'Celular proveedor',
+  'Correo proveedor',
+  'Temática proveedor 1',
+  'Proveedor propuesto 2',
+  'Proveedor propuesto 3',
+  'Meses seleccionados',
+  'Distribución mensual',
+  'Ubicaciones',
+  'Total actividades',
+  'Total atenciones',
+  'Total beneficiarios',
+  'Total presupuesto (S/.)',
+  'Ventas proyectadas (S/.)',
+  'Observaciones',
+];
+
+// Campos de sólo lectura (identificación del registro)
+const READ_ONLY_FIELDS = ['Año','CITE','Tipo de CITE','Modalidad de intervención','Tipo de actividad','Código de actividad','Fecha de registro','Versión formulario'];
+
+let _editCurrentRecord = null; // { rowIndex, data }
+let _editSearchPage    = 0;
+
+function openEditModal() {
+  if (!APPS_SCRIPT_URL) {
+    showToast('⚠ El sistema no tiene URL configurada. No es posible buscar registros.');
+    return;
+  }
+  document.getElementById('editModal').style.display = '';
+  document.body.style.overflow = 'hidden';
+  backToSearch();
+}
+
+function closeEditModal() {
+  document.getElementById('editModal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function backToSearch() {
+  document.getElementById('editStep1').style.display = '';
+  document.getElementById('editStep2').style.display = 'none';
+  document.getElementById('editSearchStatus').textContent = '';
+  document.getElementById('editSearchResults').style.display = 'none';
+  document.getElementById('editSearchResults').innerHTML = '';
+  _editCurrentRecord = null;
+}
+
+async function searchEditRecords() {
+  const field = document.getElementById('editSearchField').value;
+  const value = document.getElementById('editSearchValue').value.trim();
+  if (!value) { document.getElementById('editSearchStatus').textContent = '⚠ Ingrese un valor para buscar.'; return; }
+
+  const btn    = document.getElementById('btnEditSearch');
+  const status = document.getElementById('editSearchStatus');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Buscando…';
+  status.textContent = '';
+
+  try {
+    const params = new URLSearchParams({ action: 'search', field, value });
+    const resp   = await fetch(APPS_SCRIPT_URL + '?' + params.toString());
+    const json   = await resp.json();
+
+    if (!json.ok) {
+      status.textContent = '✗ Error del servidor: ' + (json.error || 'desconocido');
+      return;
+    }
+    const results = json.results || [];
+    if (results.length === 0) {
+      status.textContent = '🔍 No se encontraron registros con ese criterio.';
+      document.getElementById('editSearchResults').style.display = 'none';
+      return;
+    }
+    status.textContent = `✓ ${results.length} registro(s) encontrado(s). Seleccione uno para editar.`;
+    renderSearchResults(results);
+  } catch (e) {
+    status.textContent = '✗ Error de conexión: ' + e.message;
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Buscar';
+  }
+}
+
+function renderSearchResults(results) {
+  const container = document.getElementById('editSearchResults');
+  container.style.display = '';
+  container.innerHTML = results.map((r, i) => {
+    const cite      = r.data['CITE'] || '—';
+    const nombre    = r.data['Nombre de la actividad'] || '(sin nombre)';
+    const fecha     = r.data['Fecha de registro'] || '—';
+    const modalidad = r.data['Modalidad de intervención'] || '—';
+    return `<div onclick="selectEditRecord(${JSON.stringify(JSON.stringify(r)).replace(/'/g,"\\'")})"
+      style="padding:10px 14px;cursor:pointer;border-bottom:1px solid #f0ece5;transition:background .15s"
+      onmouseover="this.style.background='#f0f7ff'" onmouseout="this.style.background=''">
+      <div style="font-size:13px;font-weight:600;color:#1a2744">${nombre}</div>
+      <div style="font-size:11px;color:#6b6b6b;margin-top:2px;display:flex;gap:10px;flex-wrap:wrap">
+        <span>📍 CITE: <strong>${cite}</strong></span>
+        <span>📋 ${modalidad}</span>
+        <span>🕐 ${fecha}</span>
+        <span style="color:#2980b9;font-weight:700">Fila ${r.rowIndex}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function selectEditRecord(rJson) {
+  const r = JSON.parse(rJson);
+  _editCurrentRecord = r;
+
+  // Info del registro seleccionado
+  const info = document.getElementById('editRecordInfo');
+  info.innerHTML = `<strong>Registro seleccionado:</strong> Fila ${r.rowIndex} &nbsp;·&nbsp;
+    <strong>${r.data['Nombre de la actividad'] || '(sin nombre)'}</strong> &nbsp;·&nbsp;
+    CITE: ${r.data['CITE'] || '—'} &nbsp;·&nbsp;
+    Registrado: ${r.data['Fecha de registro'] || '—'}`;
+
+  // Generar campos editables
+  const container = document.getElementById('editFieldsContainer');
+  container.innerHTML = '';
+
+  // Campos de solo lectura (contexto)
+  const roDiv = document.createElement('div');
+  roDiv.style.cssText = 'background:#f0ece5;border-radius:7px;padding:10px 14px;font-size:11.5px;color:#6b6b6b;display:grid;grid-template-columns:1fr 1fr;gap:4px 16px';
+  roDiv.innerHTML = '<div style="grid-column:1/-1;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#c08a3e;margin-bottom:4px">Campos de identificación (solo lectura)</div>' +
+    READ_ONLY_FIELDS.filter(f => r.data[f]).map(f =>
+      `<div><span style="font-weight:600">${f}:</span> ${r.data[f]}</div>`
+    ).join('');
+  container.appendChild(roDiv);
+
+  // Separator
+  const sep = document.createElement('div');
+  sep.style.cssText = 'font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#c08a3e;margin-top:6px';
+  sep.textContent = 'Campos editables';
+  container.appendChild(sep);
+
+  // Campos editables como inputs
+  EDIT_FIELDS.forEach(field => {
+    const val = r.data[field] !== undefined ? r.data[field] : '';
+    const wrap = document.createElement('div');
+    wrap.className = 'field';
+    const lbl = document.createElement('label');
+    lbl.textContent = field;
+    lbl.style.fontSize = '11.5px';
+    wrap.appendChild(lbl);
+
+    // Campos largos → textarea; resto → input
+    const isLong = ['Objetivo de la actividad','Distribución mensual','Ubicaciones','Resumen programación mensual','Observaciones'].includes(field);
+    let inp;
+    if (isLong) {
+      inp = document.createElement('textarea');
+      inp.rows = 3;
+      inp.style.resize = 'vertical';
+    } else {
+      inp = document.createElement('input');
+      inp.type = 'text';
+    }
+    inp.value = val;
+    inp.id    = 'editfld_' + field.replace(/[^a-zA-Z0-9]/g,'_');
+    inp.style.fontSize = '12px';
+    wrap.appendChild(inp);
+    container.appendChild(wrap);
+  });
+
+  document.getElementById('editStep1').style.display = 'none';
+  document.getElementById('editStep2').style.display = '';
+  document.getElementById('editSaveStatus').textContent = '';
+  document.getElementById('editConsistencyWarn').style.display = 'none';
+}
+
+async function saveEditRecord() {
+  if (!_editCurrentRecord) return;
+
+  // Recoger valores editados
+  const updated = Object.assign({}, _editCurrentRecord.data);
+  EDIT_FIELDS.forEach(field => {
+    const inp = document.getElementById('editfld_' + field.replace(/[^a-zA-Z0-9]/g,'_'));
+    if (inp) updated[field] = inp.value;
+  });
+
+  // Validación de consistencia numérica básica
+  const totAct  = parseFloat(updated['Total actividades'])   || 0;
+  const totAten = parseFloat(updated['Total atenciones'])    || 0;
+  const totBen  = parseFloat(updated['Total beneficiarios']) || 0;
+  const totPres = parseFloat(updated['Total presupuesto (S/.)']) || 0;
+
+  let locAct=0, locAten=0, locBen=0, locPres=0;
+  try {
+    const ubicaciones = JSON.parse(updated['Ubicaciones'] || '[]');
+    ubicaciones.forEach(u => {
+      locAct  += parseFloat(u.actividades)   || 0;
+      locAten += parseFloat(u.atenciones)    || 0;
+      locBen  += parseFloat(u.beneficiarios) || 0;
+      locPres += parseFloat(u.presupuesto)   || 0;
+    });
+  } catch(_) {}
+
+  const warnEl = document.getElementById('editConsistencyWarn');
+  if (locAct > 0 || locAten > 0 || locBen > 0 || locPres > 0) {
+    const ok = Math.abs(totAct-locAct)<1 && Math.abs(totAten-locAten)<1 &&
+               Math.abs(totBen-locBen)<1 && Math.abs(totPres-locPres)<0.01;
+    if (!ok) {
+      warnEl.style.display = '';
+      warnEl.innerHTML = `✗ <strong>Inconsistencia detectada:</strong> Los totales editados no coinciden con las métricas de Ubicaciones.<br>
+        <span style="font-size:11px">Totales: Act=${totAct} / Aten=${totAten} / Ben=${totBen} / Pres=${totPres.toFixed(2)}&nbsp;&nbsp;|&nbsp;&nbsp;
+        Ubicaciones: Act=${locAct} / Aten=${locAten} / Ben=${locBen} / Pres=${locPres.toFixed(2)}</span>`;
+      showToast('⚠ Corrija la inconsistencia antes de guardar.');
+      return;
+    }
+  }
+  warnEl.style.display = 'none';
+
+  // Marcar fecha de última modificación
+  updated['Última modificación'] = new Date().toLocaleString('es-PE');
+
+  const btn    = document.getElementById('btnEditSave');
+  const status = document.getElementById('editSaveStatus');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Guardando…';
+  status.textContent = '';
+
+  try {
+    const payload = { action: 'update', rowIndex: _editCurrentRecord.rowIndex, data: updated };
+    const encoded = encodeURIComponent(JSON.stringify(payload));
+    const resp    = await fetch(APPS_SCRIPT_URL + '?data=' + encoded);
+    const json    = await resp.json();
+
+    if (json.ok) {
+      status.style.color = '#27ae60';
+      status.textContent = '✓ Cambios guardados correctamente';
+      showToast('✓ Registro actualizado en Google Sheets');
+      _editCurrentRecord.data = updated;
+    } else {
+      status.style.color = '#c0392b';
+      status.textContent = '✗ Error: ' + (json.error || 'desconocido');
+    }
+  } catch (e) {
+    status.style.color = '#c0392b';
+    status.textContent = '✗ Error de conexión: ' + e.message;
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg> Guardar cambios';
+  }
+}
+
+// Cerrar modal al hacer clic fuera
+document.getElementById('editModal').addEventListener('click', function(e) {
+  if (e.target === this) closeEditModal();
+});
+
 </script>
 </body>
 </html>
