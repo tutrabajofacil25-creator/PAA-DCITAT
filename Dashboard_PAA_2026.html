@@ -25,9 +25,9 @@
 body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:13px;line-height:1.5;min-height:100vh}
 
 /* HEADER */
-.header{background:#0d1b2e;color:#fff;padding:0 28px;border-bottom:3px solid #C8720E}
+.header{background:#525252;color:#fff;padding:0 28px;border-bottom:3px solid #525252}
 .header-top{display:flex;align-items:center;justify-content:space-between;padding:12px 0 10px;gap:24px}
-.header-mincetur{font-size:11px;font-weight:600;color:#f0c080;letter-spacing:0.5px;margin-bottom:5px;text-transform:uppercase}
+.header-mincetur{font-size:11px;font-weight:600;color:#fff;letter-spacing:0.5px;margin-bottom:5px;text-transform:uppercase}
 .header-top h1{font-size:22px;font-weight:700;letter-spacing:-0.3px;line-height:1.2;color:#fff}
 .header-top .sub{font-size:12px;color:rgba(255,255,255,0.78);margin-top:4px;font-weight:500}
 .header-bottom{border-top:1px solid rgba(255,255,255,0.12);padding:7px 0;font-size:11px;color:rgba(255,255,255,0.6)}
@@ -44,18 +44,21 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:13
 .fb-chips{display:flex;gap:5px;flex-wrap:wrap}
 .chip{font-size:11px;padding:4px 11px;border-radius:20px;border:1px solid var(--border2);background:var(--surface2);color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap;font-weight:500;user-select:none}
 .chip:hover{background:var(--surface3);color:var(--text)}
-.chip.active{background:var(--text);color:#fff;border-color:var(--text)}
-.chip-modal.active-art{background:#1557a0;color:#fff;border-color:#1557a0}
-.chip-modal.active-cap{background:#2e7dd4;color:#fff;border-color:#2e7dd4}
-.chip-modal.active-dif{background:#2a5c0d;color:#fff;border-color:#2a5c0d}
-.chip-modal.active-idi{background:#c8720e;color:#fff;border-color:#c8720e}
-.chip-modal.active-tt{background:#5630a8;color:#fff;border-color:#5630a8}
-.chip-tipo.active-priv{background:#1d8348;color:#fff;border-color:#1d8348}
-.chip-tipo.active-pub{background:#d68910;color:#fff;border-color:#d68910}
+.chip.active{background:var(--red);color:#fff;border-color:var(--red)}
+.chip.active[data-cite="ALL"],.chip.active[data-tipo="ALL"],.chip.active[data-mod="ALL"]{background:#525252;border-color:#525252}
+.chip-modal.active-art{background:var(--red);color:#fff;border-color:var(--red)}
+.chip-modal.active-cap{background:var(--red);color:#fff;border-color:var(--red)}
+.chip-modal.active-dif{background:var(--red);color:#fff;border-color:var(--red)}
+.chip-modal.active-idi{background:var(--red);color:#fff;border-color:var(--red)}
+.chip-modal.active-tt{background:var(--red);color:#fff;border-color:var(--red)}
+.chip-tipo.active-priv{background:var(--red);color:#fff;border-color:var(--red)}
+.chip-tipo.active-pub{background:var(--red);color:#fff;border-color:var(--red)}
 .fb-info{display:none}
 .fb-actions{display:flex;gap:6px;margin-left:auto;flex-shrink:0}
 .btn-action{font-size:11px;padding:5px 12px;border-radius:6px;border:1px solid var(--border2);background:var(--surface2);color:var(--text);cursor:pointer;font-weight:500;display:flex;align-items:center;gap:5px;transition:all .15s;font-family:var(--font);white-space:nowrap}
 .btn-action:hover{background:var(--text);color:#fff;border-color:var(--text)}
+.btn-action.todos{color:var(--red);font-weight:700}
+.btn-action.todos:hover{background:var(--red);color:#fff;border-color:var(--red)}
 .btn-action.primary{background:var(--blue);color:#fff;border-color:var(--blue)}
 .btn-action.primary:hover{background:#0e4280}
 
@@ -92,26 +95,26 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:13
 /* TIPO SPLIT */
 .tipo-split{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .tipo-blk{border-radius:var(--r);padding:11px 13px;border:1px solid}
-.tipo-blk.priv{background:var(--blue-l);border-color:rgba(21,87,160,0.18)}
-.tipo-blk.pub{background:var(--green-l);border-color:rgba(42,92,13,0.18)}
+.tipo-blk.priv{background:#fce8e6;border-color:rgba(226,6,6,0.15)}
+.tipo-blk.pub{background:#f4a8a0;border-color:rgba(226,6,6,0.25)}
 .tb-head{font-size:11px;font-weight:600;margin-bottom:7px;display:flex;align-items:center;gap:5px}
-.tipo-blk.priv .tb-head{color:var(--blue)}.tipo-blk.pub .tb-head{color:var(--green)}
+.tipo-blk.priv .tb-head{color:#cc1f15}.tipo-blk.pub .tb-head{color:#a30404}
 .tb-cites{font-size:9px;color:var(--text3);margin-bottom:7px;font-style:italic}
 .tb-div{border-top:1px solid;margin:6px 0;opacity:0.3}
 .tb-row{display:flex;justify-content:space-between;margin-bottom:3px;font-size:11px}
 .tb-lbl{color:var(--text2)}.tb-val{font-weight:600;font-family:var(--mono);font-size:10px}
-.tipo-blk.priv .tb-val{color:var(--blue)}.tipo-blk.pub .tb-val{color:var(--green)}
+.tipo-blk.priv .tb-val{color:#cc1f15}.tipo-blk.pub .tb-val{color:#a30404}
 
 /* TABLE */
 .dt{width:100%;border-collapse:collapse;font-size:11px}
-.dt thead th{background:var(--surface2);color:var(--text2);font-weight:600;padding:6px 8px;text-align:right;border-bottom:1px solid var(--border2);font-size:10px;text-transform:uppercase;letter-spacing:0.2px}
+.dt thead th{background:#d4d4d4;color:var(--text2);font-weight:600;padding:6px 8px;text-align:right;border-bottom:1px solid var(--border2);font-size:10px;text-transform:uppercase;letter-spacing:0.2px}
 .dt thead th:first-child{text-align:left}
 .dt tbody td{padding:6px 8px;border-bottom:1px solid var(--border);text-align:right}
 .dt tbody td:first-child{text-align:left;font-weight:500}
 .dt tbody tr:hover{background:var(--surface2)}
-.dt tbody tr.active-cite{background:#ddeeff;border-left:3px solid #1557a0}
-.dt tbody tr.active-cite td:first-child{font-weight:700;color:#0d3a6e}
-.dt tfoot td{padding:6px 8px;font-weight:700;border-top:2px solid var(--border2);text-align:right;background:var(--surface2);font-family:var(--mono);font-size:10px}
+.dt tbody tr.active-cite{background:#fce8e6;border-left:3px solid #cc1f15}
+.dt tbody tr.active-cite td:first-child{font-weight:700;color:#a30404}
+.dt tfoot td{padding:6px 8px;font-weight:700;border-top:2px solid var(--border2);text-align:right;background:#bfbfbf;font-family:var(--mono);font-size:10px}
 .dt tfoot td:first-child{text-align:left}
 .cdot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:4px}
 
@@ -125,11 +128,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:13
 /* INSIGHTS */
 .insights-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}
 .ins{padding:9px 11px;border-radius:var(--r)}
-.ins.riesgo{background:var(--red-l);border-left:3px solid var(--red)}
-.ins.oport{background:var(--green-l);border-left:3px solid var(--green-m)}
-.ins.tend{background:var(--blue-l);border-left:3px solid var(--blue)}
+.ins.riesgo{background:#fce8e6;border-left:3px solid #cc1f15}
+.ins.oport{background:#f0f0f0;border-left:3px solid #6f6f6f}
+.ins.tend{background:#fde4e0;border-left:3px solid #e2453a}
 .ins .ititle{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:3px}
-.ins.riesgo .ititle{color:var(--red)}.ins.oport .ititle{color:var(--green)}.ins.tend .ititle{color:var(--blue)}
+.ins.riesgo .ititle{color:#a30404}.ins.oport .ititle{color:#595850}.ins.tend .ititle{color:#e2453a}
 .ins p{font-size:10px;color:var(--text2);line-height:1.55}
 
 /* PANEL OVERLAY */
@@ -241,8 +244,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:13
       <div class="ct">Actividades y atenciones por mes</div>
       <div class="cs" id="cs-monthly">Mayor concentración entre mayo y septiembre</div>
       <div class="legend">
-        <div class="li"><div class="ld" style="background:#1557a0"></div>Actividades (eje izq.)</div>
-        <div class="li"><div class="ld" style="background:#4a8c1c"></div>Atenciones (eje der.)</div>
+        <div class="li"><div class="ld" style="background:#9d9d9d"></div>Actividades (eje izq.)</div>
+        <div class="li"><div class="ld" style="background:#e20606"></div>Atenciones (eje der.)</div>
       </div>
       <div class="chart-wrap h240"><canvas id="ch-monthly-act"></canvas></div>
     </div>
@@ -250,8 +253,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:13
       <div class="ct">Presupuesto por mes</div>
       <div class="cs" id="cs-pres">Junio registra el mayor desembolso mensual</div>
       <div class="legend">
-        <div class="li"><div class="ld" style="background:#c8720e"></div>Presupuesto mensual (S/)</div>
-        <div class="li"><div class="ld" style="background:#7a4200;opacity:0.5"></div>Acumulado anual (S/)</div>
+        <div class="li"><div class="ld" style="background:#9d9d9d"></div>Presupuesto mensual (S/)</div>
+        <div class="li"><div class="ld" style="background:#e20606"></div>Acumulado anual (S/)</div>
       </div>
       <div class="chart-wrap h240"><canvas id="ch-monthly-pres"></canvas></div>
     </div>
@@ -263,7 +266,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:13
   <div class="sec-hdr">Análisis por CITE y tipo de gestión</div>
   <div class="g13">
     <div class="card">
-      <div class="ct">Gestión: Privado vs. Público</div>
+      <div class="ct" id="gestion-title">Gestión Privado - Público</div>
       <div class="cs">Comparación según tipo de administración</div>
       <div class="tipo-split" id="tipo-split-dyn"></div>
     </div>
@@ -278,27 +281,27 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:13
             <th rowspan="2" style="vertical-align:bottom">Act.</th>
             <th rowspan="2" style="vertical-align:bottom">Aten.</th>
             <th rowspan="2" style="vertical-align:bottom">Benef.</th>
-            <th colspan="3" style="text-align:center;border-bottom:1px solid var(--border2);background:#f0f5fb">Presupuesto (S/)</th>
-            <th colspan="3" style="text-align:center;border-bottom:1px solid var(--border2);background:#f5f0e8">Aporte del CITE (S/)</th>
+            <th colspan="3" style="text-align:center;border-bottom:1px solid var(--border2);background:#d4d4d4">Presupuesto (S/)</th>
+            <th colspan="3" style="text-align:center;border-bottom:1px solid var(--border2);background:#d4d4d4">Aporte del CITE (S/)</th>
           </tr>
           <tr>
-            <th style="background:#f0f5fb;font-size:9.5px">Act. técnicas</th>
-            <th style="background:#f0f5fb;font-size:9.5px">Gastos op.</th>
-            <th style="background:#f0f5fb;font-size:9.5px">Total</th>
-            <th style="background:#f5f0e8;font-size:9.5px">Monetario</th>
-            <th style="background:#f5f0e8;font-size:9.5px">No monetario</th>
-            <th style="background:#f5f0e8;font-size:9.5px">Total CITE</th>
+            <th style="background:#d4d4d4;font-size:9.5px">Act. técnicas</th>
+            <th style="background:#d4d4d4;font-size:9.5px">Gastos op.</th>
+            <th style="background:#d4d4d4;font-size:9.5px">Total</th>
+            <th style="background:#d4d4d4;font-size:9.5px">Monetario</th>
+            <th style="background:#d4d4d4;font-size:9.5px">No monetario</th>
+            <th style="background:#d4d4d4;font-size:9.5px">Total CITE</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td><span class="cdot" style="background:#1557a0"></span>Arequipa</td><td>144</td><td>1,748</td><td>1,313</td><td>831,451</td><td>210,630</td><td>1,042,081</td><td>95,505</td><td>36,000</td><td>131,505</td></tr>
-          <tr><td><span class="cdot" style="background:#d63031"></span>Ayacucho</td><td>72</td><td>1,050</td><td>1,050</td><td>366,666</td><td>235,272</td><td>601,938</td><td>—</td><td>—</td><td>—</td></tr>
-          <tr><td><span class="cdot" style="background:#8e44ad"></span>Camélidos S.</td><td>284</td><td>2,796</td><td>2,794</td><td>852,635</td><td>253,247</td><td>1,105,882</td><td>600</td><td>123,800</td><td>124,400</td></tr>
-          <tr><td><span class="cdot" style="background:#c0392b"></span>Chulucanas</td><td>87</td><td>880</td><td>801</td><td>715,335</td><td>220,411</td><td>935,746</td><td>57,380</td><td>49,500</td><td>106,880</td></tr>
-          <tr><td><span class="cdot" style="background:#1d8348"></span>Huancavelica</td><td>84</td><td>2,495</td><td>700</td><td>656,139</td><td>215,806</td><td>871,945</td><td>5,140</td><td>97,200</td><td>102,340</td></tr>
-          <tr><td><span class="cdot" style="background:#d68910"></span>Sipán</td><td>99</td><td>2,284</td><td>802</td><td>366,171</td><td>259,400</td><td>625,571</td><td>—</td><td>—</td><td>—</td></tr>
-          <tr><td><span class="cdot" style="background:#6d4c41"></span>Ucayali</td><td>79</td><td>803</td><td>557</td><td>366,666</td><td>233,346</td><td>600,012</td><td>—</td><td>—</td><td>—</td></tr>
-          <tr><td><span class="cdot" style="background:#154360"></span>Utcumbamba</td><td>123</td><td>8,546</td><td>1,200</td><td>839,300</td><td>224,047</td><td>1,063,347</td><td>32,960</td><td>98,600</td><td>131,560</td></tr>
+          <tr><td><span class="cdot" style="background:#e20606"></span>Arequipa</td><td>144</td><td>1,748</td><td>1,313</td><td>831,451</td><td>210,630</td><td>1,042,081</td><td>95,505</td><td>36,000</td><td>131,505</td></tr>
+          <tr><td><span class="cdot" style="background:#f4a8a0"></span>Ayacucho</td><td>72</td><td>1,050</td><td>1,050</td><td>366,666</td><td>235,272</td><td>601,938</td><td>—</td><td>—</td><td>—</td></tr>
+          <tr><td><span class="cdot" style="background:#cc1f15"></span>Camélidos S.</td><td>284</td><td>2,796</td><td>2,794</td><td>852,635</td><td>253,247</td><td>1,105,882</td><td>600</td><td>123,800</td><td>124,400</td></tr>
+          <tr><td><span class="cdot" style="background:#a30404"></span>Chulucanas</td><td>87</td><td>880</td><td>801</td><td>715,335</td><td>220,411</td><td>935,746</td><td>57,380</td><td>49,500</td><td>106,880</td></tr>
+          <tr><td><span class="cdot" style="background:#e2453a"></span>Huancavelica</td><td>84</td><td>2,495</td><td>700</td><td>656,139</td><td>215,806</td><td>871,945</td><td>5,140</td><td>97,200</td><td>102,340</td></tr>
+          <tr><td><span class="cdot" style="background:#f0b0a5"></span>Sipán</td><td>99</td><td>2,284</td><td>802</td><td>366,171</td><td>259,400</td><td>625,571</td><td>—</td><td>—</td><td>—</td></tr>
+          <tr><td><span class="cdot" style="background:#8b1e1e"></span>Ucayali</td><td>79</td><td>803</td><td>557</td><td>366,666</td><td>233,346</td><td>600,012</td><td>—</td><td>—</td><td>—</td></tr>
+          <tr><td><span class="cdot" style="background:#ef9690"></span>Utcumbamba</td><td>123</td><td>8,546</td><td>1,200</td><td>839,300</td><td>224,047</td><td>1,063,347</td><td>32,960</td><td>98,600</td><td>131,560</td></tr>
         </tbody>
         <tfoot>
           <tr><td><strong>Total Red CITE</strong></td><td>972</td><td>20,602</td><td>9,217</td><td>4,994,362</td><td>1,852,160</td><td>6,846,521</td><td>191,585</td><td>405,100</td><td>596,685</td></tr>
@@ -320,14 +323,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:13
       <div style="margin-top:8px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
         <div style="font-size:10px;color:#595850;font-weight:600">Regiones activas:</div>
         <div class="legend" style="flex-wrap:wrap;margin-bottom:0">
-          <div class="li"><div class="ld" style="background:#1557a0"></div>Arequipa</div>
-          <div class="li"><div class="ld" style="background:#d63031"></div>Ayacucho</div>
-          <div class="li"><div class="ld" style="background:#8e44ad"></div>Camélidos / Puno</div>
-          <div class="li"><div class="ld" style="background:#c0392b"></div>Chulucanas / Piura</div>
-          <div class="li"><div class="ld" style="background:#1d8348"></div>Huancavelica</div>
-          <div class="li"><div class="ld" style="background:#d68910"></div>Sipán / Lambayeque</div>
-          <div class="li"><div class="ld" style="background:#6d4c41"></div>Ucayali</div>
-          <div class="li"><div class="ld" style="background:#154360"></div>Utcumbamba / Amazonas</div>
+          <div class="li"><div class="ld" style="background:#e20606"></div>Arequipa</div>
+          <div class="li"><div class="ld" style="background:#f4a8a0"></div>Ayacucho</div>
+          <div class="li"><div class="ld" style="background:#cc1f15"></div>Camélidos / Puno</div>
+          <div class="li"><div class="ld" style="background:#a30404"></div>Chulucanas / Piura</div>
+          <div class="li"><div class="ld" style="background:#e2453a"></div>Huancavelica</div>
+          <div class="li"><div class="ld" style="background:#f0b0a5"></div>Sipán / Lambayeque</div>
+          <div class="li"><div class="ld" style="background:#d4d4d4"></div>Ucayali</div>
+          <div class="li"><div class="ld" style="background:#ef9690"></div>Utcumbamba / Amazonas</div>
         </div>
       </div>
       <div style="margin-top:8px;font-size:10px;color:#8c8b82;border-top:1px solid rgba(0,0,0,0.07);padding-top:7px;line-height:1.5">
@@ -344,8 +347,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:13
         <div class="ct">Presupuesto total por CITE</div>
         <div class="cs">Ordenado de mayor a menor · actividades técnicas + gastos operativos</div>
         <div class="legend">
-          <div class="li"><div class="ld" style="background:#1557a0"></div>Actividades técnicas</div>
-          <div class="li"><div class="ld" style="background:#c8720e"></div>Gastos operativos</div>
+          <div class="li"><div class="ld" style="background:rgba(226,6,6,0.96)"></div>Actividades técnicas</div>
+          <div class="li"><div class="ld" style="background:rgba(111,111,111,0.78)"></div>Gastos operativos</div>
         </div>
         <div class="chart-wrap h200"><canvas id="ch-pres-stk"></canvas></div>
       </div>
@@ -353,8 +356,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:13
         <div class="ct">Aporte del CITE (S/)</div>
         <div class="cs">Contribución propia monetaria y no monetaria al PAA 2026</div>
         <div class="legend">
-          <div class="li"><div class="ld" style="background:#1d8348"></div>Aporte monetario</div>
-          <div class="li"><div class="ld" style="background:#a8d5b5"></div>Aporte no monetario</div>
+          <div class="li"><div class="ld" style="background:rgba(226,6,6,0.96)"></div>Aporte monetario</div>
+          <div class="li"><div class="ld" style="background:rgba(111,111,111,0.65)"></div>Aporte no monetario</div>
         </div>
         <div class="chart-wrap h200"><canvas id="ch-aporte"></canvas></div>
       </div>
@@ -375,8 +378,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:13
       <div class="ct">Fuentes de financiamiento</div>
       <div class="cs" id="cs-fin">Presupuesto técnico vs gastos operativos por fuente</div>
       <div class="legend">
-        <div class="li"><div class="ld" style="background:#1557a0"></div>Act. técnicas</div>
-        <div class="li"><div class="ld" style="background:#c8720e"></div>Gastos operativos</div>
+        <div class="li"><div class="ld" style="background:rgba(226,6,6,0.96)"></div>Act. técnicas</div>
+        <div class="li"><div class="ld" style="background:rgba(111,111,111,0.78)"></div>Gastos operativos</div>
       </div>
       <div class="chart-wrap h200"><canvas id="ch-fin"></canvas></div>
     </div>
@@ -604,7 +607,12 @@ function loadCSVFromText(csvText) {
     if (mk) acc[c].modal[mk] = (acc[c].modal[mk]||0) + actVal;
     const fk = FIN_MAP[(r[C.FIN]||'').trim()] || (r[C.FIN]||'').trim().slice(0,25);
     if (fk) acc[c].fin[fk] = (acc[c].fin[fk]||0) + actVal;
-    const reg = (r[C.REG]||'').trim();
+    // Consolidar siempre en la región sede del CITE (no en la región de la
+    // fila del CSV), para que el mapa de calor solo muestre las 8 regiones
+    // de las CITE aunque una actividad se haya ejecutado fuera de su
+    // jurisdicción (p.ej. en Lima).
+    const homeReg = D.citeHomeRegion && D.citeHomeRegion[c];
+    const reg = homeReg || (r[C.REG]||'').trim();
     if (reg) acc[c].regionActs[reg] = (acc[c].regionActs[reg]||0) + actVal;
   });
 
@@ -803,13 +811,28 @@ const D = {
     'CITE UTCUMBAMBA':{'Privado-Subvención':121}
   },
   finColors:{'Privado-Subvención':'#1557a0','Privado-RP':'#2e7dd4','Público-RO':'#1d8348','Público-RE':'#4a8c1c','Público-RDR':'#d68910'},
-  // Region acts from "Actividades por región" — validated against Actividades column
-  // Totals per CITE match exactly: AREQUIPA=144, AYACUCHO=72, CAMÉLIDOS=284,
+  // Region acts — consolidado 100% en la región sede de cada CITE.
+  // Algunas CITE ejecutan actividades/atenciones/beneficiarios fuera de su
+  // jurisdicción (p.ej. CITE Arequipa y CITE Camélidos Sudamericanos también
+  // reportaban registros en Lima). Para el mapa de calor, todos los totales
+  // de un CITE se concentran en su única región sede, de modo que en el mapa
+  // solo aparezcan las 8 regiones de las CITE.
+  // Totales por CITE (sin cambios): AREQUIPA=144, AYACUCHO=72, CAMÉLIDOS=284,
   // CHULUCANAS=87, HUANCAVELICA=84, SIPÁN=99, UCAYALI=79, UTCUMBAMBA=123
+  citeHomeRegion:{
+    'CITE AREQUIPA':'AREQUIPA',
+    'CITE AYACUCHO':'AYACUCHO',
+    'CITE CAMÉLIDOS SUDAMERICANOS':'PUNO',
+    'CITE CHULUCANAS':'PIURA',
+    'CITE HUANCAVELICA':'HUANCAVELICA',
+    'CITE SIPÁN':'LAMBAYEQUE',
+    'CITE UCAYALI':'UCAYALI',
+    'CITE UTCUMBAMBA':'AMAZONAS'
+  },
   regionActs:{
-    'CITE AREQUIPA':{'AREQUIPA':139,'LIMA':5},
+    'CITE AREQUIPA':{'AREQUIPA':144},
     'CITE AYACUCHO':{'AYACUCHO':72},
-    'CITE CAMÉLIDOS SUDAMERICANOS':{'PUNO':273,'LIMA':10,'AREQUIPA':1},
+    'CITE CAMÉLIDOS SUDAMERICANOS':{'PUNO':284},
     'CITE CHULUCANAS':{'PIURA':87},
     'CITE HUANCAVELICA':{'HUANCAVELICA':84},
     'CITE SIPÁN':{'LAMBAYEQUE':99},
@@ -888,7 +911,7 @@ function initChips(){
   const allCites=['ALL',...D.cites], cLabels=['Todos',...D.short];
   allCites.forEach((c,i)=>{
     const el=document.createElement('span');
-    el.className='chip'+(c==='ALL'?' active':'');
+    el.className='chip'+(c==='ALL'?' active todos':'');
     el.textContent=cLabels[i];
     el.dataset.cite=c;
     el.onclick=function(){setCite(this.dataset.cite,this);};
@@ -907,7 +930,7 @@ function initChips(){
   const ct=document.getElementById('chips-tipo');
   [{k:'ALL',l:'Todos'},{k:'Privado',l:'Privado'},{k:'Público',l:'Público'}].forEach(t=>{
     const el=document.createElement('span');
-    el.className='chip chip-tipo'+(t.k==='ALL'?' active':'');
+    el.className='chip chip-tipo'+(t.k==='ALL'?' active todos':'');
     el.textContent=t.l;
     el.dataset.tipo=t.k;
     el.onclick=function(){setTipo(this.dataset.tipo,this);};
@@ -1012,14 +1035,14 @@ function updateMonthly(cites){
   charts.mAct=new Chart(document.getElementById('ch-monthly-act'),{
     type:'bar',
     data:{labels:D.months,datasets:[
-      {label:'Actividades',data:act,backgroundColor:'rgba(226,6,6,0.96)',borderRadius:3,yAxisID:'y',order:2},
-      {label:'Atenciones',data:aten,type:'line',borderColor:'#6f6f6f',backgroundColor:'rgba(111,111,111,0.12)',tension:0.4,fill:true,pointRadius:4,pointBackgroundColor:'#6f6f6f',yAxisID:'y2',order:1}
+      {label:'Actividades',data:act,backgroundColor:'#9d9d9d',borderRadius:3,yAxisID:'y',order:2},
+      {label:'Atenciones',data:aten,type:'line',borderColor:'#e20606',backgroundColor:'#e20606',tension:0.4,fill:false,pointRadius:4,pointBackgroundColor:'#e20606',yAxisID:'y2',order:1}
     ]},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString('es-PE')}`}}},
       scales:{
-        y:{position:'left',grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:10}},title:{display:true,text:'Actividades',font:{size:9},color:'#a30404'}},
-        y2:{position:'right',grid:{display:false},ticks:{font:{size:10},callback:v=>v>=1000?(v/1000).toFixed(1)+'k':v},title:{display:true,text:'Atenciones',font:{size:9},color:'#6f6f6f'}},
+        y:{position:'left',grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:10}},title:{display:true,text:'Actividades',font:{size:9},color:'#6f6f6f'}},
+        y2:{position:'right',grid:{display:false},ticks:{font:{size:10},callback:v=>v>=1000?(v/1000).toFixed(1)+'k':v},title:{display:true,text:'Atenciones',font:{size:9},color:'#e20606'}},
         x:{grid:{display:false},ticks:{autoSkip:false,font:{size:10}}}
       }
     }
@@ -1032,8 +1055,8 @@ function updateMonthly(cites){
   charts.mPres=new Chart(document.getElementById('ch-monthly-pres'),{
     type:'bar',
     data:{labels:D.months,datasets:[
-      {label:'Presupuesto',data:presTotal.map(v=>Math.round(v/1000)),backgroundColor:'rgba(226,6,6,0.96)',borderRadius:3,yAxisID:'y'},
-      {label:'Acumulado',data:presAcum,type:'line',borderColor:'rgba(111,111,111,0.65)',backgroundColor:'transparent',tension:0.4,pointRadius:2,borderDash:[4,3],yAxisID:'y2'}
+      {label:'Presupuesto',data:presTotal.map(v=>Math.round(v/1000)),backgroundColor:'#9d9d9d',borderRadius:3,yAxisID:'y'},
+      {label:'Acumulado',data:presAcum,type:'line',borderColor:'#e20606',backgroundColor:'transparent',tension:0.4,pointRadius:2,borderDash:[4,3],yAxisID:'y2'}
     ]},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false}},
@@ -1845,8 +1868,18 @@ function generateInsights() {
 
 // ── TIPO SPLIT CARD (dynamic) ──
 function updateTipoSplit(cites){
+  const gestionTitleEl=document.getElementById('gestion-title');
+  if(gestionTitleEl){
+    let tipoActivo=null;
+    if(selTipo==='Privado'||selTipo==='Público'){
+      tipoActivo=selTipo;
+    } else if(selCite!=='ALL'){
+      tipoActivo=D.tipo[D.cites.indexOf(selCite)];
+    }
+    gestionTitleEl.textContent = tipoActivo ? 'Gestión: '+tipoActivo : 'Gestión Privado - Público';
+  }
   const tipos = ['Privado','Público'];
-  const colors = {Privado:'#1557a0', 'Público':'#2a5c0d'};
+  const colors = {Privado:'#7a0c0c', 'Público':'#e20606'};
   const bgClass = {Privado:'priv', 'Público':'pub'};
   let html = '';
   tipos.forEach(t => {
