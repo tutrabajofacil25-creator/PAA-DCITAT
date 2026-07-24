@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Formulario de Satisfacción</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+svg{overflow:visible}
+:root{
+  --navy:#1a2744;--navy2:#243352;--gold:#d4a94c;--gold2:#e8c76d;
+  --cream:#faf8f3;--white:#ffffff;--border:#ddd5c8;
+  --text:#2c2c2c;--muted:#6b6b6b;--light:#f0ece5;
+  --accent:#c08a3e;--red:#c0392b;--green:#27ae60;--blue:#2980b9;
+  --shadow:0 2px 12px rgba(26,39,68,.12);--shadow-lg:0 6px 30px rgba(26,39,68,.18);
+  --radius:8px;--radius-sm:5px;
+}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--cream);color:var(--text);min-height:100vh;line-height:1.5}
+.site-header{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);color:#fff;padding:0}
+.header-top{display:flex;align-items:center;justify-content:space-between;padding:10px 32px;border-bottom:1px solid rgba(255,255,255,.12)}
+.header-top .logo-area{display:flex;align-items:center;gap:14px}
+.logo-circle{width:44px;height:44px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--navy);font-size:15px;letter-spacing:.5px;flex-shrink:0}
+.header-top h1{font-size:18px;font-weight:600;letter-spacing:.3px}
+.header-top .sub{font-size:11px;opacity:.7;letter-spacing:.8px;text-transform:uppercase}
+.header-main{padding:24px 32px 20px;text-align:center}
+.header-main h2{font-size:24px;font-weight:300;letter-spacing:1.5px;margin-bottom:6px}
+.year-badge{display:inline-block;background:var(--gold);color:var(--navy);font-weight:700;font-size:13px;padding:3px 14px;border-radius:20px;letter-spacing:1px}
+.container{max-width:980px;margin:28px auto;padding:0 18px}
+.tray-panel{background:var(--white);border:2px solid var(--gold);border-radius:12px;margin-bottom:20px;overflow:hidden;box-shadow:var(--shadow)}
+.tray-header{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;padding:13px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.tray-header h3{font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px;margin:0}
+.tray-badge{background:var(--gold);color:var(--navy);font-weight:700;font-size:12px;padding:2px 10px;border-radius:20px;min-width:26px;text-align:center}
+.tray-body{padding:14px 18px}
+.tray-empty{text-align:center;padding:22px;color:var(--muted);font-size:13px;font-style:italic;background:var(--light);border-radius:var(--radius);border:1px dashed var(--border)}
+.tray-list{display:flex;flex-direction:column;gap:8px;max-height:300px;overflow-y:auto;padding-right:4px}
+.tray-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius);background:var(--light);transition:all .2s;position:relative}
+.tray-item:hover{border-color:var(--blue);background:#f0f7ff}
+.ti-num{min-width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px}
+.ti-info{flex:1;min-width:0}
+.ti-name{font-size:13px;font-weight:600;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ti-meta{font-size:11px;color:var(--muted);margin-top:2px;display:flex;flex-wrap:wrap;gap:6px}
+.ti-tag{background:rgba(41,128,185,.12);color:var(--blue);padding:1px 8px;border-radius:10px;font-size:10px;font-weight:600}
+.ti-tag.green{background:rgba(39,174,96,.12);color:var(--green)}
+.ti-tag.gold{background:rgba(212,169,76,.18);color:var(--accent)}
+.ti-status{font-size:10px;font-weight:700;padding:2px 9px;border-radius:10px;flex-shrink:0;align-self:flex-start}
+.ti-status.pending{background:#fff3cd;color:#856404;border:1px solid #ffc107}
+.ti-status.sent{background:#d5f4e6;color:var(--green);border:1px solid #a8e6c8}
+.ti-status.error{background:#fdecea;color:var(--red);border:1px solid #f5c6cb}
+.btn-ti-del{background:none;border:none;cursor:pointer;padding:3px;color:var(--muted);transition:color .2s;flex-shrink:0}
+.btn-ti-del:hover{color:var(--red)}
+.btn-send-all{background:var(--green);color:#fff;border:none;border-radius:var(--radius);padding:10px 22px;font-size:13px;font-weight:600;cursor:pointer;transition:background .2s;display:inline-flex;align-items:center;gap:7px}
+.btn-send-all:hover{background:#219a52}
+.btn-send-all:disabled{background:#7dba8e;cursor:not-allowed}
+.btn-clear-tray{background:none;border:1px solid var(--red);color:var(--red);border-radius:var(--radius);padding:9px 16px;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-clear-tray:hover{background:var(--red);color:#fff}
+.tray-progress{display:none;align-items:center;gap:10px;padding:10px 14px;background:#e8f4fd;border-radius:var(--radius);border:1px solid #b8ddf0;margin-bottom:8px;font-size:12px;color:var(--blue)}
+.tray-progress.show{display:flex}
+.prog-bar-wrap{flex:1;background:rgba(41,128,185,.15);border-radius:10px;height:8px;overflow:hidden}
+.prog-bar{height:100%;background:var(--blue);border-radius:10px;transition:width .3s}
+.form-card{background:var(--white);border-radius:12px;box-shadow:var(--shadow);margin-bottom:20px;overflow:hidden;border:1px solid var(--border)}
+.form-counter{display:flex;align-items:center;gap:8px;padding:10px 16px;background:linear-gradient(90deg,#e8f4fd,#f0f8ff);border-bottom:2px solid var(--blue);font-size:12px;color:var(--blue);font-weight:600}
+.section{padding:16px 20px}
+.section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.4px;color:var(--accent);border-bottom:2px solid var(--light);padding-bottom:6px;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.section-title svg{width:16px!important;height:16px!important;min-width:16px;flex-shrink:0}
+.section+.section{border-top:1px solid var(--light)}
+.grid{display:grid;gap:14px}
+.grid-2{grid-template-columns:1fr 1fr}
+.grid-3{grid-template-columns:1fr 1fr 1fr}
+.grid-4{grid-template-columns:1fr 1fr 1fr 1fr}
+@media(max-width:700px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}}
+@media(max-width:900px){.grid-3{grid-template-columns:1fr 1fr}.grid-4{grid-template-columns:1fr 1fr}}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:12px;font-weight:600;color:var(--navy);letter-spacing:.3px}
+.field label .req{color:var(--red);margin-left:2px}
+.field input,.field select,.field textarea{border:1px solid var(--border);border-radius:var(--radius);padding:8px 10px;font-size:13px;background:var(--white);color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;width:100%;font-family:inherit}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(41,128,185,.15)}
+.field input[readonly],.field input.auto-filled{background:var(--light);color:var(--muted);cursor:default}
+.field input.auto-filled{font-style:italic;font-weight:600;color:var(--accent)}
+.field .hint{font-size:10px;color:var(--muted);font-style:italic}
+.field .field-err{font-size:11px;color:var(--red);margin-top:2px;display:none}
+.field .field-err.show{display:block}
+.tipo-display{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:var(--radius);background:var(--light);border:1px solid var(--border);min-height:36px}
+.tipo-badge{display:inline-block;padding:2px 12px;border-radius:14px;font-size:12px;font-weight:700;letter-spacing:.5px}
+.tipo-badge.p\u00fablico,.tipo-badge.publico{background:#e8f4fd;color:var(--blue);border:1px solid #b8ddf0}
+.tipo-badge.privado{background:#fef3e2;color:var(--accent);border:1px solid #f0d5a8}
+.bottom-bar{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px 22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;box-shadow:var(--shadow)}
+.btn-send{background:var(--green);color:#fff;border:none;border-radius:var(--radius);padding:10px 22px;font-size:13px;font-weight:600;cursor:pointer;transition:background .2s;display:inline-flex;align-items:center;gap:7px}
+.btn-send:hover{background:#219a52}
+.btn-secondary{background:none;border:1px solid var(--border);color:var(--navy);border-radius:var(--radius);padding:9px 18px;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn-secondary:hover{border-color:var(--navy);background:var(--light)}
+.warn-box{background:#fff3cd;border:1px solid #ffc107;border-radius:var(--radius);padding:14px 18px;margin:0 0 14px;display:none!important;align-items:flex-start;gap:10px}
+.warn-box.show{display:flex}
+.warn-box svg{width:20px;height:20px;color:#856404;flex-shrink:0;margin-top:1px}
+.warn-box .wb-txt{font-size:12px;color:#856404}
+.warn-box .wb-txt strong{display:block;margin-bottom:2px}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:12px 22px;border-radius:var(--radius);box-shadow:var(--shadow-lg);font-size:13px;transform:translateY(100px);opacity:0;transition:all .35s cubic-bezier(.4,0,.2,1);z-index:999;display:flex;align-items:center;gap:10px;max-width:340px}
+.toast.show{transform:translateY(0);opacity:1}
+.toast svg{width:18px;height:18px;color:var(--gold);flex-shrink:0}
+.hidden{display:none!important}
+footer{text-align:center;padding:24px;color:var(--muted);font-size:11px;letter-spacing:.5px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{display:inline-block;width:15px;height:15px;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .55s linear infinite;vertical-align:middle}
+@media(max-width:600px){
+  .header-top{padding:10px 16px}
+  .header-main{padding:16px}
+  .header-main h2{font-size:18px}
+  .container{padding:0 10px}
+  .section{padding:14px}
+  }
+
+.rating-field{padding:10px 0}
+.rating-field .q-label{font-size:13px;font-weight:600;color:var(--navy);line-height:1.4;display:block;margin-bottom:8px}
+.rating-group{display:flex;gap:8px;flex-wrap:wrap}
+.rating-btn{flex:1;min-width:90px;border:1.5px solid var(--border);background:var(--white);color:var(--text);border-radius:var(--radius);padding:9px 6px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;text-align:center}
+.rating-btn:hover{border-color:var(--blue);background:#f0f7ff}
+.rating-btn[data-value="Malo"].selected{background:var(--red);border-color:var(--red);color:#fff}
+.rating-btn[data-value="Regular"].selected{background:#e6a23c;border-color:#e6a23c;color:#fff}
+.rating-btn[data-value="Bueno"].selected{background:var(--blue);border-color:var(--blue);color:#fff}
+.rating-btn[data-value="Excelente"].selected{background:var(--green);border-color:var(--green);color:#fff}
+@media(max-width:500px){.rating-group{gap:6px}.rating-btn{min-width:70px;padding:8px 4px;font-size:11px}}
+.subsection-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--navy);background:var(--light);border-left:3px solid var(--gold);padding:6px 10px;margin:16px 0 10px;border-radius:0 4px 4px 0}
+.subsection-label:first-child{margin-top:0}
+</style>
+
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-top">
+    <div class="logo-area">
+      <div class="logo-circle">CITE</div>
+      <div>
+        <h1>Centros de Innovación Tecnológica (CITE) de Artesanía y Turismo</h1>
+        <div class="sub">Dirección de Centros de Innovación Tecnológica de Artesanía y Turismo (DCITAT)</div>
+      </div>
+    </div>
+  </div>
+  <div class="header-main">
+    <h2>ENCUESTA DE SATISFACCIÓN DE LA CAPACITACIÓN</h2>
+    <span class="year-badge">2026</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="warn-box" id="warnNoUrl">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <div class="wb-txt"><strong>Sistema no configurado</strong>El enlace no tiene la URL del servidor. Los datos se guardarán en la bandeja y podrá enviarlos cuando el sistema esté disponible.</div>
+  </div>
+
+  <div class="form-card">
+    <div class="form-counter">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Completando encuesta <span id="formBenefNum" style="font-size:14px;font-weight:700;color:var(--navy);margin:0 4px">N° 1</span> — Los campos se limpian al agregar a la bandeja.
+    </div>
+    <form id="satForm" onsubmit="addToBandeja(event)">
+
+      <!-- SEC 1: INFORMACION BASICA -->
+      <div class="section">
+        <div class="section-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
+          Información Básica
+        </div>
+
+        <div class="grid grid-2">
+          <div class="field">
+            <label>Año</label>
+            <input type="number" id="year" readonly class="auto-filled"/>
+          </div>
+          <div class="field">
+            <label>CITE <span class="req">*</span></label>
+            <select id="cite" required onchange="updateType(); updateActividadesByCite();">
+              <option value="">– Seleccione –</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-2" style="margin-top:14px">
+          <div class="field">
+            <label>Tipo de CITE <span style="font-size:10px;font-weight:400;color:var(--muted)">(automático)</span></label>
+            <div class="tipo-display" id="tipoDisplay"><span class="tipo-badge" style="opacity:.4;color:var(--muted)">Pendiente</span></div>
+          </div>
+          <div class="field">
+            <label>Nombre del Capacitador <span class="req">*</span></label>
+            <span class="hint">Nombres y apellidos completos</span>
+            <input type="text" id="responsable" required maxlength="100" placeholder="Nombres y apellidos"/>
+          </div>
+        </div>
+
+        <div class="grid" style="margin-top:14px">
+          <div class="field">
+            <label>Nombre de la actividad <span class="req">*</span></label>
+            <span class="hint">Seleccione el CITE primero para filtrar las actividades</span>
+            <select id="activity_select" required onchange="autoFillFromActivity()" disabled>
+              <option value="">– Seleccione primero el CITE –</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-2" style="margin-top:14px">
+          <div class="field">
+            <label>Modalidad de intervención <span style="font-size:10px;font-weight:400;color:var(--muted)">(automático)</span></label>
+            <input type="text" id="intervention_mode" readonly class="auto-filled" placeholder="Se llena con la actividad"/>
+          </div>
+          <div class="field">
+            <label>Tipo de actividad <span style="font-size:10px;font-weight:400;color:var(--muted)">(automático)</span></label>
+            <input type="text" id="specific_activity" readonly class="auto-filled" placeholder="Se llena con la actividad"/>
+          </div>
+        </div>
+
+        <input type="hidden" id="activity_code"/>
+        <input type="hidden" id="activity_name"/>
+      </div>
+
+      <!-- SEC 2: DATOS DE LA ACTIVIDAD -->
+      <div class="section">
+        <div class="section-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Datos de la Actividad
+        </div>
+        <div class="grid grid-3">
+          <div class="field">
+            <label>Fecha <span class="req">*</span></label>
+            <input type="date" id="fecha" required onchange="autoFillMes()"/>
+          </div>
+          <div class="field">
+            <label>Mes <span style="font-size:10px;font-weight:400;color:var(--muted)">(automático)</span></label>
+            <input type="text" id="mes" readonly class="auto-filled" placeholder="Se llena con la fecha"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEC 3: UBICACION -->
+      <div class="section">
+        <div class="section-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Ubicación de la Actividad
+        </div>
+        <div class="grid grid-3">
+          <div class="field">
+            <label>Región <span class="req">*</span></label>
+            <select id="region" required onchange="updateProvincia()">
+              <option value="">– Seleccione región –</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Provincia <span class="req">*</span></label>
+            <select id="provincia" required disabled onchange="updateDistrito()">
+              <option value="">– Seleccione provincia –</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Distrito <span class="req">*</span></label>
+            <select id="distrito" required disabled>
+              <option value="">– Seleccione distrito –</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-2" style="margin-top:14px">
+          <div class="field">
+            <label>Lugar <span class="req">*</span></label>
+            <input type="text" id="lugar" required maxlength="50" placeholder="Nombre del lugar"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEC 4: TIPO BENEFICIARIO -->
+      <div class="section">
+        <div class="section-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Tipo de Beneficiario
+        </div>
+        <div class="grid grid-2" style="max-width:600px">
+          <div class="field">
+            <label>Tipo de beneficiario <span class="req">*</span></label>
+            <select id="beneficiary_type" required onchange="toggleOtherBeneficiary()">
+              <option value="">– Seleccione –</option>
+            </select>
+          </div>
+          <div class="field" id="otherBeneficiaryGroup" style="display:none">
+            <label>Especificar otro tipo <span class="req">*</span></label>
+            <input type="text" id="other_beneficiary" maxlength="50" placeholder="Especificar..."/>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEC 5: ENCUESTA -->
+      <div class="section">
+        <div class="section-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
+          Encuesta de Satisfacción
+        </div>
+
+        <div class="subsection-label">Del Capacitador</div>
+        <div class="field rating-field">
+          <span class="q-label">Inicio puntual la capacitación <span class="req">*</span></span>
+          <div class="rating-group" data-name="q_inicio_puntual">
+            <button type="button" class="rating-btn" data-value="Malo" onclick="selectRating(this)">Malo</button>
+            <button type="button" class="rating-btn" data-value="Regular" onclick="selectRating(this)">Regular</button>
+            <button type="button" class="rating-btn" data-value="Bueno" onclick="selectRating(this)">Bueno</button>
+            <button type="button" class="rating-btn" data-value="Excelente" onclick="selectRating(this)">Excelente</button>
+          </div>
+          <input type="hidden" id="q_inicio_puntual"/>
+        </div>
+        <div class="field rating-field">
+          <span class="q-label">Conocimiento del tema por parte del facilitador <span class="req">*</span></span>
+          <div class="rating-group" data-name="q_conocimiento_facilitador">
+            <button type="button" class="rating-btn" data-value="Malo" onclick="selectRating(this)">Malo</button>
+            <button type="button" class="rating-btn" data-value="Regular" onclick="selectRating(this)">Regular</button>
+            <button type="button" class="rating-btn" data-value="Bueno" onclick="selectRating(this)">Bueno</button>
+            <button type="button" class="rating-btn" data-value="Excelente" onclick="selectRating(this)">Excelente</button>
+          </div>
+          <input type="hidden" id="q_conocimiento_facilitador"/>
+        </div>
+        <div class="field rating-field">
+          <span class="q-label">Es fácil de entender las explicaciones del facilitador <span class="req">*</span></span>
+          <div class="rating-group" data-name="q_claridad_explicaciones">
+            <button type="button" class="rating-btn" data-value="Malo" onclick="selectRating(this)">Malo</button>
+            <button type="button" class="rating-btn" data-value="Regular" onclick="selectRating(this)">Regular</button>
+            <button type="button" class="rating-btn" data-value="Bueno" onclick="selectRating(this)">Bueno</button>
+            <button type="button" class="rating-btn" data-value="Excelente" onclick="selectRating(this)">Excelente</button>
+          </div>
+          <input type="hidden" id="q_claridad_explicaciones"/>
+        </div>
+
+        <div class="subsection-label">Metodología</div>
+        <div class="field rating-field">
+          <span class="q-label">Los temas tratados fueron claros <span class="req">*</span></span>
+          <div class="rating-group" data-name="q_temas_claros">
+            <button type="button" class="rating-btn" data-value="Malo" onclick="selectRating(this)">Malo</button>
+            <button type="button" class="rating-btn" data-value="Regular" onclick="selectRating(this)">Regular</button>
+            <button type="button" class="rating-btn" data-value="Bueno" onclick="selectRating(this)">Bueno</button>
+            <button type="button" class="rating-btn" data-value="Excelente" onclick="selectRating(this)">Excelente</button>
+          </div>
+          <input type="hidden" id="q_temas_claros"/>
+        </div>
+        <div class="field rating-field">
+          <span class="q-label">La capacitación cumplió con sus expectativas de aprendizaje <span class="req">*</span></span>
+          <div class="rating-group" data-name="q_expectativas">
+            <button type="button" class="rating-btn" data-value="Malo" onclick="selectRating(this)">Malo</button>
+            <button type="button" class="rating-btn" data-value="Regular" onclick="selectRating(this)">Regular</button>
+            <button type="button" class="rating-btn" data-value="Bueno" onclick="selectRating(this)">Bueno</button>
+            <button type="button" class="rating-btn" data-value="Excelente" onclick="selectRating(this)">Excelente</button>
+          </div>
+          <input type="hidden" id="q_expectativas"/>
+        </div>
+        <div class="field rating-field">
+          <span class="q-label">Qué le pareció el material de capacitación <span class="req">*</span></span>
+          <div class="rating-group" data-name="q_material">
+            <button type="button" class="rating-btn" data-value="Malo" onclick="selectRating(this)">Malo</button>
+            <button type="button" class="rating-btn" data-value="Regular" onclick="selectRating(this)">Regular</button>
+            <button type="button" class="rating-btn" data-value="Bueno" onclick="selectRating(this)">Bueno</button>
+            <button type="button" class="rating-btn" data-value="Excelente" onclick="selectRating(this)">Excelente</button>
+          </div>
+          <input type="hidden" id="q_material"/>
+        </div>
+
+        <div class="subsection-label">Impacto</div>
+        <div class="field rating-field">
+          <span class="q-label">¿Cuál era su nivel de conocimientos sobre el tema ANTES de esta capacitación? <span class="req">*</span></span>
+          <div class="rating-group" data-name="q_nivel_antes">
+            <button type="button" class="rating-btn" data-value="Malo" onclick="selectRating(this)">Malo</button>
+            <button type="button" class="rating-btn" data-value="Regular" onclick="selectRating(this)">Regular</button>
+            <button type="button" class="rating-btn" data-value="Bueno" onclick="selectRating(this)">Bueno</button>
+            <button type="button" class="rating-btn" data-value="Excelente" onclick="selectRating(this)">Excelente</button>
+          </div>
+          <input type="hidden" id="q_nivel_antes"/>
+        </div>
+        <div class="field rating-field">
+          <span class="q-label">¿Cuál era su nivel de conocimientos sobre el tema DESPUÉS de la capacitación? <span class="req">*</span></span>
+          <div class="rating-group" data-name="q_nivel_despues">
+            <button type="button" class="rating-btn" data-value="Malo" onclick="selectRating(this)">Malo</button>
+            <button type="button" class="rating-btn" data-value="Regular" onclick="selectRating(this)">Regular</button>
+            <button type="button" class="rating-btn" data-value="Bueno" onclick="selectRating(this)">Bueno</button>
+            <button type="button" class="rating-btn" data-value="Excelente" onclick="selectRating(this)">Excelente</button>
+          </div>
+          <input type="hidden" id="q_nivel_despues"/>
+        </div>
+        <div class="field rating-field">
+          <span class="q-label">¿La capacitación le permitió ampliar sus conocimientos? <span class="req">*</span></span>
+          <div class="rating-group" data-name="q_amplio_conocimientos">
+            <button type="button" class="rating-btn" data-value="Malo" onclick="selectRating(this)">Malo</button>
+            <button type="button" class="rating-btn" data-value="Regular" onclick="selectRating(this)">Regular</button>
+            <button type="button" class="rating-btn" data-value="Bueno" onclick="selectRating(this)">Bueno</button>
+            <button type="button" class="rating-btn" data-value="Excelente" onclick="selectRating(this)">Excelente</button>
+          </div>
+          <input type="hidden" id="q_amplio_conocimientos"/>
+        </div>
+
+        <div class="grid" style="margin-top:16px">
+          <div class="field">
+            <label>Sugerencias y comentarios para la mejora de la capacitación</label>
+            <textarea id="sugerencias" rows="3" maxlength="500" placeholder="Escriba aquí sus sugerencias..."></textarea>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+
+  <div class="bottom-bar">
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <span style="font-size:13px;color:var(--muted)">Sistema de Registro <strong style="color:var(--navy)">CITE 2026</strong></span>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button type="button" class="btn-secondary" onclick="resetForm()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-5.05"/></svg>
+        Limpiar
+      </button>
+      <button type="submit" form="satForm" class="btn-send" id="btnAdd">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Agregar a bandeja
+      </button>
+      <button type="button" class="btn-send-all" id="btnSendAll" onclick="sendAll()" style="background:var(--blue)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Enviar a Google Sheets
+      </button>
+    </div>
+  </div>
+
+  <div class="tray-panel" style="margin-top:20px">
+    <div class="tray-header">
+      <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Bandeja de encuestas
+        <span class="tray-badge" id="trayCount">0</span>
+        <span id="traySummary" style="font-size:11px;font-weight:400;color:rgba(255,255,255,.6);margin-left:8px"></span>
+      </h3>
+      <div id="trayActions" style="display:none;gap:10px;align-items:center;flex-wrap:wrap">
+        <button class="btn-send-all" id="btnSendAllTray" onclick="sendAll()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Enviar todo a Google Sheets
+        </button>
+        <button class="btn-clear-tray" onclick="clearTray()">Vaciar bandeja</button>
+      </div>
+    </div>
+    <div class="tray-body">
+      <div id="trayProgress" class="tray-progress">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span id="trayProgressTxt">Enviando…</span>
+        <div class="prog-bar-wrap"><div class="prog-bar" id="trayProgBar" style="width:0%"></div></div>
+      </div>
+      <div class="tray-empty" id="trayEmpty">No hay encuestas en la bandeja. Complete el formulario y haga clic en “Agregar a bandeja”.</div>
+      <div class="tray-list" id="trayList" style="display:none"></div>
+    </div>
+  </div>
+
+</div>
+
+<footer>Sistema de Registro CITE 2026 &#183; Los datos se almacenan en Google Sheets</footer>
+
+<div class="toast" id="toast">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="toastMsg"></span>
+</div>
+
+<!-- CATALOGOS -->
+<script>
+const citeData = [
+  'CITE AREQUIPA','CITE AYACUCHO','CITE CAM\u00c9LIDOS SUDAMERICANOS',
+  'CITE CHULUCANAS','CITE HUANCAVELICA','CITE KORIWASI',
+  'CITE SIP\u00c1N','CITE UCAYALI','CITE UTCUMBAMBA'
+];
+const citeTipo = {
+  'CITE AREQUIPA':'Privado','CITE AYACUCHO':'P\u00fablico',
+  'CITE CAM\u00c9LIDOS SUDAMERICANOS':'Privado','CITE CHULUCANAS':'Privado',
+  'CITE HUANCAVELICA':'Privado','CITE KORIWASI':'Privado',
+  'CITE SIP\u00c1N':'P\u00fablico','CITE UCAYALI':'P\u00fablico','CITE UTCUMBAMBA':'Privado'
+};
+const beneficiaryTypes = ["Alpaquero","Artesanos","Asociaciones, cooperativas y comunidades artesanales","Comercializadores de artesan\u00eda","Compradores institucionales","Dise\u00f1adores","Equipos creativos y t\u00e9cnicos especializados","Exportadores y operadores comerciales","Instituciones Educativas","Operadores tur\u00edsticos","Proveedores de materias primas","Proveedores de servicios t\u00e9cnicos","Turistas internacionales","Turistas nacionales","Unidades productivas artesanales","Universidades, institutos y escuelas de dise\u00f1o","Otro (Especificar)"];
+const monthNames = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+
+// ─── Consolidado de Actividades PAA 2026 ────────────────────────────────────
+// Columnas: CITE | CODIGO | Nombre | Modalidad | Tipo de actividad
+const consolidadoActividades = [
+  // CITE AREQUIPA
+  {cite:"CITE AREQUIPA",codigo:"5.1.1.6",nombre:"Organizaci\u00f3n de \"ShowRoom Joyer\u00eda\" Museo de Minerales (Nacionales)",modalidad:"Articulaci\u00f3n",tipo:"2. Articulaci\u00f3n para el desarrollo de iniciativas"},
+  {cite:"CITE AREQUIPA",codigo:"5.1.1.1",nombre:"Organizaci\u00f3n de ferias, ruedas de negocios, Show Room (Locales)",modalidad:"Articulaci\u00f3n",tipo:"5. Articulaci\u00f3n comercial tur\u00edstico-artesanal"},
+  {cite:"CITE AREQUIPA",codigo:"5.1.1.5",nombre:"Participaci\u00f3n de Show Room \"CasaCor Per\u00fa\" (Nacionales)",modalidad:"Articulaci\u00f3n",tipo:"2. Articulaci\u00f3n para el desarrollo de iniciativas"},
+  {cite:"CITE AREQUIPA",codigo:"5.1.1.3",nombre:"Participaci\u00f3n en feria Festival de la Innovaci\u00f3n de los CITE's de Artesan\u00eda y Turismo - Exhibe Per\u00fa 2026",modalidad:"Articulaci\u00f3n",tipo:"5. Articulaci\u00f3n comercial tur\u00edstico-artesanal"},
+  {cite:"CITE AREQUIPA",codigo:"5.1.1.2",nombre:"Participaci\u00f3n en Feria Nacional de Artesan\u00eda \"De Nuestras Manos 2026\"",modalidad:"Articulaci\u00f3n",tipo:"3. Articulaci\u00f3n comercial y de acceso a mercados"},
+  {cite:"CITE AREQUIPA",codigo:"5.1.1.4",nombre:"Participaci\u00f3n en ferias, ruedas de negocios, Show Room, (Internacionales)",modalidad:"Articulaci\u00f3n",tipo:"3. Articulaci\u00f3n comercial y de acceso a mercados"},
+  {cite:"CITE AREQUIPA",codigo:"5.1.2.2",nombre:"Promoci\u00f3n de Artesan\u00eda mediante canales de venta f\u00edsicos",modalidad:"Articulaci\u00f3n",tipo:"5. Articulaci\u00f3n comercial tur\u00edstico-artesanal"},
+  {cite:"CITE AREQUIPA",codigo:"5.2.1.1",nombre:"Reuniones de coordinaci\u00f3n con Instituciones, p\u00fablicas, privadas entre otras.",modalidad:"Articulaci\u00f3n",tipo:"1. Articulaci\u00f3n institucional y gobernanza"},
+  {cite:"CITE AREQUIPA",codigo:"2.1.1.4",nombre:"Curso de Capacitaci\u00f3n en Bordados del Colca (Costura y Patronaje; Bordado de Accesorios; Bordado en Prendas de Vestir)",modalidad:"Capacitaci\u00f3n",tipo:"3. Cursos"},
+  {cite:"CITE AREQUIPA",codigo:"2.1.1.6",nombre:"Curso de Capacitaci\u00f3n en Fieltro",modalidad:"Capacitaci\u00f3n",tipo:"3. Cursos"},
+  {cite:"CITE AREQUIPA",codigo:"2.1.1.8",nombre:"Curso de Capacitaci\u00f3n en Joyer\u00eda Especializada",modalidad:"Capacitaci\u00f3n",tipo:"3. Cursos"},
+  {cite:"CITE AREQUIPA",codigo:"2.1.1.7",nombre:"Curso de capacitaci\u00f3n en Joyer\u00eda General",modalidad:"Capacitaci\u00f3n",tipo:"3. Cursos"},
+  {cite:"CITE AREQUIPA",codigo:"2.1.1.2",nombre:"Curso de Capacitaci\u00f3n en Tejido a Mano y/o Tejido a Punto",modalidad:"Capacitaci\u00f3n",tipo:"3. Cursos"},
+  {cite:"CITE AREQUIPA",codigo:"2.1.1.3",nombre:"Curso de Capacitaci\u00f3n en tejido en telar o tejido plano",modalidad:"Capacitaci\u00f3n",tipo:"3. Cursos"},
+  {cite:"CITE AREQUIPA",codigo:"2.1.1.1",nombre:"Curso de Capacitaci\u00f3n en Transformaci\u00f3n de la fibra de alpaca (Categorizaci\u00f3n y clasificaci\u00f3n de fibra, Desarrollo de hilado artesanal, Te\u00f1ido Natural)",modalidad:"Capacitaci\u00f3n",tipo:"3. Cursos"},
+  {cite:"CITE AREQUIPA",codigo:"2.1.1.5",nombre:"Curso de Capacitaci\u00f3n Tejido a punto (M\u00e1quina de tejer mec\u00e1nica)",modalidad:"Capacitaci\u00f3n",tipo:"3. Cursos"},
+  {cite:"CITE AREQUIPA",codigo:"2.2.2.1",nombre:"Programa de capacitaci\u00f3n en Ingl\u00e9s para Artesanos (Virtual)",modalidad:"Capacitaci\u00f3n",tipo:"4. Programas de capacitaci\u00f3n"},
+  {cite:"CITE AREQUIPA",codigo:"2.2.1.3",nombre:"Seminario sobre Ventas en L\u00ednea (E-commerce)",modalidad:"Capacitaci\u00f3n",tipo:"3. Cursos"},
+  {cite:"CITE AREQUIPA",codigo:"2.2.1.1",nombre:"Taller de Fotograf\u00eda de Producto para Artesanos",modalidad:"Capacitaci\u00f3n",tipo:"2. Talleres"},
+  {cite:"CITE AREQUIPA",codigo:"2.2.1.2",nombre:"Taller de Storytelling y Marca Personal",modalidad:"Capacitaci\u00f3n",tipo:"2. Talleres"},
+  {cite:"CITE AREQUIPA",codigo:"4.3.1.1",nombre:"Acompa\u00f1amiento para participaci\u00f3n en fondos concursables a unidades productivas",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"2. Campa\u00f1as informativas"},
+  {cite:"CITE AREQUIPA",codigo:"4.1.1.2",nombre:"Comunicaci\u00f3n y difusi\u00f3n de la oferta de servicios del CITE",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"1. Generaci\u00f3n de informaci\u00f3n estrat\u00e9gica"},
+  {cite:"CITE AREQUIPA",codigo:"4.4.1.1",nombre:"Desarrollo y promoci\u00f3n del seminario de innovaci\u00f3n de la artesan\u00eda (Arequipa y Caylloma)",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"4. Exhibici\u00f3n/Exposici\u00f3n"},
+  {cite:"CITE AREQUIPA",codigo:"4.2.1.1",nombre:"Difusi\u00f3n de Programa de internacionalizaci\u00f3n",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"1. Generaci\u00f3n de informaci\u00f3n estrat\u00e9gica"},
+  {cite:"CITE AREQUIPA",codigo:"4.1.1.1",nombre:"Producci\u00f3n de material audio visual y/o impreso para difusi\u00f3n de actividades y logros de los artesanos, amautas o con reconocimientos",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"1. Generaci\u00f3n de informaci\u00f3n estrat\u00e9gica"},
+  {cite:"CITE AREQUIPA",codigo:"3.1.1.1",nombre:"Estudio de identidad cultural para la artesan\u00eda textil Arequipe\u00f1a",modalidad:"I + D + i",tipo:"1. Estudio t\u00e9cnico"},
+  {cite:"CITE AREQUIPA",codigo:"3.1.1.2",nombre:"Validaci\u00f3n de Insumos para fotograbado en joyer\u00eda.",modalidad:"I + D + i",tipo:"1. Estudio t\u00e9cnico"},
+  {cite:"CITE AREQUIPA",codigo:"1.1.1.1",nombre:"Asistencia t\u00e9cnica a talleres artesanales de la l\u00ednea Textil",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"4. Asistencia t\u00e9cnica"},
+  {cite:"CITE AREQUIPA",codigo:"1.5.1.1",nombre:"Dise\u00f1o e implementaci\u00f3n de experiencias tur\u00edsticas",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"6. Desarrollo de servicios"},
+  {cite:"CITE AREQUIPA",codigo:"1.2.1.1",nombre:"Dise\u00f1o y Desarrollo de nuevos productos",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"5. Desarrollo de productos"},
+  {cite:"CITE AREQUIPA",codigo:"1.3.1.1",nombre:"Implementaci\u00f3n de Calidad y Mejora de Procesos",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"7. Implementaci\u00f3n de est\u00e1ndares y metodolog\u00edas"},
+  {cite:"CITE AREQUIPA",codigo:"1.4.1.1",nombre:"Pasan\u00eda en la L\u00ednea de Joyer\u00eda",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"11. Pasan\u00eda/intercambio"},
+  {cite:"CITE AREQUIPA",codigo:"1.1.2.1",nombre:"Servicio especializado dentro de la l\u00ednea de Joyer\u00eda",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"9. Soporte productivo"},
+  // CITE AYACUCHO
+  {cite:"CITE AYACUCHO",codigo:"5.1.1.4",nombre:"Adecuaci\u00f3n e implementaci\u00f3n de paneles informativos de la RUTA ARTESANAL de grandes maestros",modalidad:"Articulaci\u00f3n",tipo:"2. Articulaci\u00f3n para el desarrollo de iniciativas"},
+  {cite:"CITE AYACUCHO",codigo:"5.1.1.5",nombre:"Ejecuci\u00f3n de acciones de articulaci\u00f3n comercial, posicionamiento institucional del CITE y promoci\u00f3n de la formalizaci\u00f3n del Artesano en la regi\u00f3n Ayacucho",modalidad:"Articulaci\u00f3n",tipo:"3. Articulaci\u00f3n comercial y de acceso a mercados"},
+  {cite:"CITE AYACUCHO",codigo:"5.1.1.3",nombre:"Fam trip y press tour vivencial de experiencias de nuevos talleres que integran la ruta artesanal de grandes maestros Ayacuchanos.",modalidad:"Articulaci\u00f3n",tipo:"5. Articulaci\u00f3n comercial tur\u00edstico-artesanal"},
+  {cite:"CITE AYACUCHO",codigo:"5.1.1.1",nombre:"Organizaci\u00f3n y Ejecuci\u00f3n de Ferias locales de artesan\u00eda.",modalidad:"Articulaci\u00f3n",tipo:"3. Articulaci\u00f3n comercial y de acceso a mercados"},
+  {cite:"CITE AYACUCHO",codigo:"5.1.1.2",nombre:"Participaci\u00f3n en Ferias Nacionales",modalidad:"Articulaci\u00f3n",tipo:"3. Articulaci\u00f3n comercial y de acceso a mercados"},
+  {cite:"CITE AYACUCHO",codigo:"5.2.1.1",nombre:"Reuniones de coordinaci\u00f3n interinstitucional en promoci\u00f3n del turismo y la artesan\u00eda para la gesti\u00f3n del CITE Ayacucho",modalidad:"Articulaci\u00f3n",tipo:"2. Articulaci\u00f3n para el desarrollo de iniciativas"},
+  {cite:"CITE AYACUCHO",codigo:"2.2.1.4",nombre:"Curso de capacitaci\u00f3n de herramientas digitales para comercializaci\u00f3n artesanal aplicadas a l\u00edneas artesanales priorizadas.",modalidad:"Capacitaci\u00f3n",tipo:"5. Formaci\u00f3n especializada"},
+  {cite:"CITE AYACUCHO",codigo:"2.2.1.6",nombre:"Curso de capacitaci\u00f3n de la linea artesanal de Cueros y Pieles",modalidad:"Capacitaci\u00f3n",tipo:"5. Formaci\u00f3n especializada"},
+  {cite:"CITE AYACUCHO",codigo:"2.2.1.9",nombre:"Curso de capacitaci\u00f3n de la linea artesanal de Imaginer\u00eda",modalidad:"Capacitaci\u00f3n",tipo:"5. Formaci\u00f3n especializada"},
+  {cite:"CITE AYACUCHO",codigo:"2.2.1.7",nombre:"Curso de capacitaci\u00f3n de la linea artesanal de Joyer\u00eda y Orfebre\u00eda",modalidad:"Capacitaci\u00f3n",tipo:"5. Formaci\u00f3n especializada"},
+  {cite:"CITE AYACUCHO",codigo:"2.2.1.10",nombre:"Curso de capacitaci\u00f3n de la linea artesanal de Talla",modalidad:"Capacitaci\u00f3n",tipo:"5. Formaci\u00f3n especializada"},
+  {cite:"CITE AYACUCHO",codigo:"2.2.1.5",nombre:"Curso de capacitaci\u00f3n en Fortalecimiento en Costos, Presupuestos y Finanzas para Artesanos aplicadas a l\u00edneas artesanales priorizadas.",modalidad:"Capacitaci\u00f3n",tipo:"5. Formaci\u00f3n especializada"},
+  {cite:"CITE AYACUCHO",codigo:"2.2.1.3",nombre:"Curso de capacitaci\u00f3n en tecnolog\u00edas de trazabilidad artesanal a las l\u00edneas artesanales priorizadas.",modalidad:"Capacitaci\u00f3n",tipo:"5. Formaci\u00f3n especializada"},
+  {cite:"CITE AYACUCHO",codigo:"2.2.1.2",nombre:"Curso de capacitaci\u00f3n en ventas online usando Tecnolog\u00edas digitales aplicadas a las l\u00edneas artesanales priorizadas.",modalidad:"Capacitaci\u00f3n",tipo:"5. Formaci\u00f3n especializada"},
+  {cite:"CITE AYACUCHO",codigo:"2.2.1.11",nombre:"Curso y/o Taller integral de gesti\u00f3n empresarial",modalidad:"Capacitaci\u00f3n",tipo:"2. Talleres"},
+  {cite:"CITE AYACUCHO",codigo:"2.2.1.8",nombre:"Programa de capacitaci\u00f3n de la linea artesanal de Textiler\u00eda",modalidad:"Capacitaci\u00f3n",tipo:"4. Programas de capacitaci\u00f3n"},
+  {cite:"CITE AYACUCHO",codigo:"2.2.1.1",nombre:"Programa de implementaci\u00f3n de storytelling comercial aplicadas a las l\u00edneas artesanales priorizadas.",modalidad:"Capacitaci\u00f3n",tipo:"4. Programas de capacitaci\u00f3n"},
+  {cite:"CITE AYACUCHO",codigo:"4.1.1.1",nombre:"Campa\u00f1a de inscripci\u00f3n y actualizaci\u00f3n del RNA",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"2. Campa\u00f1as informativas"},
+  {cite:"CITE AYACUCHO",codigo:"4.3.1.1",nombre:"Exposici\u00f3n de piezas artesanales en la Casa de la Artesan\u00eda Ayacuchana",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"4. Exhibici\u00f3n/Exposici\u00f3n"},
+  {cite:"CITE AYACUCHO",codigo:"4.2.1.1",nombre:"Seguimiento operativo en la planificaci\u00f3n y ejecuci\u00f3n de las actividades e indicadores del PAA 2026, del CITE Ayacucho.",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"1. Generaci\u00f3n de informaci\u00f3n estrat\u00e9gica"},
+  {cite:"CITE AYACUCHO",codigo:"4.3.1.2",nombre:"Socializaci\u00f3n del estudio de materias primas y t\u00e9cnicas de dorado de procesos productivos artesanales",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"3. Espacios de difusi\u00f3n t\u00e9cnica"},
+  {cite:"CITE AYACUCHO",codigo:"3.1.1.1",nombre:"Estudio de materias primas y optimizaci\u00f3n de procesos productivos en las l\u00edneas artesanales del CITE Ayacucho",modalidad:"I + D + i",tipo:"1. Estudio t\u00e9cnico"},
+  {cite:"CITE AYACUCHO",codigo:"3.2.1.1",nombre:"Estudio e investigaci\u00f3n de mercados para la l\u00ednea artesanal de Talla (Piedra de Huamanga)",modalidad:"I + D + i",tipo:"1. Estudio t\u00e9cnico"},
+  {cite:"CITE AYACUCHO",codigo:"1.3.1.3",nombre:"Asistencia t\u00e9cnica en demostraciones pr\u00e1cticas de t\u00e9cnicas artesanales tradicionales",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"4. Asistencia t\u00e9cnica"},
+  {cite:"CITE AYACUCHO",codigo:"1.3.1.2",nombre:"Asistencia t\u00e9cnica en la mejora de proceso productivo en l\u00edneas artesanales priorizadas Imaginer\u00eda",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"4. Asistencia t\u00e9cnica"},
+  {cite:"CITE AYACUCHO",codigo:"1.3.1.1",nombre:"Asistencia t\u00e9cnica en la mejora de proceso productivo la l\u00ednea artesanal de Talla",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"4. Asistencia t\u00e9cnica"},
+  {cite:"CITE AYACUCHO",codigo:"1.1.1.3",nombre:"Cocreaci\u00f3n y dise\u00f1o de productos artesanales innovadores",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"5. Desarrollo de productos"},
+  {cite:"CITE AYACUCHO",codigo:"1.1.1.1",nombre:"Dise\u00f1o y desarrollo de colecciones artesanales.",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"5. Desarrollo de productos"},
+  {cite:"CITE AYACUCHO",codigo:"1.1.1.2",nombre:"Dise\u00f1o y desarrollo de empaque, embalajes de productos artesanales",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"5. Desarrollo de productos"},
+  {cite:"CITE AYACUCHO",codigo:"1.2.1.1",nombre:"Experiencia pr\u00e1ctica de pasan\u00eda en procesos productivos (Pasan\u00edas)",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"11. Pasan\u00eda/intercambio"},
+  // CITE CAMÉLIDOS SUDAMERICANOS
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"3.2.1.1",nombre:"Autorizacion como ente certificado para competencias laborales en la cadena de valor de los camelidos sudamericanos",modalidad:"Articulaci\u00f3n",tipo:"6. Articulaci\u00f3n regulatoria y de reconocimiento institucional"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"9.1.1.1",nombre:"Compromisos de gesti\u00f3n a nivel multisectorial - Planes de trabajo / Convenios / Acuerdos a favor del sector artesanal local, regional y nacional",modalidad:"Articulaci\u00f3n",tipo:"1. Articulaci\u00f3n institucional y gobernanza"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"3.1.3.1",nombre:"Desarrollo del Plan para la creaci\u00f3n y promoci\u00f3n de marca colectiva para productos artesanales.",modalidad:"Articulaci\u00f3n",tipo:"4. Articulaci\u00f3n networking y negociaci\u00f3n"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"10.2.1.1",nombre:"Gesti\u00f3n de acceso a financiamiento para sostenibilidad del CITE",modalidad:"Articulaci\u00f3n",tipo:"2. Articulaci\u00f3n para el desarrollo de iniciativas"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"2.1.1.5",nombre:"Gestion del showroom del CITE CS",modalidad:"Articulaci\u00f3n",tipo:"3. Articulaci\u00f3n comercial y de acceso a mercados"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"2.2.1.1",nombre:"Participacion en ferias internacionales",modalidad:"Articulaci\u00f3n",tipo:"3. Articulaci\u00f3n comercial y de acceso a mercados"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"2.1.1.3",nombre:"Participaci\u00f3n en Ferias nacional de artesan\u00eda",modalidad:"Articulaci\u00f3n",tipo:"3. Articulaci\u00f3n comercial y de acceso a mercados"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"2.1.1.2",nombre:"Participaci\u00f3n en Ferias Regional de artesan\u00eda",modalidad:"Articulaci\u00f3n",tipo:"3. Articulaci\u00f3n comercial y de acceso a mercados"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"4.4.3.1",nombre:"Capacitacion de mujeres clasificadoras en fibra de alpaca (NTP)",modalidad:"Capacitaci\u00f3n",tipo:"3. Cursos"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"4.4.2.1",nombre:"Capacitacion en buenas practicas de esquila electromecanica (NTP)",modalidad:"Capacitaci\u00f3n",tipo:"4. Programas de capacitaci\u00f3n"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"5.2.1.1",nombre:"Capacitaci\u00f3n en mercado, tendencias y comercializaci\u00f3n avanzada",modalidad:"Capacitaci\u00f3n",tipo:"3. Cursos"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"4.4.1.1",nombre:"Certificacion de competencias laborales en la linea textil artesanal de artesanos de la region Puno",modalidad:"Capacitaci\u00f3n",tipo:"4. Programas de capacitaci\u00f3n"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"4.2.1.1",nombre:"Programa 1: textiles tradicionales con valor comercial",modalidad:"Capacitaci\u00f3n",tipo:"4. Programas de capacitaci\u00f3n"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"4.2.1.2",nombre:"Programa 2: producci\u00f3n artesanal textil comercial",modalidad:"Capacitaci\u00f3n",tipo:"4. Programas de capacitaci\u00f3n"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"4.2.1.3",nombre:"Programa 3: nuevas t\u00e9cnicas \u2013 fieltro con fibra de alpaca",modalidad:"Capacitaci\u00f3n",tipo:"4. Programas de capacitaci\u00f3n"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"8.2.2.1",nombre:"Desarrollo de seminarios de innovaci\u00f3n artesanal en la l\u00ednea textil y sublineas textiles cam\u00e9lidos",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"3. Espacios de difusi\u00f3n t\u00e9cnica"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"11.3.1.1",nombre:"Difusi\u00f3n de informaci\u00f3n t\u00e9cnica para la mejora productiva, calidad y cumplimiento normativo en l\u00edneas artesanales de la cadena de valor de los cam\u00e9lidos sudamericanos",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"3. Espacios de difusi\u00f3n t\u00e9cnica"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"10.4.1.1",nombre:"Difusi\u00f3n de programas de financiamiento para unidades productivas",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"2. Campa\u00f1as informativas"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"11.3.2.1",nombre:"Ejecuci\u00f3n de acciones de difusi\u00f3n sobre la artesan\u00eda (charlas, streaming, redes sociales, etc.).",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"6. Posicionamiento institucional y de marca"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"11.2.2.1",nombre:"Encuestas, L\u00ednea base de l\u00ednea artesanal, caracterizaci\u00f3n de la poblaci\u00f3n objetivo (Censo).",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"1. Generaci\u00f3n de informaci\u00f3n estrat\u00e9gica"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"8.3.1.1",nombre:"Promover la participaci\u00f3n de los artesanos textiles en el concurso de artesan\u00eda textil regi\u00f3n Puno",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"5. Reconocimientos institucionales"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"8.2.2.3",nombre:"Semana de la Innovaci\u00f3n",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"3. Espacios de difusi\u00f3n t\u00e9cnica"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"8.2.2.2",nombre:"Seminario y congresos nacionales e internacionales",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"3. Espacios de difusi\u00f3n t\u00e9cnica"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"8.1.1.1",nombre:"Sensibilizacion sobre la innovacion de productos artesanales y turisticos",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"3. Espacios de difusi\u00f3n t\u00e9cnica"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"1.1.1.1",nombre:"Desarrollo de estudios o investigaciones de mercado sobre producto con potencial escalable.",modalidad:"I + D + i",tipo:"2. Investigaciones"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"3.1.2.1",nombre:"Dise\u00f1o, desarrollo y validaci\u00f3n de soluciones (tecnol\u00f3gicas o mec\u00e1nicas u otros) para la mejora la cadena de valor de los cam\u00e9lidos sudamericanos",modalidad:"I + D + i",tipo:"3. Validaci\u00f3n de prototipos"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"6.3.1.2",nombre:"Optimizaci\u00f3n del Uso de la Fibra de Alpaca y Otros Fibras Naturales",modalidad:"I + D + i",tipo:"2. Investigaciones"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"7.1.1.2",nombre:"Recuperaci\u00f3n de M\u00e9todos de Producci\u00f3n Artesanal en Peligro de Extinci\u00f3n",modalidad:"I + D + i",tipo:"2. Investigaciones"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"1.3.1.2",nombre:"Asistencia t\u00e9cnica para adecuaci\u00f3n de Establecimientos Productivos de Artesan\u00eda -EPAs con fines tur\u00edsticos de la Ruta Tur\u00edstica Artesanal TITIQAQA",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"4. Asistencia t\u00e9cnica"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"1.3.1.3",nombre:"Dise\u00f1o e implementaci\u00f3n de experiencias tur\u00edsticas de la Ruta Tur\u00edstica Artesanal TITIQAQA",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"6. Desarrollo de servicios"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"1.2.2.1",nombre:"Dise\u00f1o y desarrollo de colecciones en textiles para mercado internacional y asistencia t\u00e9cnica para su desarrollo",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"5. Desarrollo de productos"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"1.2.1.1",nombre:"Dise\u00f1o y desarrollo de colecciones textiles para mercado nacional y asistencia t\u00e9cnica para su desarrollo",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"5. Desarrollo de productos"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"1.2.3.1",nombre:"Dise\u00f1o y desarrollo de productos souvenir para el mercado tur\u00edstico del destino Lago Titicaca y asistencia t\u00e9cnica para su desarrollo",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"5. Desarrollo de productos"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"4.1.4.1",nombre:"Implementaci\u00f3n de Fab Lab artesanal (con equipamiento)",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"1. Laboratorio de cocreaci\u00f3n (Living Lab)"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"4.3.4.1",nombre:"Implementaci\u00f3n y adecuaci\u00f3n de procesos y productos artesanales conforme a Normas T\u00e9cnicas Peruanas (NTP) 232.205:2015",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"7. Implementaci\u00f3n de est\u00e1ndares y metodolog\u00edas"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"4.3.1.1",nombre:"Mejoramiento de la gesti\u00f3n de calidad de talleres artesanales textiles (5 S)",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"4. Asistencia t\u00e9cnica"},
+  {cite:"CITE CAM\u00c9LIDOS SUDAMERICANOS",codigo:"1.2.1.2",nombre:"Servicio de esquila electromec\u00e1nica",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"4. Asistencia t\u00e9cnica"},
+  // CITE CHULUCANAS
+  {cite:"CITE CHULUCANAS",codigo:"2.1.1.12",nombre:"Congreso Internacional de Joyeria",modalidad:"Articulaci\u00f3n",tipo:"3. Articulaci\u00f3n comercial y de acceso a mercados"},
+  {cite:"CITE CHULUCANAS",codigo:"3.1.1.1.4",nombre:"Dise\u00f1o y desarrollo de una plataforma e-commerce intereactiva",modalidad:"Articulaci\u00f3n",tipo:"3. Articulaci\u00f3n comercial y de acceso a mercados"},
+  {cite:"CITE CHULUCANAS",codigo:"10.4.1.1",nombre:"Formulaci\u00f3n de planes de negocios para gremios artesanales para acceder a fuentes de financiamiento",modalidad:"Articulaci\u00f3n",tipo:"2. Articulaci\u00f3n para el desarrollo de iniciativas"},
+  {cite:"CITE CHULUCANAS",codigo:"3.1.1.1",nombre:"Gesti\u00f3n de autorizaci\u00f3n de uso de la Denominaci\u00f3n de origen Chulucanas para artesanos ceramistas",modalidad:"Articulaci\u00f3n",tipo:"2. Articulaci\u00f3n para el desarrollo de iniciativas"},
+  {cite:"CITE CHULUCANAS",codigo:"9.1.1.1",nombre:"Gesti\u00f3n para la suscripci\u00f3n de convenio con institucion p\u00fablica y/o Privada.",modalidad:"Articulaci\u00f3n",tipo:"1. Articulaci\u00f3n institucional y gobernanza"},
+  {cite:"CITE CHULUCANAS",codigo:"3.1.1.1.1",nombre:"Implementaci\u00f3n del punto de venta de cer\u00e1mica",modalidad:"Articulaci\u00f3n",tipo:"3. Articulaci\u00f3n comercial y de acceso a mercados"},
+  {cite:"CITE CHULUCANAS",codigo:"3.1.1.1.2",nombre:"Mejoramiento e implementaci\u00f3n de galeria de exhibici\u00f3n venta de CITE CERAMICA",modalidad:"Articulaci\u00f3n",tipo:"3. Articulaci\u00f3n comercial y de acceso a mercados"},
+  {cite:"CITE CHULUCANAS",codigo:"2.1.1.5",nombre:"Organizaci\u00f3n de ferias, ruedas de negocios, show rooms (locales)",modalidad:"Articulaci\u00f3n",tipo:"3. Articulaci\u00f3n comercial y de acceso a mercados"},
+  {cite:"CITE CHULUCANAS",codigo:"2.1.1.8",nombre:"Organizaci\u00f3n de show rooms (Nacionales)",modalidad:"Articulaci\u00f3n",tipo:"4. Articulaci\u00f3n networking y negociaci\u00f3n"},
+  {cite:"CITE CHULUCANAS",codigo:"2.1.1.7",nombre:"Participaci\u00f3n en ferias, ruedas de negocios, show rooms (Internacionales).",modalidad:"Articulaci\u00f3n",tipo:"4. Articulaci\u00f3n networking y negociaci\u00f3n"},
+  {cite:"CITE CHULUCANAS",codigo:"2.1.1.6",nombre:"Participaci\u00f3n en ferias, ruedas de negocios, show rooms (Nacionales).",modalidad:"Articulaci\u00f3n",tipo:"4. Articulaci\u00f3n networking y negociaci\u00f3n"},
+  {cite:"CITE CHULUCANAS",codigo:"9.2.1.1",nombre:"Reuniones institucionales",modalidad:"Articulaci\u00f3n",tipo:"6. Articulaci\u00f3n regulatoria y de reconocimiento institucional"},
+  {cite:"CITE CHULUCANAS",codigo:"2.3",nombre:"Curso en Bordado artesanal en telar",modalidad:"Capacitaci\u00f3n",tipo:"3. Cursos"},
+  {cite:"CITE CHULUCANAS",codigo:"2.2",nombre:"Curso en tecnica de escultura y modelado a mano de ceramica de Chulucanas",modalidad:"Capacitaci\u00f3n",tipo:"3. Cursos"},
+  {cite:"CITE CHULUCANAS",codigo:"2.1",nombre:"Curso en Tejido de Crochet - Nivel Intermedio",modalidad:"Capacitaci\u00f3n",tipo:"3. Cursos"},
+  {cite:"CITE CHULUCANAS",codigo:"2.6",nombre:"Dise\u00f1o y estructuraci\u00f3n de la malla curricular para el fortalecimiento de capacidades en la l\u00ednea artesanal de cer\u00e1mica",modalidad:"Capacitaci\u00f3n",tipo:"5. Formaci\u00f3n especializada"},
+  {cite:"CITE CHULUCANAS",codigo:"2.4",nombre:"Gesti\u00f3n para certificacion de competencias laborales MTPE a artesanos ceramistas",modalidad:"Capacitaci\u00f3n",tipo:"4. Programas de capacitaci\u00f3n"},
+  {cite:"CITE CHULUCANAS",codigo:"2.5",nombre:"Taller de Uso de Herramientas de Redes Sociales para Promoci\u00f3n de productos Artesanales",modalidad:"Capacitaci\u00f3n",tipo:"2. Talleres"},
+  {cite:"CITE CHULUCANAS",codigo:"4.5",nombre:"Concurso de Innovaci\u00f3n en Cer\u00e1mica Artesanal",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"3. Espacios de difusi\u00f3n t\u00e9cnica"},
+  {cite:"CITE CHULUCANAS",codigo:"4.6",nombre:"Difusi\u00f3n y acompa\u00f1amiento para la postulaci\u00f3n de artesanos a fondos concursables",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"1. Generaci\u00f3n de informaci\u00f3n estrat\u00e9gica"},
+  {cite:"CITE CHULUCANAS",codigo:"4.2",nombre:"Difusi\u00f3n y Desarrollo de contenidos para Redes del CITE cer\u00e1mica Chulucanas",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"3. Espacios de difusi\u00f3n t\u00e9cnica"},
+  {cite:"CITE CHULUCANAS",codigo:"4.3",nombre:"Elaboraci\u00f3n y difusi\u00f3n de cat\u00e1logos de Productos Artesanales decorativos y utilitarios",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"4. Exhibici\u00f3n/Exposici\u00f3n"},
+  {cite:"CITE CHULUCANAS",codigo:"4.1",nombre:"Inscripci\u00f3n y actualizaci\u00f3n del artesano en el Registro Nacional del Artesano(RNA)",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"3. Espacios de difusi\u00f3n t\u00e9cnica"},
+  {cite:"CITE CHULUCANAS",codigo:"4.4",nombre:"Seminario de innovaci\u00f3n",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"3. Espacios de difusi\u00f3n t\u00e9cnica"},
+  {cite:"CITE CHULUCANAS",codigo:"3.3",nombre:"Estudio de perfil del visitante de la ruta turistica artesanal",modalidad:"I + D + i",tipo:"1. Estudio t\u00e9cnico"},
+  {cite:"CITE CHULUCANAS",codigo:"3.2",nombre:"Estudio t\u00e9cnico orientado a la aplicaci\u00f3n y manejo adecuado de arcilla de alta temperatura para la elaboraci\u00f3n de piezas de cer\u00e1mica utilitaria.",modalidad:"I + D + i",tipo:"1. Estudio t\u00e9cnico"},
+  {cite:"CITE CHULUCANAS",codigo:"3.1",nombre:"Investigaci\u00f3n Aplicada para la mejora Tecnol\u00f3gica de hornos de ahumado en la Cer\u00e1mica de Chulucanas",modalidad:"I + D + i",tipo:"2. Investigaciones"},
+  {cite:"CITE CHULUCANAS",codigo:"1.2",nombre:"Asistencia Tecnica en tejido a telar",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"4. Asistencia t\u00e9cnica"},
+  {cite:"CITE CHULUCANAS",codigo:"1.5",nombre:"Asistencia tecnica para la mejora de talleres artesanales de la ruta turistica.",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"4. Asistencia t\u00e9cnica"},
+  {cite:"CITE CHULUCANAS",codigo:"1.1",nombre:"Dise\u00f1o y desarrollo de nuevos productos de Cer\u00e1mica y fibra vegetal.",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"4. Asistencia t\u00e9cnica"},
+  {cite:"CITE CHULUCANAS",codigo:"1.6",nombre:"Pasantia Tecn\u00f3logica en la linea de ceramica con artesanos ceramistas de Chulucanas y de Valencia-Espa\u00f1a.",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"4. Asistencia t\u00e9cnica"},
+  {cite:"CITE CHULUCANAS",codigo:"1.4",nombre:"Servicio de provisi\u00f3n de materia prima mejorada e insumos",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"5. Desarrollo de productos"},
+  {cite:"CITE CHULUCANAS",codigo:"1.3",nombre:"Servicios de optimizaci\u00f3n y mejora de proceso de quema de productos de ceramica con uso de horno a gas.",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"5. Desarrollo de productos"},
+  // CITE HUANCAVELICA
+  {cite:"CITE HUANCAVELICA",codigo:"5.11",nombre:"Acompa\u00f1amiento en la certificaci\u00f3n de marcas colectivas y/o individuales",modalidad:"Articulaci\u00f3n",tipo:"5. Articulaci\u00f3n comercial tur\u00edstico-artesanal"},
+  {cite:"CITE HUANCAVELICA",codigo:"5.12",nombre:"Desarrollo de estrategia de comercializaci\u00f3n y marketing digital",modalidad:"Articulaci\u00f3n",tipo:"4. Articulaci\u00f3n networking y negociaci\u00f3n"},
+  {cite:"CITE HUANCAVELICA",codigo:"5.6",nombre:"Formulaci\u00f3n de proyectos para el acceso a la cooperaci\u00f3n internacional",modalidad:"Articulaci\u00f3n",tipo:"1. Articulaci\u00f3n institucional y gobernanza"},
+  {cite:"CITE HUANCAVELICA",codigo:"5.1",nombre:"Gesti\u00f3n comercial y acceso a mercados",modalidad:"Articulaci\u00f3n",tipo:"3. Articulaci\u00f3n comercial y de acceso a mercados"},
+  {cite:"CITE HUANCAVELICA",codigo:"5.5",nombre:"Misi\u00f3n comercial internacional (artigiano - Italia)",modalidad:"Articulaci\u00f3n",tipo:"3. Articulaci\u00f3n comercial y de acceso a mercados"},
+  {cite:"CITE HUANCAVELICA",codigo:"5.7",nombre:"Participaci\u00f3n en feria nacional de artesan\u00eda \"De nuestras manos\"",modalidad:"Articulaci\u00f3n",tipo:"5. Articulaci\u00f3n comercial tur\u00edstico-artesanal"},
+  {cite:"CITE HUANCAVELICA",codigo:"5.8",nombre:"Participaci\u00f3n en festival de innovaci\u00f3n de cites de artesan\u00eda y turismo \"Exhibe per\u00fa\"",modalidad:"Articulaci\u00f3n",tipo:"5. Articulaci\u00f3n comercial tur\u00edstico-artesanal"},
+  {cite:"CITE HUANCAVELICA",codigo:"5.3",nombre:"Participaci\u00f3n en la Feria \"Expo Peru los Andes-2026\"",modalidad:"Articulaci\u00f3n",tipo:"5. Articulaci\u00f3n comercial tur\u00edstico-artesanal"},
+  {cite:"CITE HUANCAVELICA",codigo:"5.9",nombre:"Participaci\u00f3n en la feria de exhibici\u00f3n CASACOR",modalidad:"Articulaci\u00f3n",tipo:"5. Articulaci\u00f3n comercial tur\u00edstico-artesanal"},
+  {cite:"CITE HUANCAVELICA",codigo:"5.4",nombre:"Participaci\u00f3n y representaci\u00f3n en reuniones institucionales",modalidad:"Articulaci\u00f3n",tipo:"1. Articulaci\u00f3n institucional y gobernanza"},
+  {cite:"CITE HUANCAVELICA",codigo:"5.10",nombre:"Proceso de acreditaci\u00f3n del cite para realizar certificaci\u00f3n de competencias laborales",modalidad:"Articulaci\u00f3n",tipo:"1. Articulaci\u00f3n institucional y gobernanza"},
+  {cite:"CITE HUANCAVELICA",codigo:"5.2",nombre:"Promoci\u00f3n de la feria artesanal regional y/o local",modalidad:"Articulaci\u00f3n",tipo:"5. Articulaci\u00f3n comercial tur\u00edstico-artesanal"},
+  {cite:"CITE HUANCAVELICA",codigo:"2.4",nombre:"Capacitaci\u00f3n en hilados artesanales en base a fibra de alpaca",modalidad:"Capacitaci\u00f3n",tipo:"2. Talleres"},
+  {cite:"CITE HUANCAVELICA",codigo:"2.5",nombre:"Capacitaci\u00f3n y evaluaci\u00f3n de artesanos para la certificaci\u00f3n de competencias laborales",modalidad:"Capacitaci\u00f3n",tipo:"4. Programas de capacitaci\u00f3n"},
+  {cite:"CITE HUANCAVELICA",codigo:"2.7",nombre:"Curso taller en gesti\u00f3n de la innovaci\u00f3n con artesanos textiles",modalidad:"Capacitaci\u00f3n",tipo:"2. Talleres"},
+  {cite:"CITE HUANCAVELICA",codigo:"2.2",nombre:"Mejoramiento de capacidades en tejido a punto",modalidad:"Capacitaci\u00f3n",tipo:"2. Talleres"},
+  {cite:"CITE HUANCAVELICA",codigo:"2.1",nombre:"Mejoramiento de capacidades en tejido a telar",modalidad:"Capacitaci\u00f3n",tipo:"2. Talleres"},
+  {cite:"CITE HUANCAVELICA",codigo:"2.3",nombre:"Mejoramiento de t\u00e9cnicas de te\u00f1ido natural de fibra de alpaca",modalidad:"Capacitaci\u00f3n",tipo:"2. Talleres"},
+  {cite:"CITE HUANCAVELICA",codigo:"2.6",nombre:"Programa de capacitaci\u00f3n en comercio exterior",modalidad:"Capacitaci\u00f3n",tipo:"4. Programas de capacitaci\u00f3n"},
+  {cite:"CITE HUANCAVELICA",codigo:"4.1",nombre:"Campa\u00f1a de inscripci\u00f3n y/o actualizaci\u00f3n de rna",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"2. Campa\u00f1as informativas"},
+  {cite:"CITE HUANCAVELICA",codigo:"4.3",nombre:"Promoci\u00f3n y difusi\u00f3n institucional de cite",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"2. Investigaciones"},
+  {cite:"CITE HUANCAVELICA",codigo:"4.2",nombre:"Talleres de difusi\u00f3n de las normas t\u00e9cnicas peruanas (NTP) sobre la fibra de alpaca.",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"2. Investigaciones"},
+  {cite:"CITE HUANCAVELICA",codigo:"3.2",nombre:"Investigaci\u00f3n de la identidad iconogr\u00e1fica de la artesan\u00eda de Huancavelica",modalidad:"I + D + i",tipo:"2. Investigaciones"},
+  {cite:"CITE HUANCAVELICA",codigo:"3.1",nombre:"Investigaci\u00f3n de uso de plantas naturales tint\u00f3reas para te\u00f1ido natural",modalidad:"I + D + i",tipo:"2. Investigaciones"},
+  {cite:"CITE HUANCAVELICA",codigo:"3.3",nombre:"Participaci\u00f3n en seminario de innovaci\u00f3n",modalidad:"I + D + i",tipo:"2. Investigaciones"},
+  {cite:"CITE HUANCAVELICA",codigo:"1.5",nombre:"Asistencia t\u00e9cnica en el desarrollo de productos tur\u00edsticos",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"4. Asistencia t\u00e9cnica"},
+  {cite:"CITE HUANCAVELICA",codigo:"1.4",nombre:"Asistencia t\u00e9cnica en mejora de proceso productivo textil",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"4. Asistencia t\u00e9cnica"},
+  {cite:"CITE HUANCAVELICA",codigo:"1.2",nombre:"Asistencia t\u00e9cnica en packing de productos artesanales",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"4. Asistencia t\u00e9cnica"},
+  {cite:"CITE HUANCAVELICA",codigo:"1.1",nombre:"Dise\u00f1o y desarrollo de colecci\u00f3n de moda de artesan\u00eda textil",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"5. Desarrollo de productos"},
+  {cite:"CITE HUANCAVELICA",codigo:"1.6",nombre:"Mejoramiento de la gesti\u00f3n de calidad de talleres artesanales textiles (5 S)",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"6. Desarrollo de servicios"},
+  {cite:"CITE HUANCAVELICA",codigo:"1.3",nombre:"Pasan\u00eda a la Red de Fab Lab de Lima",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"11. Pasan\u00eda/intercambio"},
+  // CITE SIPÁN
+  {cite:"CITE SIP\u00c1N",codigo:"5.5.1",nombre:"Coordinaciones y tr\u00e1mites para que el CITE sea un Centro de competencias laborales",modalidad:"Articulaci\u00f3n",tipo:"6. Articulaci\u00f3n regulatoria y de reconocimiento institucional"},
+  {cite:"CITE SIP\u00c1N",codigo:"5.3.2",nombre:"Exhibici\u00f3n de muestra de l\u00edneas artesanales de la regi\u00f3n Lambayeque.",modalidad:"Articulaci\u00f3n",tipo:"2. Articulaci\u00f3n para el desarrollo de iniciativas"},
+  {cite:"CITE SIP\u00c1N",codigo:"5.4.1",nombre:"Gesti\u00f3n de Convenio de colaboraci\u00f3n institucional",modalidad:"Articulaci\u00f3n",tipo:"1. Articulaci\u00f3n institucional y gobernanza"},
+  {cite:"CITE SIP\u00c1N",codigo:"5.3.1",nombre:"Implementaci\u00f3n y/o gesti\u00f3n de canales de comercializaci\u00f3n. (f\u00edsicos y virtuales)",modalidad:"Articulaci\u00f3n",tipo:"2. Articulaci\u00f3n para el desarrollo de iniciativas"},
+  {cite:"CITE SIP\u00c1N",codigo:"5.2.1",nombre:"Organizaci\u00f3n de evento Showroom y/o rueda de negocios",modalidad:"Articulaci\u00f3n",tipo:"4. Articulaci\u00f3n networking y negociaci\u00f3n"},
+  {cite:"CITE SIP\u00c1N",codigo:"5.1.2",nombre:"Organizaci\u00f3n de eventos de promoci\u00f3n comercial en la regi\u00f3n Lambayeque.",modalidad:"Articulaci\u00f3n",tipo:"3. Articulaci\u00f3n comercial y de acceso a mercados"},
+  {cite:"CITE SIP\u00c1N",codigo:"5.3.3",nombre:"Participaci\u00f3n en Desfile de Modas",modalidad:"Articulaci\u00f3n",tipo:"3. Articulaci\u00f3n comercial y de acceso a mercados"},
+  {cite:"CITE SIP\u00c1N",codigo:"5.1.1",nombre:"Participaci\u00f3n en eventos de promoci\u00f3n y exhibici\u00f3n venta de artesan\u00eda.",modalidad:"Articulaci\u00f3n",tipo:"3. Articulaci\u00f3n comercial y de acceso a mercados"},
+  {cite:"CITE SIP\u00c1N",codigo:"5.4.3",nombre:"Participaci\u00f3n en Reuni\u00f3n de Directores ejecutivos",modalidad:"Articulaci\u00f3n",tipo:"1. Articulaci\u00f3n institucional y gobernanza"},
+  {cite:"CITE SIP\u00c1N",codigo:"5.4.2",nombre:"Participaci\u00f3n en reuniones de coordinaci\u00f3n con gobierno regional y/o local y/o instituciones.",modalidad:"Articulaci\u00f3n",tipo:"1. Articulaci\u00f3n institucional y gobernanza"},
+  {cite:"CITE SIP\u00c1N",codigo:"2.3.2",nombre:"Curso en Fotograf\u00eda",modalidad:"Capacitaci\u00f3n",tipo:"3. Cursos"},
+  {cite:"CITE SIP\u00c1N",codigo:"2.2.3",nombre:"Formaci\u00f3n especializada \"Programa de innovaci\u00f3n empresarial\"",modalidad:"Capacitaci\u00f3n",tipo:"5. Formaci\u00f3n especializada"},
+  {cite:"CITE SIP\u00c1N",codigo:"2.2.1",nombre:"Formaci\u00f3n especializada en emprendimiento y plan de negocio",modalidad:"Capacitaci\u00f3n",tipo:"5. Formaci\u00f3n especializada"},
+  {cite:"CITE SIP\u00c1N",codigo:"2.1.1",nombre:"Formaci\u00f3n especializada en engaste de piedras para artesanos de joyer\u00eda",modalidad:"Capacitaci\u00f3n",tipo:"5. Formaci\u00f3n especializada"},
+  {cite:"CITE SIP\u00c1N",codigo:"2.2.2",nombre:"Formaci\u00f3n especializada en gesti\u00f3n empresarial",modalidad:"Capacitaci\u00f3n",tipo:"5. Formaci\u00f3n especializada"},
+  {cite:"CITE SIP\u00c1N",codigo:"2.3.1",nombre:"Formaci\u00f3n especializada en herramientas digitales para la comercializaci\u00f3n",modalidad:"Capacitaci\u00f3n",tipo:"5. Formaci\u00f3n especializada"},
+  {cite:"CITE SIP\u00c1N",codigo:"2.4.1",nombre:"Taller en habilidades blandas: \"Emp\u00f3derate Artesano\" en el marco de la celebraci\u00f3n del d\u00eda del artesano",modalidad:"Capacitaci\u00f3n",tipo:"2. Talleres"},
+  {cite:"CITE SIP\u00c1N",codigo:"2.1.2",nombre:"Talleres virtuales en mejora de la productividad y calidad.",modalidad:"Capacitaci\u00f3n",tipo:"2. Talleres"},
+  {cite:"CITE SIP\u00c1N",codigo:"4.2.1",nombre:"Actualizaci\u00f3n de padr\u00f3n de beneficiarios del CITE Sip\u00e1n.",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"1. Generaci\u00f3n de informaci\u00f3n estrat\u00e9gica"},
+  {cite:"CITE SIP\u00c1N",codigo:"4.1.1",nombre:"Atenciones de inscripci\u00f3n y/o actualizaci\u00f3n del RNA",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"2. Campa\u00f1as informativas"},
+  {cite:"CITE SIP\u00c1N",codigo:"4.4.2",nombre:"Desarrollo del Festival de Innovaci\u00f3n en Artesan\u00eda en la regi\u00f3n Lambayeque.",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"3. Espacios de difusi\u00f3n t\u00e9cnica"},
+  {cite:"CITE SIP\u00c1N",codigo:"4.3.1",nombre:"Difusi\u00f3n de los servicios del CITE, concursos, investigaciones y/o estudios a sus beneficiarios.",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"3. Espacios de difusi\u00f3n t\u00e9cnica"},
+  {cite:"CITE SIP\u00c1N",codigo:"4.2.3",nombre:"Levantamiento de l\u00ednea base de artesanos con potencial comercial",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"1. Generaci\u00f3n de informaci\u00f3n estrat\u00e9gica"},
+  {cite:"CITE SIP\u00c1N",codigo:"4.4.3",nombre:"Orientaci\u00f3n a artesanos para participaci\u00f3n en concursos de dise\u00f1o e innovaci\u00f3n.",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"3. Espacios de difusi\u00f3n t\u00e9cnica"},
+  {cite:"CITE SIP\u00c1N",codigo:"4.4.1",nombre:"Participaci\u00f3n en Seminario de innovaci\u00f3n",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"3. Espacios de difusi\u00f3n t\u00e9cnica"},
+  {cite:"CITE SIP\u00c1N",codigo:"5.5.1b",nombre:"Promoci\u00f3n de postulaci\u00f3n y/o admisi\u00f3n a fondos concursables (asesor\u00edas, acompa\u00f1amiento a artesano)",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"3. Espacios de difusi\u00f3n t\u00e9cnica"},
+  {cite:"CITE SIP\u00c1N",codigo:"4.2.2",nombre:"Realizaci\u00f3n de Encuesta Anual a artesanos beneficiarios del CITE en el 2025.",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"1. Generaci\u00f3n de informaci\u00f3n estrat\u00e9gica"},
+  {cite:"CITE SIP\u00c1N",codigo:"3.1.1",nombre:"Estudio t\u00e9cnico de la cadena de valor de la fibra vegetal del junco",modalidad:"I + D + i",tipo:"1. Estudio t\u00e9cnico"},
+  {cite:"CITE SIP\u00c1N",codigo:"1.3.3",nombre:"Asistencia t\u00e9cnica en desarrollo de productos en crochet",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"4. Asistencia t\u00e9cnica"},
+  {cite:"CITE SIP\u00c1N",codigo:"1.3.4",nombre:"Asistencia t\u00e9cnica en mejora de procesos productivos de cer\u00e1mica",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"4. Asistencia t\u00e9cnica"},
+  {cite:"CITE SIP\u00c1N",codigo:"1.5.1",nombre:"Asistencia t\u00e9cnica para Desarrollo de experiencias tur\u00edsticas artesanales",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"4. Asistencia t\u00e9cnica"},
+  {cite:"CITE SIP\u00c1N",codigo:"1.3.2",nombre:"Asistencia t\u00e9cnica para el desarrollo de souvenirs para la ruta del Papa",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"4. Asistencia t\u00e9cnica"},
+  {cite:"CITE SIP\u00c1N",codigo:"1.3.5",nombre:"Asistencias t\u00e9cnicas en mejora de procesos productivos en fibras vegetales",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"4. Asistencia t\u00e9cnica"},
+  {cite:"CITE SIP\u00c1N",codigo:"1.3.1",nombre:"Asistencias t\u00e9cnicas y seguimiento para desarrollo de productos para promoci\u00f3n",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"4. Asistencia t\u00e9cnica"},
+  {cite:"CITE SIP\u00c1N",codigo:"1.1.2",nombre:"Dise\u00f1o de productos corporativos",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"5. Desarrollo de productos"},
+  {cite:"CITE SIP\u00c1N",codigo:"1.5.2",nombre:"Dise\u00f1o e implementaci\u00f3n de experiencias tur\u00edsticas en potenciales talleres artesanales de la regi\u00f3n Lambayeque",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"6. Desarrollo de servicios"},
+  {cite:"CITE SIP\u00c1N",codigo:"1.1.1",nombre:"Dise\u00f1o y desarrollo de Colecci\u00f3n de prendas de vestir y accesorios en l\u00edneas priorizadas.",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"5. Desarrollo de productos"},
+  {cite:"CITE SIP\u00c1N",codigo:"1.2.1",nombre:"Laboratorios de Cocreaci\u00f3n y validaci\u00f3n de productos artesanales",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"1. Laboratorio de cocreaci\u00f3n (Living Lab)"},
+  {cite:"CITE SIP\u00c1N",codigo:"1.4.1",nombre:"Pasan\u00eda: \"Intercambio de experiencias entre artesanos de Per\u00fa, Brasil y Paraguay\"",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"11. Pasan\u00eda/intercambio"},
+  {cite:"CITE SIP\u00c1N",codigo:"1.6.1",nombre:"Programa de incubaci\u00f3n de emprendimientos artesanales",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"10. Aceleraci\u00f3n empresarial"},
+  // CITE UCAYALI
+  {cite:"CITE UCAYALI",codigo:"5.2.1.1",nombre:"Articulaci\u00f3n para la revalorizaci\u00f3n de la artesan\u00eda en instituciones educativas",modalidad:"Articulaci\u00f3n",tipo:"1. Articulaci\u00f3n institucional y gobernanza"},
+  {cite:"CITE UCAYALI",codigo:"5.3.1.1",nombre:"Coordinaci\u00f3n interinstitucional en promoci\u00f3n del turismo y la artesan\u00eda para la gesti\u00f3n del CITE Ucayali",modalidad:"Articulaci\u00f3n",tipo:"1. Articulaci\u00f3n institucional y gobernanza"},
+  {cite:"CITE UCAYALI",codigo:"5.1.3.1",nombre:"Dise\u00f1o y elaboraci\u00f3n de Cat\u00e1logo de productos desarrollados por el CITE",modalidad:"Articulaci\u00f3n",tipo:"3. Articulaci\u00f3n comercial y de acceso a mercados"},
+  {cite:"CITE UCAYALI",codigo:"5.1.1.3",nombre:"Ferias locales (Organizador)",modalidad:"Articulaci\u00f3n",tipo:"3. Articulaci\u00f3n comercial y de acceso a mercados"},
+  {cite:"CITE UCAYALI",codigo:"5.1.1.1",nombre:"Ferias nacionales (Participaci\u00f3n)",modalidad:"Articulaci\u00f3n",tipo:"3. Articulaci\u00f3n comercial y de acceso a mercados"},
+  {cite:"CITE UCAYALI",codigo:"5.1.1.2",nombre:"Ferias regionales (Organizador)",modalidad:"Articulaci\u00f3n",tipo:"3. Articulaci\u00f3n comercial y de acceso a mercados"},
+  {cite:"CITE UCAYALI",codigo:"5.1.2.1",nombre:"Servicio para la organizaci\u00f3n, seguimiento y difusi\u00f3n de actividades de articulaci\u00f3n comercial de los beneficiarios del CITE Artesan\u00eda Ucayali.",modalidad:"Articulaci\u00f3n",tipo:"1. Articulaci\u00f3n institucional y gobernanza"},
+  {cite:"CITE UCAYALI",codigo:"2.1.1.1",nombre:"Capacitaci\u00f3n en Dise\u00f1o e Iconograf\u00eda de los Pueblos Shipibo-Konibo, Ash\u00e1ninka, Isconawa y Yine",modalidad:"Capacitaci\u00f3n",tipo:"3. Cursos"},
+  {cite:"CITE UCAYALI",codigo:"2.3.1.1",nombre:"Curso de capacitaci\u00f3n en an\u00e1lisis de tendencias internacionales y paletas de color el desarrollo de productos artesanales",modalidad:"Capacitaci\u00f3n",tipo:"3. Cursos"},
+  {cite:"CITE UCAYALI",codigo:"2.5.1.1",nombre:"Curso de capacitaci\u00f3n en gesti\u00f3n de merma y valorizaci\u00f3n de materiales en la elaboraci\u00f3n de productos artesanales",modalidad:"Capacitaci\u00f3n",tipo:"3. Cursos"},
+  {cite:"CITE UCAYALI",codigo:"2.2.1.1",nombre:"Curso de capacitaci\u00f3n en Gesti\u00f3n Empresarial",modalidad:"Capacitaci\u00f3n",tipo:"3. Cursos"},
+  {cite:"CITE UCAYALI",codigo:"2.3.1.2",nombre:"Curso de capacitaci\u00f3n en identificaci\u00f3n de nichos de mercado para productos artesanales",modalidad:"Capacitaci\u00f3n",tipo:"3. Cursos"},
+  {cite:"CITE UCAYALI",codigo:"2.4.1.1",nombre:"Curso de capacitaci\u00f3n en uso de herramientas digitales para la gesti\u00f3n de productos y negocios artesanales",modalidad:"Capacitaci\u00f3n",tipo:"3. Cursos"},
+  {cite:"CITE UCAYALI",codigo:"2.7.1.1",nombre:"Gesti\u00f3n de perfiles en est\u00e1ndares de competencias laborales",modalidad:"Capacitaci\u00f3n",tipo:"5. Formaci\u00f3n especializada"},
+  {cite:"CITE UCAYALI",codigo:"2.6.1.2",nombre:"Taller en la elaboraci\u00f3n y uso de fichas t\u00e9cnicas para productos artesanales",modalidad:"Capacitaci\u00f3n",tipo:"2. Talleres"},
+  {cite:"CITE UCAYALI",codigo:"2.6.1.1",nombre:"Taller en la mejora de procesos con 5S y Normas T\u00e9cnicas Peruanas (NTP)",modalidad:"Capacitaci\u00f3n",tipo:"2. Talleres"},
+  {cite:"CITE UCAYALI",codigo:"4.1.2.1",nombre:"Difusi\u00f3n y acompa\u00f1amiento de artesanos en Concursos de reconocimiento, innovaci\u00f3n y emprendimiento",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"2. Campa\u00f1as informativas"},
+  {cite:"CITE UCAYALI",codigo:"4.3.1.1",nombre:"Difusi\u00f3n, promoci\u00f3n y posicionamiento de las rutas tur\u00edsticas artesanales",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"6. Posicionamiento institucional y de marca"},
+  {cite:"CITE UCAYALI",codigo:"4.2.1.1",nombre:"Organizaci\u00f3n de evento de innovaci\u00f3n en artesan\u00eda",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"3. Espacios de difusi\u00f3n t\u00e9cnica"},
+  {cite:"CITE UCAYALI",codigo:"4.1.1.1",nombre:"Servicio de recopilaci\u00f3n, sistematizaci\u00f3n, seguimiento y difusi\u00f3n de las actividades programadas del Plan Anual de Actividades",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"1. Generaci\u00f3n de informaci\u00f3n estrat\u00e9gica"},
+  {cite:"CITE UCAYALI",codigo:"3.1.1.1",nombre:"Investigaci\u00f3n de tintes naturales a partir de especies maderables y no maderables",modalidad:"I + D + i",tipo:"2. Investigaciones"},
+  {cite:"CITE UCAYALI",codigo:"1.3.1.1",nombre:"Asistencia t\u00e9cnica especializada para el perfeccionamiento de acabados en bordados de la l\u00ednea textil",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"4. Asistencia t\u00e9cnica"},
+  {cite:"CITE UCAYALI",codigo:"1.3.1.2",nombre:"Asistencia t\u00e9cnica para la mejora y estandarizaci\u00f3n de procesos productivos en la elaboraci\u00f3n de textiles artesanales",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"4. Asistencia t\u00e9cnica"},
+  {cite:"CITE UCAYALI",codigo:"1.1.1.3",nombre:"Cocreaci\u00f3n y dise\u00f1o de productos artesanales innovadores",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"5. Desarrollo de productos"},
+  {cite:"CITE UCAYALI",codigo:"1.1.1.1",nombre:"Dise\u00f1o y desarrollo de colecci\u00f3n de prendas de vestir y accesorios",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"5. Desarrollo de productos"},
+  {cite:"CITE UCAYALI",codigo:"1.1.1.2",nombre:"Dise\u00f1o y mejora de la presentaci\u00f3n de productos",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"5. Desarrollo de productos"},
+  {cite:"CITE UCAYALI",codigo:"1.2.1.1",nombre:"Experiencia pr\u00e1ctica de pasan\u00eda en procesos productivos",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"11. Pasan\u00eda/intercambio"},
+  // CITE UTCUMBAMBA
+  {cite:"CITE UTCUMBAMBA",codigo:"5.7.1.1",nombre:"Acompa\u00f1amiento para la creaci\u00f3n de marca denominaci\u00f3n de origen y registro de marcas colectivas",modalidad:"Articulaci\u00f3n",tipo:"1. Articulaci\u00f3n institucional y gobernanza"},
+  {cite:"CITE UTCUMBAMBA",codigo:"5.1.1.1",nombre:"Desarrollo de una rueda de negocios nacional",modalidad:"Articulaci\u00f3n",tipo:"4. Articulaci\u00f3n networking y negociaci\u00f3n"},
+  {cite:"CITE UTCUMBAMBA",codigo:"5.1.2.3",nombre:"Desarrollo y manejo de sitios Web Ecommerce",modalidad:"Articulaci\u00f3n",tipo:"3. Articulaci\u00f3n comercial y de acceso a mercados"},
+  {cite:"CITE UTCUMBAMBA",codigo:"5.2.1.1",nombre:"Feria Internacional (participaci\u00f3n en feria)",modalidad:"Articulaci\u00f3n",tipo:"3. Articulaci\u00f3n comercial y de acceso a mercados"},
+  {cite:"CITE UTCUMBAMBA",codigo:"5.1.1.2",nombre:"Feria Nacional de Artesan\u00eda \"De Nuestros Manos\"",modalidad:"Articulaci\u00f3n",tipo:"3. Articulaci\u00f3n comercial y de acceso a mercados"},
+  {cite:"CITE UTCUMBAMBA",codigo:"5.1.1.3",nombre:"Feria Nacional de Artesan\u00eda \"Ruraq Maki\"",modalidad:"Articulaci\u00f3n",tipo:"3. Articulaci\u00f3n comercial y de acceso a mercados"},
+  {cite:"CITE UTCUMBAMBA",codigo:"5.1.1.4",nombre:"Festival de Innovaci\u00f3n de CITEs de Artesan\u00eda y Turismo \"Exhibe Per\u00fa\"",modalidad:"Articulaci\u00f3n",tipo:"3. Articulaci\u00f3n comercial y de acceso a mercados"},
+  {cite:"CITE UTCUMBAMBA",codigo:"5.1.2.2",nombre:"Gesti\u00f3n comercial de los productos y servicios del Cite.",modalidad:"Articulaci\u00f3n",tipo:"4. Articulaci\u00f3n networking y negociaci\u00f3n"},
+  {cite:"CITE UTCUMBAMBA",codigo:"5.4.1.1",nombre:"Participaci\u00f3n en la Reuni\u00f3n Anual de Directores Ejecutivos - RADE",modalidad:"Articulaci\u00f3n",tipo:"1. Articulaci\u00f3n institucional y gobernanza"},
+  {cite:"CITE UTCUMBAMBA",codigo:"5.1.2.1",nombre:"Promoci\u00f3n de artesan\u00edas a trav\u00e9s de punto de venta f\u00edsica (Amazonas, Cusco, Lima, Aeropuertos. Etc.).",modalidad:"Articulaci\u00f3n",tipo:"3. Articulaci\u00f3n comercial y de acceso a mercados"},
+  {cite:"CITE UTCUMBAMBA",codigo:"5.6.1.1",nombre:"Promoci\u00f3n de la inversi\u00f3n privada",modalidad:"Articulaci\u00f3n",tipo:"1. Articulaci\u00f3n institucional y gobernanza"},
+  {cite:"CITE UTCUMBAMBA",codigo:"5.7.1.2",nombre:"Formulaci\u00f3n de planes negocio para la obtenci\u00f3n de fuentes de financiamiento",modalidad:"Articulaci\u00f3n",tipo:"1. Articulaci\u00f3n institucional y gobernanza"},
+  {cite:"CITE UTCUMBAMBA",codigo:"5.3.1.1",nombre:"Gesti\u00f3n para la suscripci\u00f3n de convenio con instituci\u00f3n p\u00fablica y/o Privada.",modalidad:"Articulaci\u00f3n",tipo:"1. Articulaci\u00f3n institucional y gobernanza"},
+  {cite:"CITE UTCUMBAMBA",codigo:"5.1.1.6",nombre:"Participaci\u00f3n a Casacor Per\u00fa",modalidad:"Articulaci\u00f3n",tipo:"3. Articulaci\u00f3n comercial y de acceso a mercados"},
+  {cite:"CITE UTCUMBAMBA",codigo:"5.1.1.5",nombre:"Participaci\u00f3n de otras ferias locales y nacionales. (Expoinnovacion artesanal)",modalidad:"Articulaci\u00f3n",tipo:"3. Articulaci\u00f3n comercial y de acceso a mercados"},
+  {cite:"CITE UTCUMBAMBA",codigo:"2.3.1.2",nombre:"Capacitaci\u00f3n en manejo de redes sociales para la comercializaci\u00f3n",modalidad:"Capacitaci\u00f3n",tipo:"4. Programas de capacitaci\u00f3n"},
+  {cite:"CITE UTCUMBAMBA",codigo:"2.3.1.5",nombre:"Capacitaci\u00f3n en mercado, tendencias y comercializaci\u00f3n avanzada",modalidad:"Capacitaci\u00f3n",tipo:"3. Cursos"},
+  {cite:"CITE UTCUMBAMBA",codigo:"2.2.1.3",nombre:"Capacitaci\u00f3n en nuevas t\u00e9cnicas de producci\u00f3n de artesan\u00eda en madera",modalidad:"Capacitaci\u00f3n",tipo:"4. Programas de capacitaci\u00f3n"},
+  {cite:"CITE UTCUMBAMBA",codigo:"2.2.1.2",nombre:"Capacitaci\u00f3n en nuevas t\u00e9cnicas de producci\u00f3n en bisuter\u00eda",modalidad:"Capacitaci\u00f3n",tipo:"4. Programas de capacitaci\u00f3n"},
+  {cite:"CITE UTCUMBAMBA",codigo:"2.3.1.3",nombre:"Capacitaci\u00f3n en sensibilizaci\u00f3n tur\u00edstica",modalidad:"Capacitaci\u00f3n",tipo:"3. Cursos"},
+  {cite:"CITE UTCUMBAMBA",codigo:"2.2.1.5",nombre:"Capacitaci\u00f3n en gesti\u00f3n empresarial",modalidad:"Capacitaci\u00f3n",tipo:"4. Programas de capacitaci\u00f3n"},
+  {cite:"CITE UTCUMBAMBA",codigo:"2.2.1.4",nombre:"Capacitaci\u00f3n en t\u00e9cnicas en acabados y control de calidad de prendas y accesorios de vestir",modalidad:"Capacitaci\u00f3n",tipo:"4. Programas de capacitaci\u00f3n"},
+  {cite:"CITE UTCUMBAMBA",codigo:"2.3.1.4",nombre:"Capacitaci\u00f3n en tecnologias aplicadas (manejo de 3D impresi\u00f3n y scaneo)",modalidad:"Capacitaci\u00f3n",tipo:"3. Cursos"},
+  {cite:"CITE UTCUMBAMBA",codigo:"2.2.1.1",nombre:"Programa de evaluaci\u00f3n de artesanos para la certificaci\u00f3n de competencias laborales en los perfiles ocupacionales",modalidad:"Capacitaci\u00f3n",tipo:"4. Programas de capacitaci\u00f3n"},
+  {cite:"CITE UTCUMBAMBA",codigo:"4.3.1.1",nombre:"Acompa\u00f1amiento a artesanos para postulaci\u00f3n y presentaci\u00f3n de proyectos en fondos concursables.",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"3. Espacios de difusi\u00f3n t\u00e9cnica"},
+  {cite:"CITE UTCUMBAMBA",codigo:"4.3.2.2",nombre:"Desarrollo y manejo de redes sociales",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"6. Posicionamiento institucional y de marca"},
+  {cite:"CITE UTCUMBAMBA",codigo:"4.2.1.1",nombre:"Implementaci\u00f3n y actualizaci\u00f3n de base de datos de informaci\u00f3n relevante de las UEA para su intervenci\u00f3n",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"1. Generaci\u00f3n de informaci\u00f3n estrat\u00e9gica"},
+  {cite:"CITE UTCUMBAMBA",codigo:"4.3.2.3",nombre:"Realizaci\u00f3n y difusi\u00f3n de material promocional f\u00edsico y virtual (cat\u00e1logos, banners y otros).",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"6. Posicionamiento institucional y de marca"},
+  {cite:"CITE UTCUMBAMBA",codigo:"4.1.1.1",nombre:"Desarrollo de concurso de proyectos tecnologicos",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"3. Espacios de difusi\u00f3n t\u00e9cnica"},
+  {cite:"CITE UTCUMBAMBA",codigo:"4.3.2.1",nombre:"Seminario de Innovaci\u00f3n aplicado a actividades artesanales",modalidad:"Difusi\u00f3n de Informaci\u00f3n",tipo:"4. Exhibici\u00f3n/Exposici\u00f3n"},
+  {cite:"CITE UTCUMBAMBA",codigo:"3.3.1.2",nombre:"Servicio de Investigaci\u00f3n en desarrollo de herramientas y equipos tecnol\u00f3gicos para la estandarizaci\u00f3n del proceso productivo artesanal",modalidad:"I + D + i",tipo:"2. Investigaciones"},
+  {cite:"CITE UTCUMBAMBA",codigo:"1.6.1.2",nombre:"Asistencia t\u00e9cnica en desarrollo de productos artesanales en CNC y bordado computarizado",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"4. Asistencia t\u00e9cnica"},
+  {cite:"CITE UTCUMBAMBA",codigo:"1.3.1.1",nombre:"Asistencia t\u00e9cnica en manejo de m\u00e1quinas de proceso de la l\u00ednea textil",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"4. Asistencia t\u00e9cnica"},
+  {cite:"CITE UTCUMBAMBA",codigo:"1.6.1.1",nombre:"Desarrollo de propuesta de Implementaci\u00f3n de un laboratorio piloto de cocreaci\u00f3n Living lab Tur\u00edstico artesanal",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"1. Laboratorio de cocreaci\u00f3n (Living Lab)"},
+  {cite:"CITE UTCUMBAMBA",codigo:"1.3.1.6",nombre:"Asistencia tecnica para el adecuado te\u00f1ido de tintes naturales",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"4. Asistencia t\u00e9cnica"},
+  {cite:"CITE UTCUMBAMBA",codigo:"1.2.1.1",nombre:"Dise\u00f1o y desarrollo de productos en las diferentes l\u00edneas artesanales",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"5. Desarrollo de productos"},
+  {cite:"CITE UTCUMBAMBA",codigo:"1.5.1.1",nombre:"Implementaci\u00f3n de programas de calidad (Buenas Pr\u00e1cticas de Manufacturas - BPM, 5S y otros)",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"4. Asistencia t\u00e9cnica"},
+  {cite:"CITE UTCUMBAMBA",codigo:"1.4.1.1",nombre:"Pasan\u00edas para artesanos en procesos productivos y comercializaci\u00f3n / Intercambio de experiencias",modalidad:"Transferencia Tecnol\u00f3gica",tipo:"11. Pasan\u00eda/intercambio"}
+];
+</script>
+
+<script>
+const ubigeoData = {"AMAZONAS":{"CHACHAPOYAS":["CHACHAPOYAS","ASUNCION","BALSAS","CHETO","CHILIQUIN","CHUQUIBAMBA","GRANADA","HUANCAS","LA JALCA","LEIMEBAMBA","LEVANTO","MAGDALENA","MARISCAL CASTILLA","MOLINOPAMPA","MONTEVIDEO","OLLEROS","QUINJALCA","SAN FRANCISCO DE DAGUAS","SAN ISIDRO DE MAINO","SOLOCO","SONCHE"],"BAGUA":["BAGUA","ARAMANGO","COPALLIN","EL PARCO","IMAZA","LA PECA"],"BONGARA":["JUMBILLA","CHISQUILLA","CHURUJA","COROSHA","CUISPES","FLORIDA","JAZAN","RECTA","SAN CARLOS","SHIPASBAMBA","VALERA","YAMBRASBAMBA"],"CONDORCANQUI":["NIEVA","EL CENEPA","RIO SANTIAGO"],"LUYA":["LAMUD","CAMPORREDONDO","COCABAMBA","COLCAMAR","CONILA","INGUILPATA","LONGUITA","LONYA CHICO","LUYA","LUYA VIEJO","MARIA","OCALLI","OCUMAL","PISUQUIA","PROVIDENCIA","SAN CRISTOBAL","SAN FRANCISCO DEL YESO","SAN JERONIMO","SAN JUAN DE LOPECANCHA","SANTA CATALINA","SANTO TOMAS","TINGO","TRITA"],"RODRIGUEZ DE MENDOZA":["SAN NICOLAS","CHIRIMOTO","COCHAMAL","HUAMBO","LIMABAMBA","LONGAR","MARISCAL BENAVIDES","MILPUC","OMIA","SANTA ROSA","TOTORA","VISTA ALEGRE"],"UTCUBAMBA":["BAGUA GRANDE","CAJARURO","CUMBA","EL MILAGRO","JAMALCA","LONYA GRANDE","YAMON"]},"ANCASH":{"HUARAZ":["HUARAZ","COCHABAMBA","COLCABAMBA","HUANCHAY","INDEPENDENCIA","JANGAS","LA LIBERTAD","OLLEROS","PAMPAS","PARIACOTO","PIRA","TARICA"],"AIJA":["AIJA","CORIS","HUACLLAN","LA MERCED","SUCCHA"],"ANTONIO RAYMONDI":["LLAMELLIN","ACZO","CHACCHO","CHINGAS","MIRGAS","SAN JUAN DE RONTOY"],"ASUNCION":["CHACAS","ACOCHACA"],"BOLOGNESI":["CHIQUIAN","ABELARDO PARDO LEZAMETA","ANTONIO RAYMONDI","AQUIA","CAJACAY","CANIS","COLQUIOC","HUALLANCA","HUASTA","HUAYLLACAYAN","LA PRIMAVERA","MANGAS","PACLLON","SAN MIGUEL DE CORPANQUI","TICLLOS"],"CARHUAZ":["CARHUAZ","ACOPAMPA","AMASHCA","ANTA","ATAQUERO","MARCARA","PARIAHUANCA","SAN MIGUEL DE ACO","SHILLA","TINCO","YUNGAR"],"CASMA":["CASMA","BUENA VISTA ALTA","COMANDANTE NOEL","YAUTAN"],"CORONGO":["CORONGO","ACO","BAMBAS","CUSCA","LA PAMPA","YANAC","YUPAN"],"HUARI":["HUARI","ANRA","CAJAY","CHAVIN DE HUANTAR","HUACACHI","HUACCHIS","HUACHIS","HUANTAR","MASIN","PAUCAS","PONTO","RAHUAPAMPA","RAPAYAN","SAN MARCOS","SAN PEDRO DE CHANA","UCO"],"HUARMEY":["HUARMEY","COCHAPETI","CULEBRAS","HUAYAN","MALVAS"],"HUAYLAS":["CARAZ","HUALLANCA","HUATA","HUAYLAS","MATO","PAMPAROMAS","PUEBLO LIBRE","SANTA CRUZ","SANTO TORIBIO","YURACMARCA"],"MARISCAL LUZURIAGA":["PISCOBAMBA","CASCA","ELEAZAR GUZMAN BARRON","FIDEL OLIVAS ESCUDERO","LLAMA","LLUMPA","LUCMA","MUSGA"],"OCROS":["OCROS","ACAS","CAJAMARQUILLA","CARHUAPAMPA","COCHAS","CONGAS","LLIPA","SAN CRISTOBAL DE RAJAN","SAN PEDRO","SANTIAGO DE CHILCAS"],"PALLASCA":["CABANA","BOLOGNESI","CONCHUCOS","HUACASCHUQUE","HUANDOVAL","LACABAMBA","LLAPO","PALLASCA","PAMPAS","SANTA ROSA","TAUCA"],"POMABAMBA":["POMABAMBA","HUAYLLAN","PAROBAMBA","QUINUABAMBA"],"RECUAY":["RECUAY","CATAC","COTAPARACO","HUAYLLAPAMPA","LLACLLIN","MARCA","PAMPAS CHICO","PARARIN","TAPACOCHA","TICAPAMPA"],"SANTA":["CHIMBOTE","CACERES DEL PERU","COISHCO","MACATE","MORO","NEPE\u00d1A","SAMANCO","SANTA","NUEVO CHIMBOTE"],"SIHUAS":["SIHUAS","ACOBAMBA","ALFONSO UGARTE","CASHAPAMPA","CHINGALPO","HUAYLLABAMBA","QUICHES","RAGASH","SAN JUAN","SICSIBAMBA"],"YUNGAY":["YUNGAY","CASCAPARA","MANCOS","MATACOTO","QUILLO","RANRAHIRCA","SHUPLUY","YANAMA"],"CARLOS FERMIN FITZCARRALD":["SAN LUIS","SAN NICOLAS","YAUYA"]},"APURIMAC":{"ABANCAY":["ABANCAY","CHACOCHE","CIRCA","CURAHUASI","HUANIPACA","LAMBRAMA","PICHIRHUA","SAN PEDRO DE CACHORA","TAMBURCO"],"ANDAHUAYLAS":["ANDAHUAYLAS","ANDARAPA","CHIARA","HUANCARAMA","HUANCARAY","HUAYANA","KISHUARA","PACOBAMBA","PACUCHA","PAMPACHIRI","POMACOCHA","SAN ANTONIO DE CACHI","SAN JERONIMO","SAN MIGUEL DE CHACCRAMPA","SANTA MARIA DE CHICMO","TALAVERA","TUMAY HUARACA","TURPO","KAQUIABAMBA","JOS\u00c9 MAR\u00cdA ARGUEDAS"],"ANTABAMBA":["ANTABAMBA","EL ORO","HUAQUIRCA","JUAN ESPINOZA MEDRANO","OROPESA","PACHACONAS","SABAINO"],"AYMARAES":["CHALHUANCA","CAPAYA","CARAYBAMBA","CHAPIMARCA","COLCABAMBA","COTARUSE","HUAYLLO","JUSTO APU SAHUARAURA","LUCRE","POCOHUANCA","SAN JUAN DE CHAC\u00d1A","SA\u00d1AYCA","SORAYA","TAPAIRIHUA","TINTAY","TORAYA","YANACA"],"COTABAMBAS":["TAMBOBAMBA","COTABAMBAS","COYLLURQUI","HAQUIRA","MARA","CHALLHUAHUACHO"],"CHINCHEROS":["CHINCHEROS","ANCO_HUALLO","COCHARCAS","HUACCANA","OCOBAMBA","ONGOY","URANMARCA","RANRACANCHA","ROCCHACC","EL PORVENIR","LOS CHANKAS"],"GRAU":["CHUQUIBAMBILLA","CURPAHUASI","GAMARRA","HUAYLLATI","MAMARA","MICAELA BASTIDAS","PATAYPAMPA","PROGRESO","SAN ANTONIO","SANTA ROSA","TURPAY","VILCABAMBA","VIRUNDO","CURASCO"]},"AREQUIPA":{"AREQUIPA":["AREQUIPA","ALTO SELVA ALEGRE","CAYMA","CERRO COLORADO","CHARACATO","CHIGUATA","JACOBO HUNTER","LA JOYA","MARIANO MELGAR","MIRAFLORES","MOLLEBAYA","PAUCARPATA","POCSI","POLOBAYA","QUEQUE\u00d1A","SABANDIA","SACHACA","SAN JUAN DE SIGUAS","SAN JUAN DE TARUCANI","SANTA ISABEL DE SIGUAS","SANTA RITA DE SIGUAS","SOCABAYA","TIABAYA","UCHUMAYO","VITOR","YANAHUARA","YARABAMBA","YURA","JOSE LUIS BUSTAMANTE Y RIVERO"],"CAMANA":["CAMANA","JOSE MARIA QUIMPER","MARIANO NICOLAS VALCARCEL","MARISCAL CACERES","NICOLAS DE PIEROLA","OCO\u00d1A","QUILCA","SAMUEL PASTOR"],"CARAVELI":["CARAVELI","ACARI","ATICO","ATIQUIPA","BELLA UNION","CAHUACHO","CHALA","CHAPARRA","HUANUHUANU","JAQUI","LOMAS","QUICACHA","YAUCA"],"CASTILLA":["APLAO","ANDAGUA","AYO","CHACHAS","CHILCAYMARCA","CHOCO","HUANCARQUI","MACHAGUAY","ORCOPAMPA","PAMPACOLCA","TIPAN","U\u00d1ON","URACA","VIRACO"],"CAYLLOMA":["CHIVAY","ACHOMA","CABANACONDE","CALLALLI","CAYLLOMA","COPORAQUE","HUAMBO","HUANCA","ICHUPAMPA","LARI","LLUTA","MACA","MADRIGAL","SAN ANTONIO DE CHUCA","SIBAYO","TAPAY","TISCO","TUTI","YANQUE","MAJES"],"CONDESUYOS":["CHUQUIBAMBA","ANDARAY","CAYARANI","CHICHAS","IRAY","RIO GRANDE","SALAMANCA","YANAQUIHUA"],"ISLAY":["MOLLENDO","COCACHACRA","DEAN VALDIVIA","ISLAY","MEJIA","PUNTA DE BOMBON"],"LA UNION":["COTAHUASI","ALCA","CHARCANA","HUAYNACOTAS","PAMPAMARCA","PUYCA","QUECHUALLA","SAYLA","TAURIA","TOMEPAMPA","TORO"]},"AYACUCHO":{"HUAMANGA":["AYACUCHO","ACOCRO","ACOS VINCHOS","CARMEN ALTO","CHIARA","OCROS","PACAYCASA","QUINUA","SAN JOSE DE TICLLAS","SAN JUAN BAUTISTA","SANTIAGO DE PISCHA","SOCOS","TAMBILLO","VINCHOS","JESUS NAZARENO","ANDR\u00c9S AVELINO C\u00c1CERES DORREGARAY"],"CANGALLO":["CANGALLO","CHUSCHI","LOS MOROCHUCOS","MARIA PARADO DE BELLIDO","PARAS","TOTOS"],"HUANCA SANCOS":["SANCOS","CARAPO","SACSAMARCA","SANTIAGO DE LUCANAMARCA"],"HUANTA":["HUANTA","AYAHUANCO","HUAMANGUILLA","IGUAIN","LURICOCHA","SANTILLANA","SIVIA","LLOCHEGUA","CANAYRE","UCHURACCAY","PUCACOLPA","CHACA"],"LA MAR":["SAN MIGUEL","ANCO","AYNA","CHILCAS","CHUNGUI","LUIS CARRANZA","SANTA ROSA","TAMBO","SAMUGARI","ANCHIHUAY","ORONCCOY"],"LUCANAS":["PUQUIO","AUCARA","CABANA","CARMEN SALCEDO","CHAVI\u00d1A","CHIPAO","HUAC-HUAS","LARAMATE","LEONCIO PRADO","LLAUTA","LUCANAS","OCA\u00d1A","OTOCA","SAISA","SAN CRISTOBAL","SAN JUAN","SAN PEDRO","SAN PEDRO DE PALCO","SANCOS","SANTA ANA DE HUAYCAHUACHO","SANTA LUCIA"],"PARINACOCHAS":["CORACORA","CHUMPI","CORONEL CASTA\u00d1EDA","PACAPAUSA","PULLO","PUYUSCA","SAN FRANCISCO DE RAVACAYCO","UPAHUACHO"],"PAUCAR DEL SARA SARA":["PAUSA","COLTA","CORCULLA","LAMPA","MARCABAMBA","OYOLO","PARARCA","SAN JAVIER DE ALPABAMBA","SAN JOSE DE USHUA","SARA SARA"],"SUCRE":["QUEROBAMBA","BELEN","CHALCOS","CHILCAYOC","HUACA\u00d1A","MORCOLLA","PAICO","SAN PEDRO DE LARCAY","SAN SALVADOR DE QUIJE","SANTIAGO DE PAUCARAY","SORAS"],"VICTOR FAJARDO":["HUANCAPI","ALCAMENCA","APONGO","ASQUIPATA","CANARIA","CAYARA","COLCA","HUAMANQUIQUIA","HUANCARAYLLA","HUAYA","SARHUA","VILCANCHOS"],"VILCAS HUAMAN":["VILCAS HUAMAN","ACCOMARCA","CARHUANCA","CONCEPCION","HUAMBALPA","INDEPENDENCIA","SAURAMA","VISCHONGO"]},"CAJAMARCA":{"CAJAMARCA":["CAJAMARCA","ASUNCION","CHETILLA","COSPAN","ENC\u00d1ADA","JESUS","LLACANORA","LOS BA\u00d1OS DEL INCA","MAGDALENA","MATARA","NAMORA","SAN JUAN"],"CAJABAMBA":["CAJABAMBA","CACHACHI","CONDEBAMBA","SITACOCHA"],"CELENDIN":["CELENDIN","CHUMUCH","CORTEGANA","HUASMIN","JORGE CHAVEZ","JOSE GALVEZ","MIGUEL IGLESIAS","OXAMARCA","SOROCHUCO","SUCRE","UTCO","LA LIBERTAD DE PALLAN"],"CHOTA":["CHOTA","ANGUIA","CHADIN","CHIGUIRIP","CHIMBAN","CHOROPAMPA","COCHABAMBA","CONCHAN","HUAMBOS","LAJAS","LLAMA","MIRACOSTA","PACCHA","PION","QUEROCOTO","SAN JUAN DE LICUPIS","TACABAMBA","TOCMOCHE","CHALAMARCA"],"CONTUMAZA":["CONTUMAZA","CHILETE","CUPISNIQUE","GUZMANGO","SAN BENITO","SANTA CRUZ DE TOLED","TANTARICA","YONAN"],"CUTERVO":["CUTERVO","CALLAYUC","CHOROS","CUJILLO","LA RAMADA","PIMPINGOS","QUEROCOTILLO","SAN ANDRES DE CUTERVO","SAN JUAN DE CUTERVO","SAN LUIS DE LUCMA","SANTA CRUZ","SANTO DOMINGO DE LA CAPILLA","SANTO TOMAS","SOCOTA","TORIBIO CASANOVA"],"HUALGAYOC":["BAMBAMARCA","CHUGUR","HUALGAYOC"],"JAEN":["JAEN","BELLAVISTA","CHONTALI","COLASAY","HUABAL","LAS PIRIAS","POMAHUACA","PUCARA","SALLIQUE","SAN FELIPE","SAN JOSE DEL ALTO","SANTA ROSA"],"SAN IGNACIO":["SAN IGNACIO","CHIRINOS","HUARANGO","LA COIPA","NAMBALLE","SAN JOSE DE LOURDES","TABACONAS"],"SAN MARCOS":["PEDRO GALVEZ","CHANCAY","EDUARDO VILLANUEVA","GREGORIO PITA","ICHOCAN","JOSE MANUEL QUIROZ","JOSE SABOGAL"],"SAN MIGUEL":["SAN MIGUEL","BOLIVAR","CALQUIS","CATILLUC","EL PRADO","LA FLORIDA","LLAPA","NANCHOC","NIEPOS","SAN GREGORIO","SAN SILVESTRE DE COCHAN","TONGOD","UNION AGUA BLANCA"],"SAN PABLO":["SAN PABLO","SAN BERNARDINO","SAN LUIS","TUMBADEN"],"SANTA CRUZ":["SANTA CRUZ","ANDABAMBA","CATACHE","CHANCAYBA\u00d1OS","LA ESPERANZA","NINABAMBA","PULAN","SAUCEPAMPA","SEXI","UTICYACU","YAUYUCAN"]},"CALLAO":{"CALLAO":["CALLAO","BELLAVISTA","CARMEN DE LA LEGUA","LA PERLA","LA PUNTA","VENTANILLA","MI PERU"]},"CUSCO":{"CUSCO":["CUSCO","CCORCA","POROY","SAN JERONIMO","SAN SEBASTIAN","SANTIAGO","SAYLLA","WANCHAQ"],"ACOMAYO":["ACOMAYO","ACOPIA","ACOS","MOSOC LLACTA","POMACANCHI","RONDOCAN","SANGARARA"],"ANTA":["ANTA","ANCAHUASI","CACHIMAYO","CHINCHAYPUJIO","HUAROCONDO","LIMATAMBO","MOLLEPATA","PUCYURA","ZURITE"],"CALCA":["CALCA","COYA","LAMAY","LARES","PISAC","SAN SALVADOR","TARAY","YANATILE"],"CANAS":["YANAOCA","CHECCA","KUNTURKANKI","LANGUI","LAYO","PAMPAMARCA","QUEHUE","TUPAC AMARU"],"CANCHIS":["SICUANI","CHECACUPE","COMBAPATA","MARANGANI","PITUMARCA","SAN PABLO","SAN PEDRO","TINTA"],"CHUMBIVILCAS":["SANTO TOMAS","CAPACMARCA","CHAMACA","COLQUEMARCA","LIVITACA","LLUSCO","QUI\u00d1OTA","VELILLE"],"ESPINAR":["ESPINAR","CONDOROMA","COPORAQUE","OCORURO","PALLPATA","PICHIGUA","SUYCKUTAMBO","ALTO PICHIGUA"],"LA CONVENCION":["SANTA ANA","ECHARATE","HUAYOPATA","MARANURA","OCOBAMBA","QUELLOUNO","KIMBIRI","SANTA TERESA","VILCABAMBA","PICHARI","INKAWASI","VILLA VIRGEN","VILLA KINTIARINA","MEGANTONI"],"PARURO":["PARURO","ACCHA","CCAPI","COLCHA","HUANOQUITE","OMACHA","PACCARITAMBO","PILLPINTO","YAURISQUE"],"PAUCARTAMBO":["PAUCARTAMBO","CAICAY","CHALLABAMBA","COLQUEPATA","HUANCARANI","KOS\u00d1IPATA"],"QUISPICANCHI":["URCOS","ANDAHUAYLILLAS","CAMANTI","CCARHUAYO","CCATCA","CUSIPATA","HUARO","LUCRE","MARCAPATA","OCONGATE","OROPESA","QUIQUIJANA"],"URUBAMBA":["URUBAMBA","CHINCHERO","HUAYLLABAMBA","MACHUPICCHU","MARAS","OLLANTAYTAMBO","YUCAY"]},"HUANCAVELICA":{"HUANCAVELICA":["HUANCAVELICA","ACOBAMBILLA","ACORIA","CONAYCA","CUENCA","HUACHOCOLPA","HUAYLLAHUARA","IZCUCHACA","LARIA","MANTA","MARISCAL CACERES","MOYA","NUEVO OCCORO","PALCA","PILCHACA","VILCA","YAULI","ASCENSION","HUANDO"],"ACOBAMBA":["ACOBAMBA","ANDABAMBA","ANTA","CAJA","MARCAS","PAUCARA","POMACOCHA","ROSARIO"],"ANGARAES":["LIRCAY","ANCHONGA","CALLANMARCA","CCOCHACCASA","CHINCHO","CONGALLA","HUANCA-HUANCA","HUAYLLAY GRANDE","JULCAMARCA","SAN ANTONIO DE ANTAPARCO","SANTO TOMAS DE PATA","SECCLLA"],"CASTROVIRREYNA":["CASTROVIRREYNA","ARMA","AURAHUA","CAPILLAS","CHUPAMARCA","COCAS","HUACHOS","HUAMATAMBO","MOLLEPAMPA","SAN JUAN","SANTA ANA","TANTARA","TICRAPO"],"CHURCAMPA":["CHURCAMPA","ANCO","CHINCHIHUASI","EL CARMEN","LA MERCED","LOCROJA","PAUCARBAMBA","SAN MIGUEL DE MAYOCC","SAN PEDRO DE CORIS","PACHAMARCA","COSME"],"HUAYTARA":["HUAYTARA","AYAVI","CORDOVA","HUAYACUNDO ARMA","LARAMARCA","OCOYO","PILPICHACA","QUERCO","QUITO-ARMA","SAN ANTONIO DE CUSICANCHA","SAN FRANCISCO DE SANGAYAICO","SAN ISIDRO","SANTIAGO DE CHOCORVOS","SANTIAGO DE QUIRAHUARA","SANTO DOMINGO DE CAPILLAS","TAMBO"],"TAYACAJA":["PAMPAS","ACOSTAMBO","ACRAQUIA","AHUAYCHA","COLCABAMBA","DANIEL HERNANDEZ","HUACHOCOLPA","HUARIBAMBA","\u00d1AHUIMPUQUIO","PAZOS","QUISHUAR","SALCABAMBA","SALCAHUASI","SAN MARCOS DE ROCCHAC","SURCUBAMBA","TINTAY PUNCU","QUICHUAS","ANDAYMARCA","ROBLE","PICHOS","SANTIAGO DE T\u00dacUMA"]},"HUANUCO":{"HUANUCO":["HUANUCO","AMARILIS","CHINCHAO","CHURUBAMBA","MARGOS","QUISQUI","SAN FRANCISCO DE CAYRAN","SAN PEDRO DE CHAULAN","SANTA MARIA DEL VALLE","YARUMAYO","PILLCO MARCA","YACUS","SAN PABLO DE PILLAO"],"AMBO":["AMBO","CAYNA","COLPAS","CONCHAMARCA","HUACAR","SAN FRANCISCO","SAN RAFAEL","TOMAY KICHWA"],"DOS DE MAYO":["LA UNION","CHUQUIS","MARIAS","PACHAS","QUIVILLA","RIPAN","SHUNQUI","SILLAPATA","YANAS"],"HUACAYBAMBA":["HUACAYBAMBA","CANCHABAMBA","COCHABAMBA","PINRA"],"HUAMALIES":["LLATA","ARANCAY","CHAVIN DE PARIARCA","JACAS GRANDE","JIRCAN","MIRAFLORES","MONZON","PUNCHAO","PU\u00d1OS","SINGA","TANTAMAYO"],"LEONCIO PRADO":["RUPA-RUPA","DANIEL ALOMIAS ROBLES","HERMILIO VALDIZAN","JOSE CRESPO Y CASTILLO","LUYANDO","MARIANO DAMASO BERAUN","PUCAYACU","CASTILLO GRANDE","PUEBLO NUEVO","SANTO DOMINGO DE ANDA"],"MARA\u00d1ON":["HUACRACHUCO","CHOLON","SAN BUENAVENTURA","LA MORADA","SANTA ROSA DE ALTO YANAJANCA"],"PACHITEA":["PANAO","CHAGLLA","MOLINO","UMARI"],"PUERTO INCA":["PUERTO INCA","CODO DEL POZUZO","HONORIA","TOURNAVISTA","YUYAPICHIS"],"LAURICOCHA":["JESUS","BA\u00d1OS","JIVIA","QUEROPALCA","RONDOS","SAN FRANCISCO DE ASIS","SAN MIGUEL DE CAURI"],"YAROWILCA":["CHAVINILLO","CAHUAC","CHACABAMBA","APARICIO POMARES","JACAS CHICO","OBAS","PAMPAMARCA","CHORAS"]},"ICA":{"ICA":["ICA","LA TINGUI\u00d1A","LOS AQUIJES","OCUCAJE","PACHACUTEC","PARCONA","PUEBLO NUEVO","SALAS","SAN JOSE DE LOS MOLINOS","SAN JUAN BAUTISTA","SANTIAGO","SUBTANJALLA","TATE","YAUCA DEL ROSARIO"],"CHINCHA":["CHINCHA ALTA","ALTO LARAN","CHAVIN","CHINCHA BAJA","EL CARMEN","GROCIO PRADO","PUEBLO NUEVO","SAN JUAN DE YANAC","SAN PEDRO DE HUACARPANA","SUNAMPE","TAMBO DE MORA"],"NAZCA":["NAZCA","CHANGUILLO","EL INGENIO","MARCONA","VISTA ALEGRE"],"PALPA":["PALPA","LLIPATA","RIO GRANDE","SANTA CRUZ","TIBILLO"],"PISCO":["PISCO","HUANCANO","HUMAY","INDEPENDENCIA","PARACAS","SAN ANDRES","SAN CLEMENTE","TUPAC AMARU INCA"]},"JUNIN":{"HUANCAYO":["HUANCAYO","CARHUACALLANGA","CHACAPAMPA","CHICCHE","CHILCA","CHONGOS ALTO","CHUPURO","COLCA","CULLHUAS","EL TAMBO","HUACRAPUQUIO","HUALHUAS","HUANCAN","HUASICANCHA","HUAYUCACHI","INGENIO","PARIAHUANCA","PILCOMAYO","PUCARA","QUICHUAY","QUILCAS","SAN AGUSTIN","SAN JERONIMO DE TUNAN","SA\u00d1O","SAPALLANGA","SICAYA","SANTO DOMINGO DE ACOBAMBA","VIQUES"],"CONCEPCION":["CONCEPCION","ACO","ANDAMARCA","CHAMBARA","COCHAS","COMAS","HEROINAS TOLEDO","MANZANARES","MARISCAL CASTILLA","MATAHUASI","MITO","NUEVE DE JULIO","ORCOTUNA","SAN JOSE DE QUERO","SANTA ROSA DE OCOPA"],"CHANCHAMAYO":["CHANCHAMAYO","PERENE","PICHANAQUI","SAN LUIS DE SHUARO","SAN RAMON","VITOC"],"JAUJA":["JAUJA","ACOLLA","APATA","ATAURA","CANCHAYLLO","CURICACA","EL MANTARO","HUAMALI","HUARIPAMPA","HUERTAS","JANJAILLO","JULCAN","LEONOR ORDO\u00d1EZ","LLOCLLAPAMPA","MARCO","MASMA","MASMA CHICCHE","MOLINOS","MONOBAMBA","MUQUI","MUQUIYAUYO","PACA","PACCHA","PANCAN","PARCO","POMACANCHA","RICRAN","SAN LORENZO","SAN PEDRO DE CHUNAN","SAUSA","SINCOS","TUNAN MARCA","YAULI","YAUYOS"],"JUNIN":["JUNIN","CARHUAMAYO","ONDORES","ULCUMAYO"],"SATIPO":["SATIPO","COVIRIALI","LLAYLLA","MAZAMARI","PAMPA HERMOSA","PANGOA","RIO NEGRO","RIO TAMBO","VIZCATAN DEL ENE"],"TARMA":["TARMA","ACOBAMBA","HUARICOLCA","HUASAHUASI","LA UNION","PALCA","PALCAMAYO","SAN PEDRO DE CAJAS","TAPO"],"YAULI":["LA OROYA","CHACAPALPA","HUAY-HUAY","MARCAPOMACOCHA","MOROCOCHA","PACCHA","SANTA BARBARA DE CARHUACAYAN","SANTA ROSA DE SACCO","SUITUCANCHA","YAULI"],"CHUPACA":["CHUPACA","AHUAC","CHONGOS BAJO","HUACHAC","HUAMANCACA CHICO","SAN JUAN DE YSCOS","SAN JUAN DE JARPA","TRES DE DICIEMBRE","YANACANCHA"]},"LA LIBERTAD":{"TRUJILLO":["TRUJILLO","EL PORVENIR","FLORENCIA DE MORA","HUANCHACO","LA ESPERANZA","LAREDO","MOCHE","POROTO","SALAVERRY","SIMBAL","VICTOR LARCO HERRERA"],"ASCOPE":["ASCOPE","CHICAMA","CHOCOPE","MAGDALENA DE CAO","PAIJAN","RAZURI","SANTIAGO DE CAO","CASA GRANDE"],"BOLIVAR":["BOLIVAR","BAMBAMARCA","CONDORMARCA","LONGOTEA","UCHUMARCA","UCUNCHA"],"CHEPEN":["CHEPEN","PACANGA","PUEBLO NUEVO"],"JULCAN":["JULCAN","CALAMARCA","CARABAMBA","HUASO"],"OTUZCO":["OTUZCO","AGALLPAMPA","CHARAT","HUARANCHAL","LA CUESTA","MACHE","PARANDAY","SALPO","SINSICAP","USQUIL"],"PACASMAYO":["SAN PEDRO DE LLOC","GUADALUPE","JEQUETEPEQUE","PACASMAYO","SAN JOSE"],"PATAZ":["TAYABAMBA","BULDIBUYO","CHILLIA","HUANCASPATA","HUAYLILLAS","HUAYO","ONGON","PARCOY","PATAZ","PIAS","SANTIAGO DE CHALLAS","TAURIJA","URPAY"],"SANCHEZ CARRION":["HUAMACHUCO","CHUGAY","COCHORCO","CURGOS","MARCABAL","SANAGORAN","SARIN","SARTIMBAMBA"],"SANTIAGO DE CHUCO":["SANTIAGO DE CHUCO","ANGASMARCA","CACHICADAN","MOLLEBAMBA","MOLLEPATA","QUIRUVILCA","SANTA CRUZ DE CHUCA","SITABAMBA"],"GRAN CHIMU":["CASCAS","LUCMA","COMPIN","SAYAPULLO"],"VIRU":["VIRU","CHAO","GUADALUPITO"]},"LAMBAYEQUE":{"CHICLAYO":["CHICLAYO","CHONGOYAPE","ETEN","ETEN PUERTO","JOSE LEONARDO ORTIZ","LA VICTORIA","LAGUNAS","MONSEFU","NUEVA ARICA","OYOTUN","PICSI","PIMENTEL","REQUE","SANTA ROSA","SA\u00d1A","CAYALTI","PATAPO","POMALCA","PUCALA","TUMAN"],"FERRE\u00d1AFE":["FERRE\u00d1AFE","CA\u00d1ARIS","INCAHUASI","MANUEL ANTONIO MESONES MURO","PITIPO","PUEBLO NUEVO"],"LAMBAYEQUE":["LAMBAYEQUE","CHOCHOPE","ILLIMO","JAYANCA","MOCHUMI","MORROPE","MOTUPE","OLMOS","PACORA","SALAS","SAN JOSE","TUCUME"]},"LIMA":{"LIMA":["LIMA","ANCON","ATE","BARRANCO","BRE\u00d1A","CARABAYLLO","CHACLACAYO","CHORRILLOS","CIENEGUILLA","COMAS","EL AGUSTINO","INDEPENDENCIA","JESUS MARIA","LA MOLINA","LA VICTORIA","LINCE","LOS OLIVOS","LURIGANCHO","LURIN","MAGDALENA DEL MAR","PUEBLO LIBRE","MIRAFLORES","PACHACAMAC","PUCUSANA","PUENTE PIEDRA","PUNTA HERMOSA","PUNTA NEGRA","RIMAC","SAN BARTOLO","SAN BORJA","SAN ISIDRO","SAN JUAN DE LURIGANCHO","SAN JUAN DE MIRAFLORES","SAN LUIS","SAN MARTIN DE PORRES","SAN MIGUEL","SANTA ANITA","SANTA MARIA DEL MAR","SANTA ROSA","SANTIAGO DE SURCO","SURQUILLO","VILLA EL SALVADOR","VILLA MARIA DEL TRIUNFO"],"BARRANCA":["BARRANCA","PARAMONGA","PATIVILCA","SUPE","SUPE PUERTO"],"CAJATAMBO":["CAJATAMBO","COPA","GORGOR","HUANCAPON","MANAS"],"CANTA":["CANTA","ARAHUAY","HUAMANTANGA","HUAROS","LACHAQUI","SAN BUENAVENTURA","SANTA ROSA DE QUIVES"],"CA\u00d1ETE":["SAN VICENTE DE CA\u00d1ETE","ASIA","CALANGO","CERRO AZUL","CHILCA","COAYLLO","IMPERIAL","LUNAHUANA","MALA","NUEVO IMPERIAL","PACARAN","QUILMANA","SAN ANTONIO","SAN LUIS","SANTA CRUZ DE FLORES","ZU\u00d1IGA"],"HUARAL":["HUARAL","ATAVILLOS ALTO","ATAVILLOS BAJO","AUCALLAMA","CHANCAY","IHUARI","LAMPIAN","PACARAOS","SAN MIGUEL DE ACOS","SANTA CRUZ DE ANDAMARCA","SUMBILCA","VEINTISIETE DE NOVIEMBRE"],"HUAROCHIRI":["MATUCANA","ANTIOQUIA","CALLAHUANCA","CARAMPOMA","CHICLA","CUENCA","HUACHUPAMPA","HUANZA","HUAROCHIRI","LAHUAYTAMBO","LANGA","LARAOS","MARIATANA","RICARDO PALMA","SAN ANDRES DE TUPICOCHA","SAN ANTONIO","SAN BARTOLOME","SAN DAMIAN","SAN JUAN DE IRIS","SAN JUAN DE TANTARANCHE","SAN LORENZO DE QUINTI","SAN MATEO","SAN MATEO DE OTAO","SAN PEDRO DE CASTA","SAN PEDRO DE HUANCAYRE","SANGALLAYA","SANTA CRUZ DE COCACHACRA","SANTA EULALIA","SANTIAGO DE ANCHUCAYA","SANTIAGO DE TUNA","SANTO DOMINGO DE LOS OLLEROS","SURCO"],"HUAURA":["HUACHO","AMBAR","CALETA DE CARQUIN","CHECRAS","HUALMAY","HUAURA","LEONCIO PRADO","PACCHO","SANTA LEONOR","SANTA MARIA","SAYAN","VEGUETA"],"OYON":["OYON","ANDAJES","CAUJUL","COCHAMARCA","NAVAN","PACHANGARA"],"YAUYOS":["YAUYOS","ALIS","AYAUCA","AYAVIRI","AZANGARO","CACRA","CARANIA","CATAHUASI","CHOCOS","COCHAS","COLONIA","HONGOS","HUAMPARA","HUANCAYA","HUANGASCAR","HUANTAN","HUA\u00d1EC","LARAOS","LINCHA","MADEAN","MIRAFLORES","OMAS","PUTINZA","QUINCHES","QUINOCAY","SAN JOAQUIN","SAN PEDRO DE PILAS","TANTA","TAURIPAMPA","TOMAS","TUPE","VI\u00d1AC","VITIS"]},"LORETO":{"MAYNAS":["IQUITOS","ALTO NANAY","FERNANDO LORES","INDIANA","LAS AMAZONAS","MAZAN","NAPO","PUNCHANA","TORRES CAUSANA","BELEN","SAN JUAN BAUTISTA","PUTUMAYO","ROSA PANDURO","TENIENTE MANUEL CLAVERO","YAGUAS"],"ALTO AMAZONAS":["YURIMAGUAS","BALSAPUERTO","JEBEROS","LAGUNAS","SANTA CRUZ","TENIENTE CESAR LOPEZ ROJAS"],"LORETO":["NAUTA","PARINARI","TIGRE","TROMPETEROS","URARINAS"],"MARISCAL RAMON CASTILLA":["RAMON CASTILLA","PEBAS","YAVARI","SAN PABLO"],"REQUENA":["REQUENA","ALTO TAPICHE","CAPELO","EMILIO SAN MARTIN","MAQUIA","PUINAHUA","SAQUENA","SOPLIN","TAPICHE","JENARO HERRERA","YAQUERANA"],"UCAYALI":["CONTAMANA","INAHUAYA","PADRE MARQUEZ","PAMPA HERMOSA","SARAYACU","VARGAS GUERRA"],"DATEM DEL MARA\u00d1ON":["BARRANCA","CAHUAPANAS","MANSERICHE","MORONA","PASTAZA","ANDOAS"]},"MADRE DE DIOS":{"TAMBOPATA":["TAMBOPATA","INAMBARI","LAS PIEDRAS","LABERINTO"],"MANU":["MANU","FITZCARRALD","MADRE DE DIOS","HUEPETUHE"],"TAHUAMANU":["I\u00d1APARI","IBERIA","TAHUAMANU"]},"MOQUEGUA":{"MARISCAL NIETO":["MOQUEGUA","CARUMAS","CUCHUMBAYA","SAMEGUA","SAN CRISTOBAL","TORATA"],"GENERAL SANCHEZ CERR":["OMATE","CHOJATA","COALAQUE","ICHU\u00d1A","LA CAPILLA","LLOQUE","MATALAQUE","PUQUINA","QUINISTAQUILLAS","UBINAS","YUNGA"],"ILO":["ILO","EL ALGARROBAL","PACOCHA"]},"PASCO":{"PASCO":["CHAUPIMARCA","HUACHON","HUARIACA","HUAYLLAY","NINACACA","PALLANCHACRA","PAUCARTAMBO","SAN FRANCISCO DE ASIS DE YARUSYACAN","SIMON BOLIVAR","TICLACAYAN","TINYAHUARCO","VICCO","YANACANCHA"],"DANIEL ALCIDES CARRI":["YANAHUANCA","CHACAYAN","GOYLLARISQUIZGA","PAUCAR","SAN PEDRO DE PILLAO","SANTA ANA DE TUSI","TAPUC","VILCABAMBA"],"OXAPAMPA":["OXAPAMPA","CHONTABAMBA","HUANCABAMBA","PALCAZU","POZUZO","PUERTO BERMUDEZ","VILLA RICA","CONSTITUCI\u00d3N"]},"PIURA":{"PIURA":["PIURA","CASTILLA","CATACAOS","CURA MORI","EL TALLAN","LA ARENA","LA UNION","LAS LOMAS","TAMBO GRANDE","26 DE OCTUBRE"],"AYABACA":["AYABACA","FRIAS","JILILI","LAGUNAS","MONTERO","PACAIPAMPA","PAIMAS","SAPILLICA","SICCHEZ","SUYO"],"HUANCABAMBA":["HUANCABAMBA","CANCHAQUE","EL CARMEN DE LA FRONTERA","HUARMACA","LALAQUIZ","SAN MIGUEL DE EL FAIQUE","SONDOR","SONDORILLO"],"MORROPON":["CHULUCANAS","BUENOS AIRES","CHALACO","LA MATANZA","MORROPON","SALITRAL","SAN JUAN DE BIGOTE","SANTA CATALINA DE MOSSA","SANTO DOMINGO","YAMANGO"],"PAITA":["PAITA","AMOTAPE","ARENAL","COLAN","LA HUACA","TAMARINDO","VICHAYAL"],"SULLANA":["SULLANA","BELLAVISTA","IGNACIO ESCUDERO","LANCONES","MARCAVELICA","MIGUEL CHECA","QUERECOTILLO","SALITRAL"],"TALARA":["PARI\u00d1AS","EL ALTO","LA BREA","LOBITOS","LOS ORGANOS","MANCORA"],"SECHURA":["SECHURA","BELLAVISTA DE LA UNION","BERNAL","CRISTO NOS VALGA","VICE","RINCONADA LLICUAR"]},"PUNO":{"PUNO":["PUNO","ACORA","AMANTANI","ATUNCOLLA","CAPACHICA","CHUCUITO","COATA","HUATA","MA\u00d1AZO","PAUCARCOLLA","PICHACANI","PLATERIA","SAN ANTONIO","TIQUILLACA","VILQUE"],"AZANGARO":["AZANGARO","ACHAYA","ARAPA","ASILLO","CAMINACA","CHUPA","JOSE DOMINGO CHOQUEHUANCA","MU\u00d1ANI","POTONI","SAMAN","SAN ANTON","SAN JOSE","SAN JUAN DE SALINAS","SANTIAGO DE PUPUJA","TIRAPATA"],"CARABAYA":["MACUSANI","AJOYANI","AYAPATA","COASA","CORANI","CRUCERO","ITUATA","OLLACHEA","SAN GABAN","USICAYOS"],"CHUCUITO":["JULI","DESAGUADERO","HUACULLANI","KELLUYO","PISACOMA","POMATA","ZEPITA"],"EL COLLAO":["ILAVE","CAPAZO","PILCUYO","SANTA ROSA","CONDURIRI"],"HUANCANE":["HUANCANE","COJATA","HUATASANI","INCHUPALLA","PUSI","ROSASPATA","TARACO","VILQUE CHICO"],"LAMPA":["LAMPA","CABANILLA","CALAPUJA","NICASIO","OCUVIRI","PALCA","PARATIA","PUCARA","SANTA LUCIA","VILAVILA"],"MELGAR":["AYAVIRI","ANTAUTA","CUPI","LLALLI","MACARI","NU\u00d1OA","ORURILLO","SANTA ROSA","UMACHIRI"],"MOHO":["MOHO","CONIMA","HUAYRAPATA","TILALI"],"SAN ROMAN":["JULIACA","CABANA","CABANILLAS","CARACOTO","SAN MIGUEL"],"SANDIA":["SANDIA","CUYOCUYO","LIMBANI","PATAMBUCO","PHARA","QUIACA","SAN JUAN DEL ORO","YANAHUAYA","ALTO INAMBARI","SAN PEDRO DE PUTINA PUNCO"],"YUNGUYO":["YUNGUYO","ANAPIA","COPANI","CUTURAPI","OLLARAYA","TINICACHI","UNICACHI"],"SAN ANTONIO DE PUTINA":["PUTINA","ANANEA","PEDRO VILCA APAZA","QUILCAPUNCU","SINA"]},"SAN MARTIN":{"MOYOBAMBA":["MOYOBAMBA","CALZADA","HABANA","JEPELACIO","SORITOR","YANTALO"],"BELLAVISTA":["BELLAVISTA","ALTO BIAVO","BAJO BIAVO","HUALLAGA","SAN PABLO","SAN RAFAEL"],"EL DORADO":["SAN JOSE DE SISA","AGUA BLANCA","SAN MARTIN","SANTA ROSA","SHATOJA"],"HUALLAGA":["SAPOSOA","ALTO SAPOSOA","EL ESLABON","PISCOYACU","SACANCHE","TINGO DE SAPOSOA"],"LAMAS":["LAMAS","ALONSO DE ALVARADO","BARRANQUITA","CAYNARACHI","CU\u00d1UMBUQUI","PINTO RECODO","RUMISAPA","SAN ROQUE DE CUMBAZA","SHANAO","TABALOSOS","ZAPATERO"],"MARISCAL CACERES":["JUANJUI","CAMPANILLA","HUICUNGO","PACHIZA","PAJARILLO"],"PICOTA":["PICOTA","BUENOS AIRES","CASPISAPA","PILLUANA","PUCACACA","SAN CRISTOBAL","SAN HILARION","SHAMBOYACU","TINGO DE PONASA","TRES UNIDOS"],"RIOJA":["RIOJA","AWAJUN","ELIAS SOPLIN VARGAS","NUEVA CAJAMARCA","PARDO MIGUEL","POSIC","SAN FERNANDO","YORONGOS","YURACYACU"],"SAN MARTIN":["TARAPOTO","ALBERTO LEVEAU","CACATACHI","CHAZUTA","CHIPURANA","EL PORVENIR","HUIMBAYOC","JUAN GUERRA","LA BANDA DE SHILCAYO","MORALES","PAPAPLAYA","SAN ANTONIO","SAUCE","SHAPAJA"],"TOCACHE":["TOCACHE","NUEVO PROGRESO","POLVORA","SHUNTE","UCHIZA"]},"TACNA":{"TACNA":["TACNA","ALTO DE LA ALIANZA","CALANA","CIUDAD NUEVA","INCLAN","PACHIA","PALCA","POCOLLAY","SAMA","CORONEL GREGORIO ALBARRACIN LANCHIPA","LA YARADA-LOS PALOS"],"CANDARAVE":["CANDARAVE","CAIRANI","CAMILACA","CURIBAYA","HUANUARA","QUILAHUANI"],"JORGE BASADRE":["LOCUMBA","ILABAYA","ITE"],"TARATA":["TARATA","HEROES ALBARRACIN","ESTIQUE","ESTIQUE-PAMPA","SITAJARA","SUSAPAYA","TARUCACHI","TICACO"]},"TUMBES":{"TUMBES":["TUMBES","CORRALES","LA CRUZ","PAMPAS DE HOSPITAL","SAN JACINTO","SAN JUAN DE LA VIRGEN"],"CONTRALMIRANTE VILLA":["ZORRITOS","CASITAS","CANOAS DE PUNTA SAL"],"ZARUMILLA":["ZARUMILLA","AGUAS VERDES","MATAPALO","PAPAYAL"]},"UCAYALI":{"CORONEL PORTILLO":["CALLERIA","CAMPOVERDE","IPARIA","MASISEA","YARINACOCHA","NUEVA REQUENA","MANANTAY"],"ATALAYA":["RAYMONDI","SEPAHUA","TAHUANIA","YURUA"],"PADRE ABAD":["PADRE ABAD","IRAZOLA","CURIMANA","NESHUYA","ALEXANDER VON HUMBOLDT"],"PURUS":["PURUS"]}};
+</script>
+
+<script>
+/* ==========================================================================
+   IMPORTANTE - CONEXION A GOOGLE SHEETS
+   Reemplace la URL de abajo por la de su propio despliegue de Apps Script
+   (Extensiones > Apps Script > Implementar > Aplicacion web, en el Google
+   Sheet donde desea que se guarden las respuestas de esta encuesta).
+   Un ejemplo de codigo de Apps Script compatible se entrega junto a este
+   archivo (ver mensaje de chat).
+   ========================================================================== */
+let APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxQkt13tj6vjH7uNSMDKYCWTLKzQ4-YH_pdxmKTFNW23uWku8H_ZPNwqpnzv10-Yydw/exec';
+
+let bandeja = [];
+let idContador = 1;
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('year').value = new Date().getFullYear();
+  populateSelectors();
+  loadBandeja();
+  idContador = bandeja.length + 1;
+  renderBandeja();
+  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === 'PEGAR_AQUI_LA_URL_DE_APPS_SCRIPT') {
+    document.getElementById('warnNoUrl').classList.add('show');
+  }
+});
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+function populateSelectors() {
+  const addOpts = (selId, arr, ph) => {
+    const el = document.getElementById(selId);
+    if (!el) return;
+    el.innerHTML = '';
+    const def = document.createElement('option'); def.value = ''; def.textContent = ph || '\u2013 Seleccione \u2013';
+    el.appendChild(def);
+    arr.forEach(v => { const o = document.createElement('option'); o.value = v; o.textContent = v; el.appendChild(o); });
+  };
+  addOpts('cite', citeData, '\u2013 Seleccione \u2013');
+  addOpts('beneficiary_type', beneficiaryTypes, '\u2013 Seleccione \u2013');
+  const regiones = Object.keys(ubigeoData).sort();
+  const el = document.getElementById('region');
+  el.innerHTML = '<option value="">\u2013 Seleccione regi\u00f3n \u2013</option>';
+  regiones.forEach(r => { const o = document.createElement('option'); o.value = r; o.textContent = r; el.appendChild(o); });
+}
+
+// Filtra actividades por CITE seleccionado y puebla el select de actividad
+function updateActividadesByCite() {
+  const cite = document.getElementById('cite').value;
+  const sel = document.getElementById('activity_select');
+  document.getElementById('intervention_mode').value = '';
+  document.getElementById('specific_activity').value = '';
+  document.getElementById('activity_code').value = '';
+  document.getElementById('activity_name').value = '';
+
+  if (!cite) {
+    sel.innerHTML = '<option value="">\u2013 Seleccione primero el CITE \u2013</option>';
+    sel.disabled = true;
+    return;
+  }
+  const filtradas = consolidadoActividades
+    .filter(a => a.cite === cite)
+    .sort((a, b) => a.codigo.localeCompare(b.codigo, undefined, { numeric: true, sensitivity: 'base' }));
+  sel.innerHTML = '<option value="">\u2013 Seleccione actividad \u2013</option>';
+  filtradas.forEach(a => {
+    const o = document.createElement('option');
+    o.value = a.codigo;
+    o.textContent = `[${a.codigo}] ${a.nombre}`;
+    sel.appendChild(o);
+  });
+  sel.disabled = false;
+}
+
+// Rellena automaticamente modalidad, tipo, codigo y nombre al seleccionar actividad
+function autoFillFromActivity() {
+  const cite = document.getElementById('cite').value;
+  const codigo = document.getElementById('activity_select').value;
+  if (!codigo) {
+    document.getElementById('intervention_mode').value = '';
+    document.getElementById('specific_activity').value = '';
+    document.getElementById('activity_code').value = '';
+    document.getElementById('activity_name').value = '';
+    return;
+  }
+  const act = consolidadoActividades.find(a => a.cite === cite && a.codigo === codigo);
+  if (act) {
+    document.getElementById('intervention_mode').value = act.modalidad;
+    document.getElementById('specific_activity').value = act.tipo;
+    document.getElementById('activity_code').value = act.codigo;
+    document.getElementById('activity_name').value = act.nombre;
+  }
+}
+
+function updateProvincia() {
+  const reg = document.getElementById('region').value;
+  const provSel = document.getElementById('provincia');
+  const distSel = document.getElementById('distrito');
+  provSel.innerHTML = '<option value="">\u2013 Seleccione provincia \u2013</option>';
+  distSel.innerHTML = '<option value="">\u2013 Seleccione distrito \u2013</option>';
+  distSel.disabled = true;
+  if (reg && ubigeoData[reg]) {
+    provSel.disabled = false;
+    Object.keys(ubigeoData[reg]).sort().forEach(p => { const o=document.createElement('option');o.value=p;o.textContent=p;provSel.appendChild(o); });
+  } else { provSel.disabled = true; }
+}
+
+function updateDistrito() {
+  const reg = document.getElementById('region').value;
+  const prov = document.getElementById('provincia').value;
+  const distSel = document.getElementById('distrito');
+  distSel.innerHTML = '<option value="">\u2013 Seleccione distrito \u2013</option>';
+  if (reg && prov && ubigeoData[reg] && ubigeoData[reg][prov]) {
+    distSel.disabled = false;
+    ubigeoData[reg][prov].sort().forEach(d => { const o=document.createElement('option');o.value=d.trim();o.textContent=d.trim();distSel.appendChild(o); });
+  } else { distSel.disabled = true; }
+}
+
+function autoFillMes() {
+  const fechaVal = document.getElementById('fecha').value;
+  if (fechaVal) {
+    const m = parseInt(fechaVal.split('-')[1], 10);
+    document.getElementById('mes').value = monthNames[m - 1] || '';
+  } else { document.getElementById('mes').value = ''; }
+}
+
+function updateType() {
+  const cite = document.getElementById('cite').value;
+  const tipo = citeTipo[cite] || '';
+  const el = document.getElementById('tipoDisplay');
+  el.innerHTML = tipo
+    ? `<span class="tipo-badge ${tipo.toLowerCase()}">${tipo}</span>`
+    : `<span class="tipo-badge" style="opacity:.4;color:var(--muted)">Pendiente</span>`;
+}
+
+function toggleOtherBeneficiary() {
+  const val = document.getElementById('beneficiary_type').value;
+  const other = document.getElementById('otherBeneficiaryGroup');
+  if (val === 'Otro (Especificar)') {
+    other.style.display = 'flex'; other.style.flexDirection = 'column'; other.style.gap = '4px';
+    document.getElementById('other_beneficiary').required = true;
+  } else { other.style.display = 'none'; document.getElementById('other_beneficiary').required = false; }
+}
+
+// Lista de preguntas de la encuesta (id del input oculto + etiqueta legible para el Sheet)
+const RATING_QUESTIONS = [
+  { id: 'q_inicio_puntual',        label: 'Inicio puntual la capacitaci\u00f3n' },
+  { id: 'q_conocimiento_facilitador', label: 'Conocimiento del tema por parte del facilitador' },
+  { id: 'q_claridad_explicaciones', label: 'Facilidad para entender las explicaciones del facilitador' },
+  { id: 'q_temas_claros',          label: 'Los temas tratados fueron claros' },
+  { id: 'q_expectativas',          label: 'La capacitaci\u00f3n cumpli\u00f3 con sus expectativas de aprendizaje' },
+  { id: 'q_material',              label: 'Material de capacitaci\u00f3n' },
+  { id: 'q_nivel_antes',           label: 'Nivel de conocimientos ANTES de la capacitaci\u00f3n' },
+  { id: 'q_nivel_despues',         label: 'Nivel de conocimientos DESPU\u00c9S de la capacitaci\u00f3n' },
+  { id: 'q_amplio_conocimientos',  label: '\u00bfLa capacitaci\u00f3n le permiti\u00f3 ampliar sus conocimientos?' },
+];
+
+function selectRating(btn) {
+  const group = btn.parentElement;
+  group.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById(group.dataset.name).value = btn.dataset.value;
+}
+
+function collectFormData() {
+  const g = id => { const el = document.getElementById(id); return el ? el.value || '' : ''; };
+  const benefType = g('beneficiary_type');
+  const data = {
+    'ID': idContador,
+    'A\u00f1o': g('year'),
+    'CITE': g('cite'),
+    'Tipo de CITE': citeTipo[g('cite')] || '',
+    'Nombre del Capacitador': g('responsable'),
+    'Modalidad de intervenci\u00f3n': g('intervention_mode'),
+    'Tipo de actividad': g('specific_activity'),
+    'C\u00f3digo actividad': g('activity_code'),
+    'Nombre de la actividad': g('activity_name'),
+    'Fecha': g('fecha'),
+    'Mes': g('mes'),
+    'Regi\u00f3n': g('region'),
+    'Provincia': g('provincia'),
+    'Distrito': g('distrito'),
+    'Lugar': g('lugar'),
+    'Tipo de beneficiario': benefType === 'Otro (Especificar)' ? ('Otro: ' + g('other_beneficiary')) : benefType,
+  };
+  RATING_QUESTIONS.forEach(q => { data[q.label] = g(q.id); });
+  data['Sugerencias y comentarios'] = g('sugerencias');
+  data['Fecha de registro'] = new Date().toLocaleString('es-PE');
+  data['Versi\u00f3n formulario'] = 'CITE_Satisfaccion_2026_v1';
+  return data;
+}
+
+function validateForm() {
+  const actSel = document.getElementById('activity_select').value;
+  if (!actSel) { showToast('\u26a0 Debe seleccionar el nombre de la actividad'); return false; }
+  for (const q of RATING_QUESTIONS) {
+    if (!document.getElementById(q.id).value) {
+      showToast('\u26a0 Falta calificar: ' + q.label);
+      return false;
+    }
+  }
+  const benefType = document.getElementById('beneficiary_type').value;
+  if (benefType === 'Otro (Especificar)' && !document.getElementById('other_beneficiary').value.trim()) {
+    showToast('\u26a0 Especifique el otro tipo de beneficiario');
+    return false;
+  }
+  return true;
+}
+
+function addToBandeja(e) {
+  e.preventDefault();
+  if (!validateForm()) return;
+  const data = collectFormData();
+  bandeja.push({ data, _status: 'pending', _ts: Date.now() });
+  idContador++;
+  saveBandeja();
+  renderBandeja();
+  resetForm();
+  showToast('\u2713 Encuesta agregada a la bandeja');
+}
+
+function resetForm() {
+  document.getElementById('satForm').reset();
+  document.getElementById('year').value = new Date().getFullYear();
+  document.getElementById('tipoDisplay').innerHTML = '<span class="tipo-badge" style="opacity:.4;color:var(--muted)">Pendiente</span>';
+  const actSel = document.getElementById('activity_select');
+  actSel.innerHTML = '<option value="">\u2013 Seleccione primero el CITE \u2013</option>';
+  actSel.disabled = true;
+  document.getElementById('intervention_mode').value = '';
+  document.getElementById('specific_activity').value = '';
+  document.getElementById('activity_code').value = '';
+  document.getElementById('activity_name').value = '';
+  ['provincia','distrito'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.innerHTML = '<option value="">\u2013 Seleccione \u2013</option>'; el.disabled = true; }
+  });
+  document.getElementById('otherBeneficiaryGroup').style.display = 'none';
+  document.getElementById('mes').value = '';
+  RATING_QUESTIONS.forEach(q => {
+    document.getElementById(q.id).value = '';
+    document.querySelectorAll(`.rating-group[data-name="${q.id}"] .rating-btn`).forEach(b => b.classList.remove('selected'));
+  });
+}
+
+function loadBandeja() {
+  try { bandeja = JSON.parse(localStorage.getItem('cite_satisfaccion_bandeja_2026') || '[]'); } catch (e) { bandeja = []; }
+}
+function saveBandeja() {
+  try { localStorage.setItem('cite_satisfaccion_bandeja_2026', JSON.stringify(bandeja)); } catch (e) {}
+}
+
+function renderBandeja() {
+  const count   = bandeja.length;
+  const pending = bandeja.filter(a => a._status === 'pending').length;
+  const sent    = bandeja.filter(a => a._status === 'sent').length;
+  const errored = bandeja.filter(a => a._status === 'error').length;
+  document.getElementById('trayCount').textContent = count;
+  document.getElementById('formBenefNum').textContent = 'N\u00ba ' + (count + 1);
+  let sumTxt = [];
+  if (pending > 0) sumTxt.push(pending + ' pendiente' + (pending !== 1 ? 's' : ''));
+  if (sent    > 0) sumTxt.push(sent    + ' enviado'   + (sent    !== 1 ? 's' : ''));
+  if (errored > 0) sumTxt.push('<span style="color:#ffc107">' + errored + ' con error</span>');
+  document.getElementById('traySummary').innerHTML = sumTxt.join(' \u00b7 ');
+  const actionsEl = document.getElementById('trayActions');
+  actionsEl.style.display = count > 0 ? 'flex' : 'none';
+  const btnSend = document.getElementById('btnSendAll');
+  if (btnSend) btnSend.disabled = !APPS_SCRIPT_URL || pending === 0;
+
+  const empty = document.getElementById('trayEmpty');
+  const list  = document.getElementById('trayList');
+  if (count === 0) { empty.style.display=''; list.style.display='none'; list.innerHTML=''; return; }
+  empty.style.display = 'none';
+  list.style.display = 'flex';
+  list.innerHTML = bandeja.map((item, i) => {
+    const d = item.data;
+    const statusClass = item._status === 'sent' ? 'sent' : (item._status === 'error' ? 'error' : 'pending');
+    const statusLabel = item._status === 'sent' ? 'Enviado' : (item._status === 'error' ? 'Error' : 'Pendiente');
+    return `<div class="tray-item">
+      <div class="ti-num">${i+1}</div>
+      <div class="ti-info">
+        <div class="ti-name">${d['Nombre de la actividad'] || 'Sin actividad'}</div>
+        <div class="ti-meta">
+          <span class="ti-tag">${d['CITE'] || ''}</span>
+          <span class="ti-tag gold">${d['Fecha'] || ''}</span>
+          <span class="ti-tag green">${d['Tipo de beneficiario'] || ''}</span>
+        </div>
+      </div>
+      <span class="ti-status ${statusClass}">${statusLabel}</span>
+      <button class="btn-ti-del" onclick="removeFromBandeja(${i})" title="Eliminar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>`;
+  }).join('');
+}
+
+function removeFromBandeja(i) {
+  bandeja.splice(i, 1);
+  saveBandeja();
+  renderBandeja();
+}
+
+function clearTray() {
+  if (!confirm('\u00bfVaciar toda la bandeja? Esta acci\u00f3n no se puede deshacer.')) return;
+  bandeja = [];
+  saveBandeja();
+  renderBandeja();
+  showToast('Bandeja vaciada');
+}
+
+async function sendAll() {
+  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === 'PEGAR_AQUI_LA_URL_DE_APPS_SCRIPT') { showToast('\u26a0 Sin URL configurada'); return; }
+  const pending = bandeja.filter(a => a._status === 'pending');
+  if (pending.length === 0) { showToast('No hay encuestas pendientes'); return; }
+  const btn = document.getElementById('btnSendAll');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Enviando\u2026';
+  const prog = document.getElementById('trayProgress');
+  const progBar = document.getElementById('trayProgBar');
+  const progTxt = document.getElementById('trayProgressTxt');
+  prog.classList.add('show');
+  let done = 0;
+  for (let i = 0; i < bandeja.length; i++) {
+    if (bandeja[i]._status !== 'pending') continue;
+    progTxt.textContent = 'Enviando ' + (done + 1) + ' de ' + pending.length + '\u2026';
+    progBar.style.width = Math.round((done / pending.length) * 100) + '%';
+    try {
+      const encoded = encodeURIComponent(JSON.stringify(bandeja[i].data));
+      const resp = await fetch(APPS_SCRIPT_URL + '?action=save&data=' + encoded);
+      const json = await resp.json();
+      bandeja[i]._status = json.ok ? 'sent' : 'error';
+    } catch (e) { bandeja[i]._status = 'error'; }
+    done++;
+  }
+  progBar.style.width = '100%';
+  setTimeout(() => prog.classList.remove('show'), 1200);
+  saveBandeja(); renderBandeja();
+  btn.disabled = false;
+  btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Enviar todo a Google Sheets';
+  const errors = bandeja.filter(a => a._status === 'error').length;
+  showToast(errors > 0 ? '\u26a0 ' + errors + ' encuesta(s) con error' : '\u2713 ' + done + ' encuesta(s) enviada(s) correctamente');
+}
+</script>
+</body>
+</html>
