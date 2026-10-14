@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Formulario PAA 2027 — Red CITE Artesanía y Turismo</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --charcoal:#3a3a3d;--charcoal2:#232325;--red:#c8102e;--red2:#a50d26;
+  --gold:#d4a94c;--gold2:#e8c76d;--goldsoft:#fbf1d9;--accent:#c08a3e;
+  --cream:#faf8f3;--white:#fff;--border:#ddd5c8;--light:#f0ece5;
+  --text:#2c2c2c;--muted:#6b6b6b;--green:#1e8e4e;--blue:#2471a3;
+  --prod:#e4e1dc;--act:#fbf6ec;--trim:#fff6dd;
+  --shadow:0 2px 12px rgba(35,35,37,.10);--radius:8px;
+}
+html,body{background:var(--cream)}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:var(--text);min-height:100vh;line-height:1.45;font-size:13px}
+button{font-family:inherit}
+/* HEADER */
+.site-header{background:linear-gradient(135deg,var(--charcoal) 0%,var(--charcoal2) 100%);color:#fff;border-bottom:4px solid var(--red)}
+.header-top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 28px;border-bottom:1px solid rgba(255,255,255,.12);flex-wrap:wrap}
+.header-logo{height:46px;width:auto;display:block}
+.ministry{font-size:11px;letter-spacing:1.2px;text-transform:uppercase;opacity:.8;text-align:right}
+.ministry b{display:block;font-size:12px;opacity:1;letter-spacing:.6px}
+.header-main{padding:18px 28px 16px;text-align:center}
+.header-main h1{font-size:22px;font-weight:300;letter-spacing:1.5px}
+.header-main .sub{font-size:12px;opacity:.75;margin-top:2px}
+.year-badge{display:inline-block;background:var(--gold);color:var(--charcoal2);font-weight:700;font-size:13px;padding:3px 16px;border-radius:20px;letter-spacing:1px;margin-top:8px}
+/* TABS */
+.tabs-wrap{position:sticky;top:0;z-index:50;background:var(--white);border-bottom:1px solid var(--border);box-shadow:0 2px 6px rgba(0,0,0,.05)}
+.tabs{display:flex;gap:2px;max-width:1500px;margin:0 auto;padding:0 18px;overflow-x:auto;scrollbar-width:thin}
+.tab{background:none;border:none;border-bottom:3px solid transparent;padding:12px 16px 9px;font-size:12.5px;font-weight:600;color:var(--muted);cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.tab:hover{color:var(--charcoal)}
+.tab.active{color:var(--charcoal2);border-bottom-color:var(--red)}
+.tab .dot{width:8px;height:8px;border-radius:50%;background:var(--border)}
+.tab .dot.ok{background:var(--green)}.tab .dot.err{background:var(--red)}
+.tab.na{opacity:.45}
+.status-pill{margin-left:auto;align-self:center;font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;white-space:nowrap;background:#fff3cd;color:#856404;border:1px solid #f1d27a}
+.status-pill.saved{background:#e3f5ea;color:var(--green);border-color:#a8dcbb}
+/* LAYOUT */
+.container{max-width:1500px;margin:22px auto;padding:0 18px}
+.panel{display:none}
+.panel.active{display:block}
+.card{background:var(--white);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);margin-bottom:18px;overflow:hidden}
+.card-head{padding:14px 20px;border-bottom:1px solid var(--light);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.card-head h2{font-size:15px;font-weight:700;color:var(--charcoal2);letter-spacing:.2px}
+.card-head .k{font-size:11px;font-weight:700;color:var(--red);letter-spacing:1.4px;text-transform:uppercase;display:block;margin-bottom:2px}
+.card-head p{font-size:12px;color:var(--muted);margin-top:2px;max-width:900px}
+.card-body{padding:16px 20px}
+.section-title{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:1.3px;color:var(--accent);border-bottom:2px solid var(--light);padding-bottom:6px;margin:4px 0 12px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:900px){.g3,.g4{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.g2,.g3,.g4{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:12px;font-weight:600;color:var(--charcoal2)}
+.req{color:var(--red)}
+.hint{font-size:10.5px;color:var(--muted);font-style:italic}
+.field input,.field select,.field textarea{border:1px solid var(--border);border-radius:var(--radius);padding:8px 10px;font-size:13px;background:var(--white);color:var(--text);outline:none;width:100%;font-family:inherit}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(36,113,163,.15)}
+.ro{background:var(--light)!important;color:var(--muted)}
+.tipo-badge{display:inline-block;padding:5px 14px;border-radius:14px;font-size:12px;font-weight:700}
+.tipo-badge.pub{background:#e6f0f8;color:var(--blue);border:1px solid #b8d3e8}
+.tipo-badge.pri{background:#fdf1df;color:var(--accent);border:1px solid #f0d5a8}
+.tipo-badge.none{background:var(--light);color:var(--muted)}
+.note{font-size:12px;color:var(--muted);background:var(--light);border-radius:var(--radius);padding:10px 14px;border-left:3px solid var(--gold)}
+.note.red{border-left-color:var(--red);background:#fdf0f1;color:#7d1020}
+.note b{color:var(--charcoal2)}
+/* TABLES */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius);background:var(--white);max-height:72vh;overflow-y:auto}
+table.grid-t{border-collapse:separate;border-spacing:0;font-size:12px;min-width:100%}
+.grid-t thead{position:sticky;top:0;z-index:5}
+.grid-t th{background:var(--charcoal);color:#fff;font-weight:600;font-size:11px;padding:7px 6px;text-align:center;border-right:1px solid rgba(255,255,255,.15);border-bottom:1px solid rgba(255,255,255,.15);white-space:nowrap}
+.grid-t th.trim{background:#6b5a2e}
+.grid-t th.src{background:#8a6a2a}
+.grid-t td{border-right:1px solid #ece7de;border-bottom:1px solid #ece7de;padding:3px 4px;vertical-align:middle;background:var(--white)}
+.grid-t td.n{text-align:right;font-variant-numeric:tabular-nums;padding-right:7px;white-space:nowrap}
+.grid-t td.trim{background:var(--trim);font-weight:600}
+.grid-t tr.prod td{background:var(--prod);font-weight:700;color:var(--charcoal2)}
+.grid-t tr.prod td.trim{background:#efe2bd}
+.grid-t tr.act td{background:var(--act);font-weight:600}
+.grid-t tr.act td.trim{background:#f6e9c6}
+.grid-t tr.tot td{background:var(--charcoal2);color:#fff;font-weight:700}
+.grid-t tr.band td{background:#f3f0ea;font-weight:700;font-size:11px;letter-spacing:.6px;color:var(--muted);text-transform:uppercase}
+.grid-t tr.addrow td{background:#fcfbf8}
+.grid-t .sticky1{position:sticky;left:0;z-index:2;min-width:84px;width:84px;max-width:84px}
+.grid-t .sticky2{position:sticky;z-index:2}
+.grid-t th.sticky1,.grid-t th.sticky2{z-index:4}
+.grid-t input,.grid-t select,.grid-t textarea{width:100%;border:1px solid transparent;border-radius:4px;padding:5px 5px;font-size:12px;background:transparent;font-family:inherit;color:inherit;outline:none}
+.grid-t input:hover,.grid-t select:hover,.grid-t textarea:hover{border-color:var(--border);background:#fff}
+.grid-t input:focus,.grid-t select:focus,.grid-t textarea:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 2px rgba(36,113,163,.15)}
+.grid-t input.num{text-align:right;width:62px;font-variant-numeric:tabular-nums}
+.grid-t input.money{text-align:right;width:84px;font-variant-numeric:tabular-nums}
+.grid-t input.cdef{color:#8a7d66;font-style:italic}
+.grid-t input.code{width:74px;font-weight:600}
+.grid-t textarea{resize:vertical;min-height:30px;line-height:1.3}
+.grid-t .ins-name{padding-left:18px;font-style:italic}
+.grid-t td.bad{background:#fde2e4!important;color:var(--red2);font-weight:700}
+.grid-t td.okc{color:var(--green)}
+.namecell{min-width:300px}
+/* BUTTONS */
+.btn{border:none;border-radius:var(--radius);padding:9px 18px;font-size:12.5px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:background .15s,border-color .15s}
+.btn svg{width:15px;height:15px}
+.btn-primary{background:var(--red);color:#fff}.btn-primary:hover{background:var(--red2)}
+.btn-green{background:var(--green);color:#fff}.btn-green:hover{background:#17733f}
+.btn-dark{background:var(--charcoal);color:#fff}.btn-dark:hover{background:var(--charcoal2)}
+.btn-line{background:#fff;border:1px solid var(--border);color:var(--charcoal2)}.btn-line:hover{border-color:var(--charcoal);background:var(--light)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.mini{border:1px dashed #b9ad99;background:#fff;color:var(--charcoal);border-radius:6px;padding:4px 10px;font-size:11.5px;font-weight:600;cursor:pointer;white-space:nowrap}
+.mini:hover{border-color:var(--red);color:var(--red)}
+.mini.solid{border-style:solid}
+.ico{background:none;border:none;cursor:pointer;padding:3px 4px;color:#9a9189;border-radius:4px;line-height:0}
+.ico:hover{color:var(--red);background:#fdf0f1}
+.ico svg{width:14px;height:14px}
+.ficha-btn{border:1px solid var(--border);background:#fff;border-radius:12px;font-size:10.5px;font-weight:700;padding:3px 9px;cursor:pointer;color:var(--muted);white-space:nowrap}
+.ficha-btn.ok{border-color:#a8dcbb;color:var(--green);background:#eef9f2}
+.ficha-btn.pend{border-color:#f1c3c9;color:var(--red);background:#fdf3f4}
+.rowtools{display:flex;gap:2px;align-items:center;justify-content:center}
+.bottom-bar{position:sticky;bottom:0;z-index:40;background:rgba(255,255,255,.97);border-top:1px solid var(--border);box-shadow:0 -2px 10px rgba(0,0,0,.06)}
+.bottom-inner{max-width:1500px;margin:0 auto;padding:10px 18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.bottom-inner .kpis{display:flex;gap:18px;flex-wrap:wrap;margin-right:auto;font-size:11.5px;color:var(--muted)}
+.bottom-inner .kpis b{color:var(--charcoal2);font-size:13px;font-variant-numeric:tabular-nums}
+/* RULES */
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.rule{border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;background:#fff}
+.rule .rt{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.7px}
+.rule .rv{font-size:24px;font-weight:700;color:var(--charcoal2);font-variant-numeric:tabular-nums;margin:2px 0}
+.rule .rl{font-size:11px;color:var(--muted)}
+.rule.ok{border-color:#a8dcbb;background:#f3fbf6}.rule.ok .rv{color:var(--green)}
+.rule.bad{border-color:#efa9b2;background:#fdf3f4}.rule.bad .rv{color:var(--red)}
+.rule.na{opacity:.55}
+.issues{display:flex;flex-direction:column;gap:6px}
+.issue{display:flex;gap:10px;align-items:flex-start;padding:8px 12px;border-radius:7px;font-size:12.5px}
+.issue.e{background:#fdf0f1;color:#7d1020;border:1px solid #f4c7cd}
+.issue.w{background:#fff8e6;color:#7a5b10;border:1px solid #f1dda5}
+.issue .tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:rgba(0,0,0,.07);white-space:nowrap}
+.issue a{color:inherit;font-weight:700;margin-left:auto;white-space:nowrap;cursor:pointer;text-decoration:underline}
+.ok-big{display:flex;gap:10px;align-items:center;padding:14px 16px;border-radius:9px;background:#eef9f2;border:1px solid #a8dcbb;color:var(--green);font-weight:600}
+/* MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(20,20,22,.55);z-index:200;overflow-y:auto;padding:24px 14px}
+.modal-bg.show{display:block}
+.modal{max-width:860px;margin:0 auto;background:#fff;border-radius:14px;box-shadow:0 10px 40px rgba(0,0,0,.3);overflow:hidden}
+.modal-head{background:linear-gradient(135deg,var(--charcoal),var(--charcoal2));color:#fff;padding:16px 22px;display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:3px solid var(--red)}
+.modal-head h3{font-size:15px;font-weight:600}
+.modal-head small{display:block;font-size:11px;opacity:.75}
+.modal-x{background:rgba(255,255,255,.15);border:none;color:#fff;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:17px}
+.modal-body{padding:18px 22px}
+.modal-foot{padding:12px 22px;border-top:1px solid var(--light);display:flex;justify-content:flex-end;gap:10px}
+.mgrid{display:grid;grid-template-columns:110px repeat(12,1fr) 70px;gap:4px;align-items:center;font-size:11px}
+.mgrid .h{font-weight:700;color:var(--muted);text-align:center}
+.mgrid input{width:100%;border:1px solid var(--border);border-radius:4px;padding:5px 3px;font-size:11.5px;text-align:right}
+.mgrid .lbl{font-weight:600;color:var(--charcoal2)}
+.mgrid .tt{font-weight:700;text-align:right;color:var(--charcoal2)}
+@media(max-width:760px){.mgrid{grid-template-columns:80px repeat(6,1fr);}.mgrid .hide-s{display:none}}
+.loc-card{border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:8px;display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:end;background:var(--cream)}
+.loc-card.f{grid-template-columns:1fr 1fr auto;border-color:#ecd2a6;background:#fef9f2}
+@media(max-width:640px){.loc-card,.loc-card.f{grid-template-columns:1fr}}
+.toast{position:fixed;bottom:84px;right:24px;background:var(--charcoal2);color:#fff;padding:12px 20px;border-radius:var(--radius);box-shadow:0 6px 30px rgba(0,0,0,.25);font-size:13px;transform:translateY(30px);opacity:0;transition:all .3s;z-index:300;max-width:380px;pointer-events:none}
+.toast.show{transform:translateY(0);opacity:1}
+.hidden{display:none!important}
+/* acceso */
+.gate{position:fixed;inset:0;z-index:500;background:linear-gradient(135deg,var(--charcoal),var(--charcoal2));display:flex;align-items:center;justify-content:center;padding:20px}
+.gate.hide{display:none}
+.gate-box{max-width:520px;background:#fff;border-radius:14px;padding:28px 30px;text-align:center;border-top:4px solid var(--red)}
+.gate-box img{height:52px;margin-bottom:14px;filter:invert(1) brightness(.25)}
+.gate-box h2{font-size:18px;color:var(--charcoal2);margin-bottom:8px}
+.gate-box p{font-size:13px;color:var(--muted)}
+.mode-banner{max-width:1500px;margin:14px auto 0;padding:0 18px}
+footer{text-align:center;padding:20px 20px 30px;color:var(--muted);font-size:11px}
+@media(max-width:600px){.bottom-inner .kpis{display:none}.bottom-inner{justify-content:flex-end;padding:8px 10px;gap:6px}.bottom-inner .btn{padding:8px 11px;font-size:12px}}
+@media(max-width:600px){.header-top,.header-main{padding-left:16px;padding-right:16px}.container{padding:0 10px}.card-body{padding:14px}.header-main h1{font-size:17px}.ministry{display:none}}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-top">
+    <img class="header-logo" alt="Red CITE Artesanía y Turismo" src="data:image/png;base64,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"/>
+    <div class="ministry"><b>Ministerio de Comercio Exterior y Turismo</b>Dirección de Centros de Innovación Tecnológica de Artesanía y Turismo (DCITAT)</div>
+  </div>
+  <div class="header-main">
+    <h1>FORMULARIO PLAN ANUAL DE ACTIVIDADES (PAA)</h1>
+    <div class="sub">Anexos A, B, C, D (Directiva General CITE N.° 005) y Anexo IV — Hitos de cumplimiento (Directiva N.° 008)</div>
+    <span class="year-badge">2027</span>
+  </div>
+</header>
+
+<div class="tabs-wrap">
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-tab="gen"><span class="dot" id="dot-gen"></span>Datos generales</button>
+    <button class="tab" data-tab="A"><span class="dot" id="dot-A"></span>Anexo A · Metas físicas</button>
+    <button class="tab" data-tab="B"><span class="dot" id="dot-B"></span>Anexo B · Presupuesto MINCETUR</button>
+    <button class="tab" data-tab="C"><span class="dot" id="dot-C"></span>Anexo C · Fuentes</button>
+    <button class="tab" data-tab="D"><span class="dot" id="dot-D"></span>Anexo D · Desembolsos</button>
+    <button class="tab" data-tab="IV"><span class="dot" id="dot-IV"></span>Anexo IV · Hitos</button>
+    <button class="tab" data-tab="val"><span class="dot" id="dot-val"></span>Validar, grabar y descargar</button>
+    <span class="status-pill" id="statusPill">Borrador</span>
+  </nav>
+</div>
+
+<div class="mode-banner hidden" id="modeBanner"><div class="note red">Modo sin conexión: este formulario no tiene configurada la URL del servidor, así que el PAA grabado queda solo en este navegador. Úselo únicamente para pruebas.</div></div>
+<div class="container">
+
+<!-- ═════════ DATOS GENERALES ═════════ -->
+<section class="panel active" id="panel-gen">
+  <div class="card">
+    <div class="card-head"><div><span class="k">Paso 1</span><h2>Datos generales del PAA</h2><p>Seleccione su CITE. El tipo (público o privado) se asigna automáticamente y define qué anexos y reglas aplican.</p></div></div>
+    <div class="card-body">
+      <div class="grid g4">
+        <div class="field"><label>Año del PAA</label><input value="2027" readonly class="ro"/></div>
+        <div class="field"><label>CITE <span class="req">*</span></label><select id="f-cite" data-b="g::cite"><option value="">– Seleccione –</option></select></div>
+        <div class="field"><label>Tipo <span class="hint">(automático)</span></label><div id="tipoBox"><span class="tipo-badge none">Pendiente</span></div></div>
+        <div class="field"><label>Etapa del PAA <span class="req">*</span></label>
+          <select id="f-etapa" data-b="g::etapa"><option>Programación</option><option>Reprogramación</option><option>Reformulación</option></select><span class="hint" id="etapaHint"></span></div>
+      </div>
+      <div class="grid g4" style="margin-top:14px">
+        <div class="field"><label>Responsable <span class="req">*</span></label><input id="f-responsable" data-b="g::responsable" maxlength="100" placeholder="Nombres y apellidos"/></div>
+        <div class="field"><label>Cargo</label><input id="f-cargo" data-b="g::cargo" maxlength="100" placeholder="Cargo en el CITE"/></div>
+        <div class="field"><label>Correo electrónico</label><input id="f-correo" data-b="g::correo" type="email" maxlength="100" placeholder="correo@dominio.pe"/></div>
+        <div class="field"><label>Teléfono / celular</label><input id="f-telefono" data-b="g::telefono" maxlength="20" placeholder="9xx xxx xxx"/></div>
+      </div>
+      <div class="grid g2" style="margin-top:14px" id="docRefRow">
+        <div class="field"><label>Documento de aprobación de la reformulación <span class="req">*</span></label><span class="hint">Obligatorio en la etapa “Reformulación” (ej.: Oficio N.° 0xx-2027-MINCETUR/VMT/DGA-DCITAT)</span><input id="f-docRef" data-b="g::docRef" maxlength="150"/></div>
+        <div class="field"><label>Programación de referencia (para control de variación)</label><span class="hint">Se fija al grabar la Programación; solo una Reformulación aprobada la reemplaza</span><input id="f-base" readonly class="ro"/></div>
+      </div>
+      <div class="note" style="margin-top:16px" id="genNote">Seleccione un CITE para continuar.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div><span class="k">Cómo se llena</span><h2>Orden recomendado</h2></div></div>
+    <div class="card-body">
+      <ol style="padding-left:18px;font-size:12.5px;display:grid;gap:5px">
+        <li><b>Anexo A:</b> registre los indicadores y, en cada producto, agregue tantas filas de actividad como necesite (código, nombre, unidad de medida y meta mensual). Complete la <b>Ficha</b> de cada actividad (tipo de actividad, objetivo, atenciones, beneficiarios, lugares de ejecución).</li>
+        <li><b>Anexo B:</b> las actividades del Anexo A aparecen solas; agregue debajo de cada una sus insumos con el presupuesto mensual MINCETUR. Registre también los gastos de operación. <span id="olClas"></span></li>
+        <li id="olC"><b>Anexo C (solo CITE privados):</b> registre los aportes del CITE y de la entidad asociada y la programación mensual total por fuentes.</li>
+        <li id="olD"><b>Anexo D (solo CITE privados):</b> registre el monto del primer y del segundo desembolso de la subvención.</li>
+        <li><b>Anexo IV:</b> registre los hitos de cumplimiento y sus indicadores.</li>
+        <li><b>Validar, grabar y descargar:</b> el sistema revisa las reglas de consistencia; si hay errores, no permite grabar. Luego descargue el Excel (un anexo por hoja).</li>
+      </ol>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+        <button class="btn btn-line" onclick="exportJSON()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Guardar copia de respaldo (.json)</button>
+        <label class="btn btn-line" style="cursor:pointer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Abrir copia de respaldo<input type="file" accept=".json" class="hidden" onchange="importJSON(this)"/></label>
+        <button class="btn btn-line" id="btnLoadServer" onclick="loadFromServer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-5.05"/></svg>Recuperar PAA grabado (Google Sheets)</button>
+        <button class="btn btn-line" onclick="resetAll()" style="margin-left:auto;color:var(--red)">Empezar un PAA en blanco</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ ANEXO A ═════════ -->
+<section class="panel" id="panel-A">
+  <div class="card">
+    <div class="card-head"><div><span class="k">Anexo A</span><h2>Plan Anual de Actividades – Año 2027: Programación de Metas y Actividades</h2><p>Programa Presupuestal 087: Incremento de la competitividad del sector artesanía · <b class="citeName"></b></p></div>
+      <button class="mini solid" onclick="addIndicador()">+ Agregar indicador</button></div>
+    <div class="card-body">
+      <div class="section-title">Programación de indicadores</div>
+      <div class="tbl-wrap" style="max-height:none"><table class="grid-t" id="tblInd"></table></div>
+      <p class="hint" style="margin-top:6px">Variación = Resultado final esperado − Línea de base (en la misma unidad del indicador). Para porcentajes, registre el valor numérico (ej.: 45 para 45 %).</p>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div><span class="k">Anexo A</span><h2>Programación de metas físicas</h2><p>Agregue en cada producto las actividades que programará su CITE. La cantidad anual y los trimestres se calculan solos.</p></div></div>
+    <div class="card-body">
+      <div class="tbl-wrap"><table class="grid-t" id="tblA"></table></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ ANEXO B ═════════ -->
+<section class="panel" id="panel-B">
+  <div class="card">
+    <div class="card-head"><div><span class="k">Anexo B</span><h2>Plan Anual de Actividades – Año 2027: Programación de Presupuesto, fuente de financiamiento MINCETUR</h2><p>Metas financieras en soles · <b class="citeName"></b>. Las actividades vienen del Anexo A; agregue los insumos de cada una.</p></div>
+      <button class="mini solid" onclick="addGasto()">+ Gasto de operación</button></div>
+    <div class="card-body">
+      <div class="note" id="noteB" style="margin-bottom:12px"></div>
+      <div class="tbl-wrap"><table class="grid-t" id="tblB"></table></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ ANEXO C ═════════ -->
+<section class="panel" id="panel-C">
+  <div class="card">
+    <div class="card-head"><div><span class="k">Anexo C</span><h2>Programación del presupuesto (metas financieras) – Total según fuentes de financiamiento</h2><p><b class="citeName"></b>. La programación mensual es el <b>total de todas las fuentes</b> (se precarga con el Anexo B en cursiva). El aporte MINCETUR viene del Anexo B.</p></div></div>
+    <div class="card-body">
+      <div class="note red hidden" id="naC">El Anexo C solo corresponde a los CITE privados. Su CITE es público: no debe llenarlo.</div>
+      <div id="wrapC">
+        <div class="note" style="margin-bottom:12px">Regla por fila: <b>Total año = Aporte MINCETUR + Aporte del CITE (monetario + no monetario) + Aporte de la entidad asociada (monetario + no monetario)</b>. La columna “Dif.” debe quedar en 0. Puede agregar insumos financiados solo con contrapartida.</div>
+        <div class="tbl-wrap"><table class="grid-t" id="tblC"></table></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ ANEXO D ═════════ -->
+<section class="panel" id="panel-D">
+  <div class="card">
+    <div class="card-head"><div><span class="k">Anexo D</span><h2>Programación de desembolso de la subvención económica</h2><p>En soles · <b class="citeName"></b></p></div>
+</div>
+    <div class="card-body">
+      <div class="note red hidden" id="naD">El Anexo D no aplica a los CITE públicos.</div>
+      <div id="wrapD">
+        <div class="tbl-wrap" style="max-width:720px;max-height:none"><table class="grid-t" id="tblD"></table></div>
+        <p class="hint" style="margin-top:8px">(*) Supeditado a la evaluación del cumplimiento de los hitos (Anexo IV). El total debe ser igual al presupuesto MINCETUR del Anexo B (<b data-k="bt:t" data-f="2"></b>).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ ANEXO IV ═════════ -->
+<section class="panel" id="panel-IV">
+  <div class="card">
+    <div class="card-head"><div><span class="k">Anexo IV · Directiva N.° 008</span><h2>Hitos de cumplimiento</h2><p><b class="citeName"></b>. Aplica a CITE públicos y privados. Cada hito puede tener uno o más indicadores.</p></div>
+      <button class="mini solid" onclick="addHito()">+ Agregar hito</button></div>
+    <div class="card-body">
+      <div class="tbl-wrap" style="max-height:none"><table class="grid-t" id="tblIV"></table></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ VALIDACIÓN ═════════ -->
+<section class="panel" id="panel-val">
+  <div class="card">
+    <div class="card-head"><div><span class="k">Reglas de consistencia</span><h2>Control del presupuesto</h2><p id="rulesSub"></p></div></div>
+    <div class="card-body">
+      <div class="rules" id="rulesBox"></div>
+      <div id="afAuthBox" class="hidden" style="margin-top:14px">
+        <div class="note red">Los activos fijos superan el límite. Solo puede grabar si cuenta con <b>sustento técnico y autorización de la DCITAT</b>.</div>
+        <div class="grid g2" style="margin-top:10px">
+          <label style="display:flex;gap:8px;align-items:center;font-size:12.5px;font-weight:600"><input type="checkbox" id="f-afAut" data-b="g::afAutorizado"/> Cuento con autorización de la DCITAT</label>
+          <div class="field"><input id="f-afDoc" data-b="g::afDoc" placeholder="N.° de documento de autorización" maxlength="150"/></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div><span class="k">Revisión</span><h2>Observaciones encontradas</h2></div>
+      <button class="mini solid" onclick="renderVal()">Volver a revisar</button></div>
+    <div class="card-body"><div id="issuesBox"></div></div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div><span class="k">Paso final</span><h2>Grabar y descargar</h2><p>“Grabar PAA” solo se habilita cuando no hay errores. La descarga genera un Excel con un anexo por hoja (y una hoja con las fichas de actividad).</p></div></div>
+    <div class="card-body" style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="grabar()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>Grabar PAA</button>
+      <button class="btn btn-green" onclick="downloadExcel()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Descargar anexos en Excel</button>
+      <span class="hint" id="serverHint" style="align-self:center"></span>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<div class="bottom-bar">
+  <div class="bottom-inner">
+    <div class="kpis">
+      <span>Actividades <b id="k-act">0</b></span>
+      <span>Metas físicas <b data-k="at:t" data-f="0">0</b></span>
+      <span>Presupuesto MINCETUR S/ <b data-k="bt:t" data-f="2">0.00</b></span>
+      <span class="privOnly">Contrapartida S/ <b id="k-contra">0.00</b></span>
+    </div>
+    <button class="btn btn-line" onclick="goTab('val')">Revisar</button>
+    <button class="btn btn-primary" onclick="grabar()">Grabar PAA</button>
+    <button class="btn btn-green" onclick="downloadExcel()">Descargar Excel</button>
+  </div>
+</div>
+
+<footer>Sistema de registro PAA 2027 · Red CITE Artesanía y Turismo · El avance se guarda en este navegador; al grabar, el PAA se registra en la base de datos de la DCITAT.</footer>
+
+<!-- FICHA MODAL -->
+<div class="modal-bg" id="fichaModal">
+  <div class="modal">
+    <div class="modal-head"><div><h3 id="fichaTitle">Ficha de la actividad</h3><small id="fichaSub"></small></div><button class="modal-x" onclick="closeFicha()">✕</button></div>
+    <div class="modal-body" id="fichaBody"></div>
+    <div class="modal-foot"><button class="btn btn-dark" onclick="closeFicha()">Listo</button></div>
+  </div>
+</div>
+
+<!-- RESULT MODAL -->
+<div class="modal-bg" id="resModal">
+  <div class="modal" style="max-width:720px">
+    <div class="modal-head"><div><h3 id="resTitle"></h3><small id="resSub"></small></div><button class="modal-x" onclick="closeRes()">✕</button></div>
+    <div class="modal-body" id="resBody"></div>
+    <div class="modal-foot" id="resFoot"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div id="gate" class="gate"><div class="gate-box"><img alt="Red CITE Artesanía y Turismo" id="gateLogo"/><h2 id="gateTitle">Cargando su PAA…</h2><p id="gateMsg">Verificando su enlace de acceso.</p></div></div>
+
+<datalist id="dl-clasif"></datalist>
+
+<script>
+const ubigeoData = {"AMAZONAS":{"CHACHAPOYAS":["CHACHAPOYAS","ASUNCION","BALSAS","CHETO","CHILIQUIN","CHUQUIBAMBA","GRANADA","HUANCAS","LA JALCA","LEIMEBAMBA","LEVANTO","MAGDALENA","MARISCAL CASTILLA","MOLINOPAMPA","MONTEVIDEO","OLLEROS","QUINJALCA","SAN FRANCISCO DE DAGUAS","SAN ISIDRO DE MAINO","SOLOCO","SONCHE"],"BAGUA":["BAGUA","ARAMANGO","COPALLIN","EL PARCO","IMAZA","LA PECA"],"BONGARA":["JUMBILLA","CHISQUILLA","CHURUJA","COROSHA","CUISPES","FLORIDA","JAZAN","RECTA","SAN CARLOS","SHIPASBAMBA","VALERA","YAMBRASBAMBA"],"CONDORCANQUI":["NIEVA","EL CENEPA","RIO SANTIAGO"],"LUYA":["LAMUD","CAMPORREDONDO","COCABAMBA","COLCAMAR","CONILA","INGUILPATA","LONGUITA","LONYA CHICO","LUYA","LUYA VIEJO","MARIA","OCALLI","OCUMAL","PISUQUIA","PROVIDENCIA","SAN CRISTOBAL","SAN FRANCISCO DEL YESO","SAN JERONIMO","SAN JUAN DE LOPECANCHA","SANTA CATALINA","SANTO TOMAS","TINGO","TRITA"],"RODRIGUEZ DE MENDOZA":["SAN NICOLAS","CHIRIMOTO","COCHAMAL","HUAMBO","LIMABAMBA","LONGAR","MARISCAL BENAVIDES","MILPUC","OMIA","SANTA ROSA","TOTORA","VISTA ALEGRE"],"UTCUBAMBA":["BAGUA GRANDE","CAJARURO","CUMBA","EL MILAGRO","JAMALCA","LONYA GRANDE","YAMON"]},"ANCASH":{"HUARAZ":["HUARAZ","COCHABAMBA","COLCABAMBA","HUANCHAY","INDEPENDENCIA","JANGAS","LA LIBERTAD","OLLEROS","PAMPAS","PARIACOTO","PIRA","TARICA"],"AIJA":["AIJA","CORIS","HUACLLAN","LA MERCED","SUCCHA"],"ANTONIO RAYMONDI":["LLAMELLIN","ACZO","CHACCHO","CHINGAS","MIRGAS","SAN JUAN DE RONTOY"],"ASUNCION":["CHACAS","ACOCHACA"],"BOLOGNESI":["CHIQUIAN","ABELARDO PARDO LEZAMETA","ANTONIO RAYMONDI","AQUIA","CAJACAY","CANIS","COLQUIOC","HUALLANCA","HUASTA","HUAYLLACAYAN","LA PRIMAVERA","MANGAS","PACLLON","SAN MIGUEL DE CORPANQUI","TICLLOS"],"CARHUAZ":["CARHUAZ","ACOPAMPA","AMASHCA","ANTA","ATAQUERO","MARCARA","PARIAHUANCA","SAN MIGUEL DE ACO","SHILLA","TINCO","YUNGAR"],"CASMA":["CASMA","BUENA VISTA ALTA","COMANDANTE NOEL","YAUTAN"],"CORONGO":["CORONGO","ACO","BAMBAS","CUSCA","LA PAMPA","YANAC","YUPAN"],"HUARI":["HUARI","ANRA","CAJAY","CHAVIN DE HUANTAR","HUACACHI","HUACCHIS","HUACHIS","HUANTAR","MASIN","PAUCAS","PONTO","RAHUAPAMPA","RAPAYAN","SAN MARCOS","SAN PEDRO DE CHANA","UCO"],"HUARMEY":["HUARMEY","COCHAPETI","CULEBRAS","HUAYAN","MALVAS"],"HUAYLAS":["CARAZ","HUALLANCA","HUATA","HUAYLAS","MATO","PAMPAROMAS","PUEBLO LIBRE","SANTA CRUZ","SANTO TORIBIO","YURACMARCA"],"MARISCAL LUZURIAGA":["PISCOBAMBA","CASCA","ELEAZAR GUZMAN BARRON","FIDEL OLIVAS ESCUDERO","LLAMA","LLUMPA","LUCMA","MUSGA"],"OCROS":["OCROS","ACAS","CAJAMARQUILLA","CARHUAPAMPA","COCHAS","CONGAS","LLIPA","SAN CRISTOBAL DE RAJAN","SAN PEDRO","SANTIAGO DE CHILCAS"],"PALLASCA":["CABANA","BOLOGNESI","CONCHUCOS","HUACASCHUQUE","HUANDOVAL","LACABAMBA","LLAPO","PALLASCA","PAMPAS","SANTA ROSA","TAUCA"],"POMABAMBA":["POMABAMBA","HUAYLLAN","PAROBAMBA","QUINUABAMBA"],"RECUAY":["RECUAY","CATAC","COTAPARACO","HUAYLLAPAMPA","LLACLLIN","MARCA","PAMPAS CHICO","PARARIN","TAPACOCHA","TICAPAMPA"],"SANTA":["CHIMBOTE","CACERES DEL PERU","COISHCO","MACATE","MORO","NEPEÑA","SAMANCO","SANTA","NUEVO CHIMBOTE"],"SIHUAS":["SIHUAS","ACOBAMBA","ALFONSO UGARTE","CASHAPAMPA","CHINGALPO","HUAYLLABAMBA","QUICHES","RAGASH","SAN JUAN","SICSIBAMBA"],"YUNGAY":["YUNGAY","CASCAPARA","MANCOS","MATACOTO","QUILLO","RANRAHIRCA","SHUPLUY","YANAMA"],"CARLOS FERMIN FITZCARRALD":["SAN LUIS","SAN NICOLAS","YAUYA"]},"APURIMAC":{"ABANCAY":["ABANCAY","CHACOCHE","CIRCA","CURAHUASI","HUANIPACA","LAMBRAMA","PICHIRHUA","SAN PEDRO DE CACHORA","TAMBURCO"],"ANDAHUAYLAS":["ANDAHUAYLAS","ANDARAPA","CHIARA","HUANCARAMA","HUANCARAY","HUAYANA","KISHUARA","PACOBAMBA","PACUCHA","PAMPACHIRI","POMACOCHA","SAN ANTONIO DE CACHI","SAN JERONIMO","SAN MIGUEL DE CHACCRAMPA","SANTA MARIA DE CHICMO","TALAVERA","TUMAY HUARACA","TURPO","KAQUIABAMBA","JOSÉ MARÍA ARGUEDAS"],"ANTABAMBA":["ANTABAMBA","EL ORO","HUAQUIRCA","JUAN ESPINOZA MEDRANO","OROPESA","PACHACONAS","SABAINO"],"AYMARAES":["CHALHUANCA","CAPAYA","CARAYBAMBA","CHAPIMARCA","COLCABAMBA","COTARUSE","HUAYLLO","JUSTO APU SAHUARAURA","LUCRE","POCOHUANCA","SAN JUAN DE CHACÑA","SAÑAYCA","SORAYA","TAPAIRIHUA","TINTAY","TORAYA","YANACA"],"COTABAMBAS":["TAMBOBAMBA","COTABAMBAS","COYLLURQUI","HAQUIRA","MARA","CHALLHUAHUACHO"],"CHINCHEROS":["CHINCHEROS","ANCO_HUALLO","COCHARCAS","HUACCANA","OCOBAMBA","ONGOY","URANMARCA","RANRACANCHA","ROCCHACC","EL PORVENIR","LOS CHANKAS"],"GRAU":["CHUQUIBAMBILLA","CURPAHUASI","GAMARRA","HUAYLLATI","MAMARA","MICAELA BASTIDAS","PATAYPAMPA","PROGRESO","SAN ANTONIO","SANTA ROSA","TURPAY","VILCABAMBA","VIRUNDO","CURASCO"]},"AREQUIPA":{"AREQUIPA":["AREQUIPA","ALTO SELVA ALEGRE","CAYMA","CERRO COLORADO","CHARACATO","CHIGUATA","JACOBO HUNTER","LA JOYA","MARIANO MELGAR","MIRAFLORES","MOLLEBAYA","PAUCARPATA","POCSI","POLOBAYA","QUEQUEÑA","SABANDIA","SACHACA","SAN JUAN DE SIGUAS","SAN JUAN DE TARUCANI","SANTA ISABEL DE SIGUAS","SANTA RITA DE SIGUAS","SOCABAYA","TIABAYA","UCHUMAYO","VITOR","YANAHUARA","YARABAMBA","YURA","JOSE LUIS BUSTAMANTE Y RIVERO"],"CAMANA":["CAMANA","JOSE MARIA QUIMPER","MARIANO NICOLAS VALCARCEL","MARISCAL CACERES","NICOLAS DE PIEROLA","OCOÑA","QUILCA","SAMUEL PASTOR"],"CARAVELI":["CARAVELI","ACARI","ATICO","ATIQUIPA","BELLA UNION","CAHUACHO","CHALA","CHAPARRA","HUANUHUANU","JAQUI","LOMAS","QUICACHA","YAUCA"],"CASTILLA":["APLAO","ANDAGUA","AYO","CHACHAS","CHILCAYMARCA","CHOCO","HUANCARQUI","MACHAGUAY","ORCOPAMPA","PAMPACOLCA","TIPAN","UÑON","URACA","VIRACO"],"CAYLLOMA":["CHIVAY","ACHOMA","CABANACONDE","CALLALLI","CAYLLOMA","COPORAQUE","HUAMBO","HUANCA","ICHUPAMPA","LARI","LLUTA","MACA","MADRIGAL","SAN ANTONIO DE CHUCA","SIBAYO","TAPAY","TISCO","TUTI","YANQUE","MAJES"],"CONDESUYOS":["CHUQUIBAMBA","ANDARAY","CAYARANI","CHICHAS","IRAY","RIO GRANDE","SALAMANCA","YANAQUIHUA"],"ISLAY":["MOLLENDO","COCACHACRA","DEAN VALDIVIA","ISLAY","MEJIA","PUNTA DE BOMBON"],"LA UNION":["COTAHUASI","ALCA","CHARCANA","HUAYNACOTAS","PAMPAMARCA","PUYCA","QUECHUALLA","SAYLA","TAURIA","TOMEPAMPA","TORO"]},"AYACUCHO":{"HUAMANGA":["AYACUCHO","ACOCRO","ACOS VINCHOS","CARMEN ALTO","CHIARA","OCROS","PACAYCASA","QUINUA","SAN JOSE DE TICLLAS","SAN JUAN BAUTISTA","SANTIAGO DE PISCHA","SOCOS","TAMBILLO","VINCHOS","JESUS NAZARENO","ANDRÉS AVELINO CÁCERES DORREGARAY"],"CANGALLO":["CANGALLO","CHUSCHI","LOS MOROCHUCOS","MARIA PARADO DE BELLIDO","PARAS","TOTOS"],"HUANCA SANCOS":["SANCOS","CARAPO","SACSAMARCA","SANTIAGO DE LUCANAMARCA"],"HUANTA":["HUANTA","AYAHUANCO","HUAMANGUILLA","IGUAIN","LURICOCHA","SANTILLANA","SIVIA","LLOCHEGUA","CANAYRE","UCHURACCAY","PUCACOLPA","CHACA"],"LA MAR":["SAN MIGUEL","ANCO","AYNA","CHILCAS","CHUNGUI","LUIS CARRANZA","SANTA ROSA","TAMBO","SAMUGARI","ANCHIHUAY","ORONCCOY"],"LUCANAS":["PUQUIO","AUCARA","CABANA","CARMEN SALCEDO","CHAVIÑA","CHIPAO","HUAC-HUAS","LARAMATE","LEONCIO PRADO","LLAUTA","LUCANAS","OCAÑA","OTOCA","SAISA","SAN CRISTOBAL","SAN JUAN","SAN PEDRO","SAN PEDRO DE PALCO","SANCOS","SANTA ANA DE HUAYCAHUACHO","SANTA LUCIA"],"PARINACOCHAS":["CORACORA","CHUMPI","CORONEL CASTAÑEDA","PACAPAUSA","PULLO","PUYUSCA","SAN FRANCISCO DE RAVACAYCO","UPAHUACHO"],"PAUCAR DEL SARA SARA":["PAUSA","COLTA","CORCULLA","LAMPA","MARCABAMBA","OYOLO","PARARCA","SAN JAVIER DE ALPABAMBA","SAN JOSE DE USHUA","SARA SARA"],"SUCRE":["QUEROBAMBA","BELEN","CHALCOS","CHILCAYOC","HUACAÑA","MORCOLLA","PAICO","SAN PEDRO DE LARCAY","SAN SALVADOR DE QUIJE","SANTIAGO DE PAUCARAY","SORAS"],"VICTOR FAJARDO":["HUANCAPI","ALCAMENCA","APONGO","ASQUIPATA","CANARIA","CAYARA","COLCA","HUAMANQUIQUIA","HUANCARAYLLA","HUAYA","SARHUA","VILCANCHOS"],"VILCAS HUAMAN":["VILCAS HUAMAN","ACCOMARCA","CARHUANCA","CONCEPCION","HUAMBALPA","INDEPENDENCIA","SAURAMA","VISCHONGO"]},"CAJAMARCA":{"CAJAMARCA":["CAJAMARCA","ASUNCION","CHETILLA","COSPAN","ENCAÑADA","JESUS","LLACANORA","LOS BAÑOS DEL INCA","MAGDALENA","MATARA","NAMORA","SAN JUAN"],"CAJABAMBA":["CAJABAMBA","CACHACHI","CONDEBAMBA","SITACOCHA"],"CELENDIN":["CELENDIN","CHUMUCH","CORTEGANA","HUASMIN","JORGE CHAVEZ","JOSE GALVEZ","MIGUEL IGLESIAS","OXAMARCA","SOROCHUCO","SUCRE","UTCO","LA LIBERTAD DE PALLAN"],"CHOTA":["CHOTA","ANGUIA","CHADIN","CHIGUIRIP","CHIMBAN","CHOROPAMPA","COCHABAMBA","CONCHAN","HUAMBOS","LAJAS","LLAMA","MIRACOSTA","PACCHA","PION","QUEROCOTO","SAN JUAN DE LICUPIS","TACABAMBA","TOCMOCHE","CHALAMARCA"],"CONTUMAZA":["CONTUMAZA","CHILETE","CUPISNIQUE","GUZMANGO","SAN BENITO","SANTA CRUZ DE TOLED","TANTARICA","YONAN"],"CUTERVO":["CUTERVO","CALLAYUC","CHOROS","CUJILLO","LA RAMADA","PIMPINGOS","QUEROCOTILLO","SAN ANDRES DE CUTERVO","SAN JUAN DE CUTERVO","SAN LUIS DE LUCMA","SANTA CRUZ","SANTO DOMINGO DE LA CAPILLA","SANTO TOMAS","SOCOTA","TORIBIO CASANOVA"],"HUALGAYOC":["BAMBAMARCA","CHUGUR","HUALGAYOC"],"JAEN":["JAEN","BELLAVISTA","CHONTALI","COLASAY","HUABAL","LAS PIRIAS","POMAHUACA","PUCARA","SALLIQUE","SAN FELIPE","SAN JOSE DEL ALTO","SANTA ROSA"],"SAN IGNACIO":["SAN IGNACIO","CHIRINOS","HUARANGO","LA COIPA","NAMBALLE","SAN JOSE DE LOURDES","TABACONAS"],"SAN MARCOS":["PEDRO GALVEZ","CHANCAY","EDUARDO VILLANUEVA","GREGORIO PITA","ICHOCAN","JOSE MANUEL QUIROZ","JOSE SABOGAL"],"SAN MIGUEL":["SAN MIGUEL","BOLIVAR","CALQUIS","CATILLUC","EL PRADO","LA FLORIDA","LLAPA","NANCHOC","NIEPOS","SAN GREGORIO","SAN SILVESTRE DE COCHAN","TONGOD","UNION AGUA BLANCA"],"SAN PABLO":["SAN PABLO","SAN BERNARDINO","SAN LUIS","TUMBADEN"],"SANTA CRUZ":["SANTA CRUZ","ANDABAMBA","CATACHE","CHANCAYBAÑOS","LA ESPERANZA","NINABAMBA","PULAN","SAUCEPAMPA","SEXI","UTICYACU","YAUYUCAN"]},"CALLAO":{"CALLAO":["CALLAO","BELLAVISTA","CARMEN DE LA LEGUA","LA PERLA","LA PUNTA","VENTANILLA","MI PERU"]},"CUSCO":{"CUSCO":["CUSCO","CCORCA","POROY","SAN JERONIMO","SAN SEBASTIAN","SANTIAGO","SAYLLA","WANCHAQ"],"ACOMAYO":["ACOMAYO","ACOPIA","ACOS","MOSOC LLACTA","POMACANCHI","RONDOCAN","SANGARARA"],"ANTA":["ANTA","ANCAHUASI","CACHIMAYO","CHINCHAYPUJIO","HUAROCONDO","LIMATAMBO","MOLLEPATA","PUCYURA","ZURITE"],"CALCA":["CALCA","COYA","LAMAY","LARES","PISAC","SAN SALVADOR","TARAY","YANATILE"],"CANAS":["YANAOCA","CHECCA","KUNTURKANKI","LANGUI","LAYO","PAMPAMARCA","QUEHUE","TUPAC AMARU"],"CANCHIS":["SICUANI","CHECACUPE","COMBAPATA","MARANGANI","PITUMARCA","SAN PABLO","SAN PEDRO","TINTA"],"CHUMBIVILCAS":["SANTO TOMAS","CAPACMARCA","CHAMACA","COLQUEMARCA","LIVITACA","LLUSCO","QUIÑOTA","VELILLE"],"ESPINAR":["ESPINAR","CONDOROMA","COPORAQUE","OCORURO","PALLPATA","PICHIGUA","SUYCKUTAMBO","ALTO PICHIGUA"],"LA CONVENCION":["SANTA ANA","ECHARATE","HUAYOPATA","MARANURA","OCOBAMBA","QUELLOUNO","KIMBIRI","SANTA TERESA","VILCABAMBA","PICHARI","INKAWASI","VILLA VIRGEN","VILLA KINTIARINA","MEGANTONI"],"PARURO":["PARURO","ACCHA","CCAPI","COLCHA","HUANOQUITE","OMACHA","PACCARITAMBO","PILLPINTO","YAURISQUE"],"PAUCARTAMBO":["PAUCARTAMBO","CAICAY","CHALLABAMBA","COLQUEPATA","HUANCARANI","KOSÑIPATA"],"QUISPICANCHI":["URCOS","ANDAHUAYLILLAS","CAMANTI","CCARHUAYO","CCATCA","CUSIPATA","HUARO","LUCRE","MARCAPATA","OCONGATE","OROPESA","QUIQUIJANA"],"URUBAMBA":["URUBAMBA","CHINCHERO","HUAYLLABAMBA","MACHUPICCHU","MARAS","OLLANTAYTAMBO","YUCAY"]},"HUANCAVELICA":{"HUANCAVELICA":["HUANCAVELICA","ACOBAMBILLA","ACORIA","CONAYCA","CUENCA","HUACHOCOLPA","HUAYLLAHUARA","IZCUCHACA","LARIA","MANTA","MARISCAL CACERES","MOYA","NUEVO OCCORO","PALCA","PILCHACA","VILCA","YAULI","ASCENSION","HUANDO"],"ACOBAMBA":["ACOBAMBA","ANDABAMBA","ANTA","CAJA","MARCAS","PAUCARA","POMACOCHA","ROSARIO"],"ANGARAES":["LIRCAY","ANCHONGA","CALLANMARCA","CCOCHACCASA","CHINCHO","CONGALLA","HUANCA-HUANCA","HUAYLLAY GRANDE","JULCAMARCA","SAN ANTONIO DE ANTAPARCO","SANTO TOMAS DE PATA","SECCLLA"],"CASTROVIRREYNA":["CASTROVIRREYNA","ARMA","AURAHUA","CAPILLAS","CHUPAMARCA","COCAS","HUACHOS","HUAMATAMBO","MOLLEPAMPA","SAN JUAN","SANTA ANA","TANTARA","TICRAPO"],"CHURCAMPA":["CHURCAMPA","ANCO","CHINCHIHUASI","EL CARMEN","LA MERCED","LOCROJA","PAUCARBAMBA","SAN MIGUEL DE MAYOCC","SAN PEDRO DE CORIS","PACHAMARCA","COSME"],"HUAYTARA":["HUAYTARA","AYAVI","CORDOVA","HUAYACUNDO ARMA","LARAMARCA","OCOYO","PILPICHACA","QUERCO","QUITO-ARMA","SAN ANTONIO DE CUSICANCHA","SAN FRANCISCO DE SANGAYAICO","SAN ISIDRO","SANTIAGO DE CHOCORVOS","SANTIAGO DE QUIRAHUARA","SANTO DOMINGO DE CAPILLAS","TAMBO"],"TAYACAJA":["PAMPAS","ACOSTAMBO","ACRAQUIA","AHUAYCHA","COLCABAMBA","DANIEL HERNANDEZ","HUACHOCOLPA","HUARIBAMBA","ÑAHUIMPUQUIO","PAZOS","QUISHUAR","SALCABAMBA","SALCAHUASI","SAN MARCOS DE ROCCHAC","SURCUBAMBA","TINTAY PUNCU","QUICHUAS","ANDAYMARCA","ROBLE","PICHOS","SANTIAGO DE TÚCUMA"]},"HUANUCO":{"HUANUCO":["HUANUCO","AMARILIS","CHINCHAO","CHURUBAMBA","MARGOS","QUISQUI","SAN FRANCISCO DE CAYRAN","SAN PEDRO DE CHAULAN","SANTA MARIA DEL VALLE","YARUMAYO","PILLCO MARCA","YACUS","SAN PABLO DE PILLAO"],"AMBO":["AMBO","CAYNA","COLPAS","CONCHAMARCA","HUACAR","SAN FRANCISCO","SAN RAFAEL","TOMAY KICHWA"],"DOS DE MAYO":["LA UNION","CHUQUIS","MARIAS","PACHAS","QUIVILLA","RIPAN","SHUNQUI","SILLAPATA","YANAS"],"HUACAYBAMBA":["HUACAYBAMBA","CANCHABAMBA","COCHABAMBA","PINRA"],"HUAMALIES":["LLATA","ARANCAY","CHAVIN DE PARIARCA","JACAS GRANDE","JIRCAN","MIRAFLORES","MONZON","PUNCHAO","PUÑOS","SINGA","TANTAMAYO"],"LEONCIO PRADO":["RUPA-RUPA","DANIEL ALOMIAS ROBLES","HERMILIO VALDIZAN","JOSE CRESPO Y CASTILLO","LUYANDO","MARIANO DAMASO BERAUN","PUCAYACU","CASTILLO GRANDE","PUEBLO NUEVO","SANTO DOMINGO DE ANDA"],"MARAÑON":["HUACRACHUCO","CHOLON","SAN BUENAVENTURA","LA MORADA","SANTA ROSA DE ALTO YANAJANCA"],"PACHITEA":["PANAO","CHAGLLA","MOLINO","UMARI"],"PUERTO INCA":["PUERTO INCA","CODO DEL POZUZO","HONORIA","TOURNAVISTA","YUYAPICHIS"],"LAURICOCHA":["JESUS","BAÑOS","JIVIA","QUEROPALCA","RONDOS","SAN FRANCISCO DE ASIS","SAN MIGUEL DE CAURI"],"YAROWILCA":["CHAVINILLO","CAHUAC","CHACABAMBA","APARICIO POMARES","JACAS CHICO","OBAS","PAMPAMARCA","CHORAS"]},"ICA":{"ICA":["ICA","LA TINGUIÑA","LOS AQUIJES","OCUCAJE","PACHACUTEC","PARCONA","PUEBLO NUEVO","SALAS","SAN JOSE DE LOS MOLINOS","SAN JUAN BAUTISTA","SANTIAGO","SUBTANJALLA","TATE","YAUCA DEL ROSARIO"],"CHINCHA":["CHINCHA ALTA","ALTO LARAN","CHAVIN","CHINCHA BAJA","EL CARMEN","GROCIO PRADO","PUEBLO NUEVO","SAN JUAN DE YANAC","SAN PEDRO DE HUACARPANA","SUNAMPE","TAMBO DE MORA"],"NAZCA":["NAZCA","CHANGUILLO","EL INGENIO","MARCONA","VISTA ALEGRE"],"PALPA":["PALPA","LLIPATA","RIO GRANDE","SANTA CRUZ","TIBILLO"],"PISCO":["PISCO","HUANCANO","HUMAY","INDEPENDENCIA","PARACAS","SAN ANDRES","SAN CLEMENTE","TUPAC AMARU INCA"]},"JUNIN":{"HUANCAYO":["HUANCAYO","CARHUACALLANGA","CHACAPAMPA","CHICCHE","CHILCA","CHONGOS ALTO","CHUPURO","COLCA","CULLHUAS","EL TAMBO","HUACRAPUQUIO","HUALHUAS","HUANCAN","HUASICANCHA","HUAYUCACHI","INGENIO","PARIAHUANCA","PILCOMAYO","PUCARA","QUICHUAY","QUILCAS","SAN AGUSTIN","SAN JERONIMO DE TUNAN","SAÑO","SAPALLANGA","SICAYA","SANTO DOMINGO DE ACOBAMBA","VIQUES"],"CONCEPCION":["CONCEPCION","ACO","ANDAMARCA","CHAMBARA","COCHAS","COMAS","HEROINAS TOLEDO","MANZANARES","MARISCAL CASTILLA","MATAHUASI","MITO","NUEVE DE JULIO","ORCOTUNA","SAN JOSE DE QUERO","SANTA ROSA DE OCOPA"],"CHANCHAMAYO":["CHANCHAMAYO","PERENE","PICHANAQUI","SAN LUIS DE SHUARO","SAN RAMON","VITOC"],"JAUJA":["JAUJA","ACOLLA","APATA","ATAURA","CANCHAYLLO","CURICACA","EL MANTARO","HUAMALI","HUARIPAMPA","HUERTAS","JANJAILLO","JULCAN","LEONOR ORDOÑEZ","LLOCLLAPAMPA","MARCO","MASMA","MASMA CHICCHE","MOLINOS","MONOBAMBA","MUQUI","MUQUIYAUYO","PACA","PACCHA","PANCAN","PARCO","POMACANCHA","RICRAN","SAN LORENZO","SAN PEDRO DE CHUNAN","SAUSA","SINCOS","TUNAN MARCA","YAULI","YAUYOS"],"JUNIN":["JUNIN","CARHUAMAYO","ONDORES","ULCUMAYO"],"SATIPO":["SATIPO","COVIRIALI","LLAYLLA","MAZAMARI","PAMPA HERMOSA","PANGOA","RIO NEGRO","RIO TAMBO","VIZCATÁN DEL ENE"],"TARMA":["TARMA","ACOBAMBA","HUARICOLCA","HUASAHUASI","LA UNION","PALCA","PALCAMAYO","SAN PEDRO DE CAJAS","TAPO"],"YAULI":["LA OROYA","CHACAPALPA","HUAY-HUAY","MARCAPOMACOCHA","MOROCOCHA","PACCHA","SANTA BARBARA DE CARHUACAYAN","SANTA ROSA DE SACCO","SUITUCANCHA","YAULI"],"CHUPACA":["CHUPACA","AHUAC","CHONGOS BAJO","HUACHAC","HUAMANCACA CHICO","SAN JUAN DE YSCOS","SAN JUAN DE JARPA","TRES DE DICIEMBRE","YANACANCHA"]},"LA LIBERTAD":{"TRUJILLO":["TRUJILLO","EL PORVENIR","FLORENCIA DE MORA","HUANCHACO","LA ESPERANZA","LAREDO","MOCHE","POROTO","SALAVERRY","SIMBAL","VICTOR LARCO HERRERA"],"ASCOPE":["ASCOPE","CHICAMA","CHOCOPE","MAGDALENA DE CAO","PAIJAN","RAZURI","SANTIAGO DE CAO","CASA GRANDE"],"BOLIVAR":["BOLIVAR","BAMBAMARCA","CONDORMARCA","LONGOTEA","UCHUMARCA","UCUNCHA"],"CHEPEN":["CHEPEN","PACANGA","PUEBLO NUEVO"],"JULCAN":["JULCAN","CALAMARCA","CARABAMBA","HUASO"],"OTUZCO":["OTUZCO","AGALLPAMPA","CHARAT","HUARANCHAL","LA CUESTA","MACHE","PARANDAY","SALPO","SINSICAP","USQUIL"],"PACASMAYO":["SAN PEDRO DE LLOC","GUADALUPE","JEQUETEPEQUE","PACASMAYO","SAN JOSE"],"PATAZ":["TAYABAMBA","BULDIBUYO","CHILLIA","HUANCASPATA","HUAYLILLAS","HUAYO","ONGON","PARCOY","PATAZ","PIAS","SANTIAGO DE CHALLAS","TAURIJA","URPAY"],"SANCHEZ CARRION":["HUAMACHUCO","CHUGAY","COCHORCO","CURGOS","MARCABAL","SANAGORAN","SARIN","SARTIMBAMBA"],"SANTIAGO DE CHUCO":["SANTIAGO DE CHUCO","ANGASMARCA","CACHICADAN","MOLLEBAMBA","MOLLEPATA","QUIRUVILCA","SANTA CRUZ DE CHUCA","SITABAMBA"],"GRAN CHIMU":["CASCAS","LUCMA","COMPIN","SAYAPULLO"],"VIRU":["VIRU","CHAO","GUADALUPITO"]},"LAMBAYEQUE":{"CHICLAYO":["CHICLAYO","CHONGOYAPE","ETEN","ETEN PUERTO","JOSE LEONARDO ORTIZ","LA VICTORIA","LAGUNAS","MONSEFU","NUEVA ARICA","OYOTUN","PICSI","PIMENTEL","REQUE","SANTA ROSA","SAÑA","CAYALTI","PATAPO","POMALCA","PUCALA","TUMAN"],"FERREÑAFE":["FERREÑAFE","CAÑARIS","INCAHUASI","MANUEL ANTONIO MESONES MURO","PITIPO","PUEBLO NUEVO"],"LAMBAYEQUE":["LAMBAYEQUE","CHOCHOPE","ILLIMO","JAYANCA","MOCHUMI","MORROPE","MOTUPE","OLMOS","PACORA","SALAS","SAN JOSE","TUCUME"]},"LIMA":{"LIMA":["LIMA","ANCON","ATE","BARRANCO","BREÑA","CARABAYLLO","CHACLACAYO","CHORRILLOS","CIENEGUILLA","COMAS","EL AGUSTINO","INDEPENDENCIA","JESUS MARIA","LA MOLINA","LA VICTORIA","LINCE","LOS OLIVOS","LURIGANCHO","LURIN","MAGDALENA DEL MAR","PUEBLO LIBRE","MIRAFLORES","PACHACAMAC","PUCUSANA","PUENTE PIEDRA","PUNTA HERMOSA","PUNTA NEGRA","RIMAC","SAN BARTOLO","SAN BORJA","SAN ISIDRO","SAN JUAN DE LURIGANCHO","SAN JUAN DE MIRAFLORES","SAN LUIS","SAN MARTIN DE PORRES","SAN MIGUEL","SANTA ANITA","SANTA MARIA DEL MAR","SANTA ROSA","SANTIAGO DE SURCO","SURQUILLO","VILLA EL SALVADOR","VILLA MARIA DEL TRIUNFO"],"BARRANCA":["BARRANCA","PARAMONGA","PATIVILCA","SUPE","SUPE PUERTO"],"CAJATAMBO":["CAJATAMBO","COPA","GORGOR","HUANCAPON","MANAS"],"CANTA":["CANTA","ARAHUAY","HUAMANTANGA","HUAROS","LACHAQUI","SAN BUENAVENTURA","SANTA ROSA DE QUIVES"],"CAÑETE":["SAN VICENTE DE CAÑETE","ASIA","CALANGO","CERRO AZUL","CHILCA","COAYLLO","IMPERIAL","LUNAHUANA","MALA","NUEVO IMPERIAL","PACARAN","QUILMANA","SAN ANTONIO","SAN LUIS","SANTA CRUZ DE FLORES","ZUÑIGA"],"HUARAL":["HUARAL","ATAVILLOS ALTO","ATAVILLOS BAJO","AUCALLAMA","CHANCAY","IHUARI","LAMPIAN","PACARAOS","SAN MIGUEL DE ACOS","SANTA CRUZ DE ANDAMARCA","SUMBILCA","VEINTISIETE DE NOVIEMBRE"],"HUAROCHIRI":["MATUCANA","ANTIOQUIA","CALLAHUANCA","CARAMPOMA","CHICLA","CUENCA","HUACHUPAMPA","HUANZA","HUAROCHIRI","LAHUAYTAMBO","LANGA","LARAOS","MARIATANA","RICARDO PALMA","SAN ANDRES DE TUPICOCHA","SAN ANTONIO","SAN BARTOLOME","SAN DAMIAN","SAN JUAN DE IRIS","SAN JUAN DE TANTARANCHE","SAN LORENZO DE QUINTI","SAN MATEO","SAN MATEO DE OTAO","SAN PEDRO DE CASTA","SAN PEDRO DE HUANCAYRE","SANGALLAYA","SANTA CRUZ DE COCACHACRA","SANTA EULALIA","SANTIAGO DE ANCHUCAYA","SANTIAGO DE TUNA","SANTO DOMINGO DE LOS OLLEROS","SURCO"],"HUAURA":["HUACHO","AMBAR","CALETA DE CARQUIN","CHECRAS","HUALMAY","HUAURA","LEONCIO PRADO","PACCHO","SANTA LEONOR","SANTA MARIA","SAYAN","VEGUETA"],"OYON":["OYON","ANDAJES","CAUJUL","COCHAMARCA","NAVAN","PACHANGARA"],"YAUYOS":["YAUYOS","ALIS","AYAUCA","AYAVIRI","AZANGARO","CACRA","CARANIA","CATAHUASI","CHOCOS","COCHAS","COLONIA","HONGOS","HUAMPARA","HUANCAYA","HUANGASCAR","HUANTAN","HUAÑEC","LARAOS","LINCHA","MADEAN","MIRAFLORES","OMAS","PUTINZA","QUINCHES","QUINOCAY","SAN JOAQUIN","SAN PEDRO DE PILAS","TANTA","TAURIPAMPA","TOMAS","TUPE","VIÑAC","VITIS"]},"LORETO":{"MAYNAS":["IQUITOS","ALTO NANAY","FERNANDO LORES","INDIANA","LAS AMAZONAS","MAZAN","NAPO","PUNCHANA","TORRES CAUSANA","BELEN","SAN JUAN BAUTISTA","PUTUMAYO","ROSA PANDURO","TENIENTE MANUEL CLAVERO","YAGUAS"],"ALTO AMAZONAS":["YURIMAGUAS","BALSAPUERTO","JEBEROS","LAGUNAS","SANTA CRUZ","TENIENTE CESAR LOPEZ ROJAS"],"LORETO":["NAUTA","PARINARI","TIGRE","TROMPETEROS","URARINAS"],"MARISCAL RAMON CASTILLA":["RAMON CASTILLA","PEBAS","YAVARI","SAN PABLO"],"REQUENA":["REQUENA","ALTO TAPICHE","CAPELO","EMILIO SAN MARTIN","MAQUIA","PUINAHUA","SAQUENA","SOPLIN","TAPICHE","JENARO HERRERA","YAQUERANA"],"UCAYALI":["CONTAMANA","INAHUAYA","PADRE MARQUEZ","PAMPA HERMOSA","SARAYACU","VARGAS GUERRA"],"DATEM DEL MARAÑON":["BARRANCA","CAHUAPANAS","MANSERICHE","MORONA","PASTAZA","ANDOAS"]},"MADRE DE DIOS":{"TAMBOPATA":["TAMBOPATA","INAMBARI","LAS PIEDRAS","LABERINTO"],"MANU":["MANU","FITZCARRALD","MADRE DE DIOS","HUEPETUHE"],"TAHUAMANU":["IÑAPARI","IBERIA","TAHUAMANU"]},"MOQUEGUA":{"MARISCAL NIETO":["MOQUEGUA","CARUMAS","CUCHUMBAYA","SAMEGUA","SAN CRISTOBAL","TORATA"],"GENERAL SANCHEZ CERR":["OMATE","CHOJATA","COALAQUE","ICHUÑA","LA CAPILLA","LLOQUE","MATALAQUE","PUQUINA","QUINISTAQUILLAS","UBINAS","YUNGA"],"ILO":["ILO","EL ALGARROBAL","PACOCHA"]},"PASCO":{"PASCO":["CHAUPIMARCA","HUACHON","HUARIACA","HUAYLLAY","NINACACA","PALLANCHACRA","PAUCARTAMBO","SAN FRANCISCO DE ASIS DE YARUSYACAN","SIMON BOLIVAR","TICLACAYAN","TINYAHUARCO","VICCO","YANACANCHA"],"DANIEL ALCIDES CARRI":["YANAHUANCA","CHACAYAN","GOYLLARISQUIZGA","PAUCAR","SAN PEDRO DE PILLAO","SANTA ANA DE TUSI","TAPUC","VILCABAMBA"],"OXAPAMPA":["OXAPAMPA","CHONTABAMBA","HUANCABAMBA","PALCAZU","POZUZO","PUERTO BERMUDEZ","VILLA RICA","CONSTITUCIÓN"]},"PIURA":{"PIURA":["PIURA","CASTILLA","CATACAOS","CURA MORI","EL TALLAN","LA ARENA","LA UNION","LAS LOMAS","TAMBO GRANDE","26 DE OCTUBRE"],"AYABACA":["AYABACA","FRIAS","JILILI","LAGUNAS","MONTERO","PACAIPAMPA","PAIMAS","SAPILLICA","SICCHEZ","SUYO"],"HUANCABAMBA":["HUANCABAMBA","CANCHAQUE","EL CARMEN DE LA FRONTERA","HUARMACA","LALAQUIZ","SAN MIGUEL DE EL FAIQUE","SONDOR","SONDORILLO"],"MORROPON":["CHULUCANAS","BUENOS AIRES","CHALACO","LA MATANZA","MORROPON","SALITRAL","SAN JUAN DE BIGOTE","SANTA CATALINA DE MOSSA","SANTO DOMINGO","YAMANGO"],"PAITA":["PAITA","AMOTAPE","ARENAL","COLAN","LA HUACA","TAMARINDO","VICHAYAL"],"SULLANA":["SULLANA","BELLAVISTA","IGNACIO ESCUDERO","LANCONES","MARCAVELICA","MIGUEL CHECA","QUERECOTILLO","SALITRAL"],"TALARA":["PARIÑAS","EL ALTO","LA BREA","LOBITOS","LOS ORGANOS","MANCORA"],"SECHURA":["SECHURA","BELLAVISTA DE LA UNION","BERNAL","CRISTO NOS VALGA","VICE","RINCONADA LLICUAR"]},"PUNO":{"PUNO":["PUNO","ACORA","AMANTANI","ATUNCOLLA","CAPACHICA","CHUCUITO","COATA","HUATA","MAÑAZO","PAUCARCOLLA","PICHACANI","PLATERIA","SAN ANTONIO","TIQUILLACA","VILQUE"],"AZANGARO":["AZANGARO","ACHAYA","ARAPA","ASILLO","CAMINACA","CHUPA","JOSE DOMINGO CHOQUEHUANCA","MUÑANI","POTONI","SAMAN","SAN ANTON","SAN JOSE","SAN JUAN DE SALINAS","SANTIAGO DE PUPUJA","TIRAPATA"],"CARABAYA":["MACUSANI","AJOYANI","AYAPATA","COASA","CORANI","CRUCERO","ITUATA","OLLACHEA","SAN GABAN","USICAYOS"],"CHUCUITO":["JULI","DESAGUADERO","HUACULLANI","KELLUYO","PISACOMA","POMATA","ZEPITA"],"EL COLLAO":["ILAVE","CAPAZO","PILCUYO","SANTA ROSA","CONDURIRI"],"HUANCANE":["HUANCANE","COJATA","HUATASANI","INCHUPALLA","PUSI","ROSASPATA","TARACO","VILQUE CHICO"],"LAMPA":["LAMPA","CABANILLA","CALAPUJA","NICASIO","OCUVIRI","PALCA","PARATIA","PUCARA","SANTA LUCIA","VILAVILA"],"MELGAR":["AYAVIRI","ANTAUTA","CUPI","LLALLI","MACARI","NUÑOA","ORURILLO","SANTA ROSA","UMACHIRI"],"MOHO":["MOHO","CONIMA","HUAYRAPATA","TILALI"],"SAN ROMAN":["JULIACA","CABANA","CABANILLAS","CARACOTO","SAN MIGUEL"],"SANDIA":["SANDIA","CUYOCUYO","LIMBANI","PATAMBUCO","PHARA","QUIACA","SAN JUAN DEL ORO","YANAHUAYA","ALTO INAMBARI","SAN PEDRO DE PUTINA PUNCO"],"YUNGUYO":["YUNGUYO","ANAPIA","COPANI","CUTURAPI","OLLARAYA","TINICACHI","UNICACHI"],"SAN ANTONIO DE PUTINA":["PUTINA","ANANEA","PEDRO VILCA APAZA","QUILCAPUNCU","SINA"]},"SAN MARTIN":{"MOYOBAMBA":["MOYOBAMBA","CALZADA","HABANA","JEPELACIO","SORITOR","YANTALO"],"BELLAVISTA":["BELLAVISTA","ALTO BIAVO","BAJO BIAVO","HUALLAGA","SAN PABLO","SAN RAFAEL"],"EL DORADO":["SAN JOSE DE SISA","AGUA BLANCA","SAN MARTIN","SANTA ROSA","SHATOJA"],"HUALLAGA":["SAPOSOA","ALTO SAPOSOA","EL ESLABON","PISCOYACU","SACANCHE","TINGO DE SAPOSOA"],"LAMAS":["LAMAS","ALONSO DE ALVARADO","BARRANQUITA","CAYNARACHI","CUÑUMBUQUI","PINTO RECODO","RUMISAPA","SAN ROQUE DE CUMBAZA","SHANAO","TABALOSOS","ZAPATERO"],"MARISCAL CACERES":["JUANJUI","CAMPANILLA","HUICUNGO","PACHIZA","PAJARILLO"],"PICOTA":["PICOTA","BUENOS AIRES","CASPISAPA","PILLUANA","PUCACACA","SAN CRISTOBAL","SAN HILARION","SHAMBOYACU","TINGO DE PONASA","TRES UNIDOS"],"RIOJA":["RIOJA","AWAJUN","ELIAS SOPLIN VARGAS","NUEVA CAJAMARCA","PARDO MIGUEL","POSIC","SAN FERNANDO","YORONGOS","YURACYACU"],"SAN MARTIN":["TARAPOTO","ALBERTO LEVEAU","CACATACHI","CHAZUTA","CHIPURANA","EL PORVENIR","HUIMBAYOC","JUAN GUERRA","LA BANDA DE SHILCAYO","MORALES","PAPAPLAYA","SAN ANTONIO","SAUCE","SHAPAJA"],"TOCACHE":["TOCACHE","NUEVO PROGRESO","POLVORA","SHUNTE","UCHIZA"]},"TACNA":{"TACNA":["TACNA","ALTO DE LA ALIANZA","CALANA","CIUDAD NUEVA","INCLAN","PACHIA","PALCA","POCOLLAY","SAMA","CORONEL GREGORIO ALBARRACIN LANCHIPA","LA YARADA-LOS PALOS"],"CANDARAVE":["CANDARAVE","CAIRANI","CAMILACA","CURIBAYA","HUANUARA","QUILAHUANI"],"JORGE BASADRE":["LOCUMBA","ILABAYA","ITE"],"TARATA":["TARATA","HEROES ALBARRACIN","ESTIQUE","ESTIQUE-PAMPA","SITAJARA","SUSAPAYA","TARUCACHI","TICACO"]},"TUMBES":{"TUMBES":["TUMBES","CORRALES","LA CRUZ","PAMPAS DE HOSPITAL","SAN JACINTO","SAN JUAN DE LA VIRGEN"],"CONTRALMIRANTE VILLA":["ZORRITOS","CASITAS","CANOAS DE PUNTA SAL"],"ZARUMILLA":["ZARUMILLA","AGUAS VERDES","MATAPALO","PAPAYAL"]},"UCAYALI":{"CORONEL PORTILLO":["CALLERIA","CAMPOVERDE","IPARIA","MASISEA","YARINACOCHA","NUEVA REQUENA","MANANTAY"],"ATALAYA":["RAYMONDI","SEPAHUA","TAHUANIA","YURUA"],"PADRE ABAD":["PADRE ABAD","IRAZOLA","CURIMANA","NESHUYA","ALEXANDER VON HUMBOLDT"],"PURUS":["PURUS"]}};
+const LOGO_DARK = "iVBORw0KGgoAAAANSUhEUgAAAY0AAAB4CAYAAAAOj67PAAA1bklEQVR42u2dd7gkZZXwf9Xd994JDEMGxQAi4DqC4LoqghgxoMuCgWRAXMBAlP3MuPqZECOIYkIlCIYFMQCurOKQh6QIIqIuChJGQJgRhpl7b4fvj3POV++tqdhd1V09vOd56rkz3dVVbzjvySFYsmTHBtAF3ggcAWwPTOChbtADVgI/Bz4C/C/QAtp+aTx48DAsCJYs2RHgBODdfjnGBu4BXgNc5RmHBw8ehgkN4ABlGB3VODzUW9toA48BLgJ21f+3/NJ48OBhWEzjXcosAv2/hxprhsogOsB6wIWecXjw4GHYTOPJ+tczjPGBpjL69T3j8ODBw7CZRtMvw9junWccHjx4GDrh8eAZhwcPHjx4puEZhwcPHjx4puEhP+PwpkcPHjx4puEhF+N4LhJl5ffYgwcPnml4SNzPjjKO84FtkNwOv88ePHjwTMNDLDSBWWBD4IPKNIIRjynIedVlHFWOqy5rMWp8aEauYMj7Pkp8KnuPh/pu7yxddxlHD3geYZmRQD8bBeR9r+ULdammOkGvBnvTK0AIbB876wijaOh8uglzauh9nTHZ915N1nao4/BMY92W5iaR4pOjrk21EJhK0Xo6wCOqIXUdxlc28ZgHLCiofXWBFSWOYTHpAQpdYI1e7YgkOa5lfhoRRrEFsDWwke7F34E/A/c68y2TGEbxb7Veg8J6esaK4JPdOws8VMIYpnR+RXF6Zb/r65mGh6qFkjbwWWBfkkOBO4rEtwG/AM4G/uoQm7LG8WbgE+QLSe7q++8CnglMl6StXQA81Xl+3HsfAe4ErgV+BFys762CkQ5D67WAjNcDBwH/gvjdXFgBXAN8E/iewzx6Jez7x4E3KSOeB5yIVIrut9inzelk4N8oFuLe0d9fCuw9AI7b2N8IfKogTt+jOL26nzX2TMPDMGB9xMeSBpsgjvs9gPcC7wO+UjKhXJBjHFGJcFXJa7FRjjFsDDwe2AU4CrgEqRF37ZgxDhvrU4FTdT4GsxHJeAPgpXq9RZnL8pIY9SJdcyOsC0uanz23Q/7wdiPc65c0hvl94PQaBvBreEe4h2FAWxF2NgcBmFUC8mXg8IIHMo+Ul3ccgcNoygR7dyfnWnSA5wOXAfuXvB5VgkXyPVPHvoviwax+P6EEvOUIrx1gRhnHtSpIwOBO4yj+lcV05zvMMY5A92L2uFEyXnWHjdNe0/AwDHBt8gFwLnAeYeHFBcDOwIEqgXX0vs8iocO3U46pKjqOpcDnUqR3s3/POoSgrLUwqe/TwG+c+U0CWwEvRpI0jehNIWa7e1TzqLPGYYRxU+CHql3NKr0J1DRzNvBbnduTkP4wr3EI8Dmq5ZWhaZQduWR4+Emdh2tqXKQ4Nd9hhO9C/DUu7i0vGafsuZcpTqXh9BrE3NrX+z3T8DBMMAS9Bjgr5vtTgF8qkTFC+TrgM5Tn33DH8WfgJyNei/OViEbhQ8Cr1ayzgWNa+Qawg2Ni6NVwny0C6mPAlsowLKz2GOCkyP1XA98B9kR8GicBx48BHl8W892kMpP5zr1nIM7+tGeVNabbq8Zpb57yMApYoARwnmOemAJu0gMWOOabnSscx6SeAfsbd1VtClrszN811zSBH6j0bY7kNuL3eQ2hY7yuZqktESet26vnY8oQ3Dm614XA05VhNKh/vkrTmYuZ2zaKGfdG+t1kZO5V4vREVTjtmYaHUUBXCaB7dfUw/TkisS4sWSKLk4qTDlcVOQNR6MSsRVs/n1TN61yHGPeAfSpekzJoyktV2u7ovt6NRK41nf3vRK4m8DfH3NKrOR53Evat3/vGAqe9ecrDqAhLKwb/2sAzIir3A85BKFNCBNgLuDXGzGM26j+oyWSUzLWB+H/2I7THP2VIDG0Q2InQ6TyBhA2vdphGEhGuq8mt7mA4vWcGTt8GvIzQp+Z9Gh7GAlY5EpcL+yARQmZ6CYArKpLEQJyWi1Lumx3xOln29J0RwrAYMe2tpr5EdpMIo/8L+ZzQnmEMhtPr6VXZ+nqm4WEUpot/RWLL3eipnYDdHWI9gUQKnTtCqXqqJus2ETnwVZVZKRPaCXPwMFoYGKc90/AwCqbxPL2SpKAJJF7/TUimcJmRUxDa2S9Fsnqj4Ymmuq+sgfQYAP/kMAuA+ygvQ70quDMyth2Iz1uIggkSXuPoD6evBD4fc2YMpx9y1taXEfEwtmBmGCtodzmSEX5FBQzDPSx/QvIB6sxge0j5Exyie71DYNs13EuAq5RITehnLwCeANxBfPmOIKJRet9Gf+t+W9U47ZmGh1Eg9p8RG7cxhGcidliTlr6nDGNSNY6qYD7iG0hKhDJHbp7s7UGYQ4u5kYxd5/oA8CzC6KIA+PYgkmLF4CZO3gNsrgxiAZLl/0rCrpKuf8OytvdF6nOtqkhgWNdhnl5JazcwTvuQWw/DVqEBvg68SKXPFyHx/IGjcXxWzRkzFePoaiRJbhVhZVn3mnaIWVXwkL5jJnKYt1Ei+zHCCrEtJaiXEobg1lEwaAAPE+ZbGDPZEynAuA1rh6FuCnxBBYbzVIjosu73FqkKpx+pCqe9puFhFDDpSNg9JSRfAw5T4jmFZAbvwgChgTmEpechRRGTnm8ms5OAW0qWfG0MH0ZyGMw0Nwk8Dklym6fE1cqL3A4cOgaE1LSiLwGvQnI2ZvSzvZASKb9AkjlngO2QQpWb6f/3AJYhNbcewJuqiuDTc3Pi9MnAzf3g9Lgxjbogjpd+ipssoolcXefzJnCsah3bqLT0TOA4Japl1VlyCwV2gG31yoIfKdMoY9/d+aPaVtKazSizaAK/UtPNPWNitrHxvU7Xz+Y5jSRs7qWXC9OE0T03Ul6plG4M7lXNNDsR7bpKmuji9DZ6ZcEFyjQK4/S4mKd6DrGuw+WlnmKwnhK+hfp3fszergIO1vW17z8EvILyKrua/2Kq4PPK3G9rwjSRMYaGo118ACle+L+Mj53f1uwfqmkcryartJDPKeB+4J1I8cpV5Iu4yoKFEfxbUOG8A8JwcsO1Kuns1LBxelw0jSAivdRFFfSQDzFdp/akmiXc740pXK4E4yV674SaKi4acO/tPbcgBQLzMiFT5cusSHoBUsU2qQlTWwntbUghv8uV2ML4OYbdLnXvR0yQ+6p56snKQHtIWPWtus/f1/W2ufZK2PerkaKPhn83VGi5mNY5LHBw++EK3mfP+kOfOH1Pv2MKlizZcVXFnHdQtbKBRNq8mrAhzqgkfTOT7IVUXu3WlIHYuO5E7MV1zhyOCgdei4vHu3HOXbBaSK6pZoKwrtjDzA3BHccOhVUIycPSftcpTcOI38+AX9doXF9HbO3rUaw376MVohVLkwhgXOXWMoll0CeTL3MMeaq3uj2yu+sAATV7e8PRIGaZ23u94TCWTsX416tYY4vicKfgWLt1xum6M43AMW9YtE27BmN6CGmcs6sufhMPWQiaF6okkD1GT4C7j3I86CZI01WWRhn2mveLY1bdd1KvXsw8rIz+/aPC6bozDct4XUZYTnnUh87CRC9VpuHNKR489MfAPcylddZP/YeI6S5wmEkbCeRYBbwD+KnDZIZuNqi7dPonxClYFynNkP2SMVhDDx481B/MJLWhMoxtgccCj9FrCyR3p42UlLlwVAxjXJjGMsJs2DqN63okyqXhpSYPHjz0Ca5P4rvKMGYJ/S5Wnn8p0mtmKek9SR7VTMPg0hqq1Q3EpnhDjTQgDx48jB+YCf4kJJ+lTVjk0Qo+fk2/u4caRJY1ar6YHaRaZt0IcyPC0Lym4cGDh34ZxiHAkUhoPKpdGI05Bnir3leLemN1ZRpWqOw2xKdRN8Ls/RoeHq0QrY7gYTCh+LVICD9IJYSWahf3IdUQTiKMzqyF4FzX6CnLz7iasIxyp2bjA/FrrECyTX2+xtqHIg/z7Vb4/CymX6RExbDCqjtDeGeRdbf8iV7K7xrM7f9RRl5L3vyDft+V9fwia9TsY5wWqr8IeBdz+8mAZHnfioTXTg+gFAQFcW5smYbBpc4G1wnMr/EgUkjuRfh8jeiBrJrJl/X8Zk7iMwqhZZSCkglq0fyJgLBKcVtNKXE5Fs0BhYKq8w/yPD9vhYLOAO//VsZ90wOcwW6Be3Mz3royDYsOqKM/w+XiXWVsL8L7NaIH4sVIrHkvheneAvyR4uVDpvT5/TDp1crs/4Y4FjsxhDJ6mObpHlcp+VtwxZX62aTOsVXBe5YD1ySsu+G1rcMzkN7tzwC2BjZByg41lWE8BNyLNNa6CbgWSXx9pB+C5AiI6xP2jE+DpRSr7WTjeSJSfj7as8PW6HeIaTwrQzsvblyCRFu62f7bI3kZcVYKW/9HgIspniXeA3YkrHMWJODC35Hk6bHWNNx6U7cWQIZREEZXG/J+jZDZ7wT8PMf91yFd6YKCB34jpPDfIPAI8Fclcj/W5z0SOdT2vo1LeF8euBp4jv57A31nFVr2L5CikI0Ephkg/dnfDjy7j+ffDvw3cBoSMl+EcZhz+FjgP3Pc/z7gk+SvFmHPfyXS7yMJlute3J7AOIri4k7KTANHS3sL8O6M3z2A5Gzk7QkfOMzsfODxObSkrZE6dbm0k7oW27MDNOuouXUd5690Y32+Rkhsj9K/06zdR8OuWaRnxm4UN+31VGqz7m+dApeZoRaopPcGpCrpjUgTqF6M5NdTibqf9+W5rGvfw5F3rij5nfaeVSnmqKeqIHSawzDazhi6MZfbhc+k+LeqpeCrjlSbRyjoqIZ6iIMnSfjT0ffMc5hdXrC1mE549hZIB8EFEWI8CC5GYU3GGDrAyj4Etx7wb8owZlLGM633H1Zgj2otHdfVnxFV71YiDvG6mtGGba57LNJ4x0wszYTL9vXoAbSafq4Gc1vL2gHaRgncDxyzWlDC+4qOjSG8sxGzdx2kLM4Vysjdkj0tvey30avp3GNru8aRlPPSGiN4+yoeQdh3JHpN6PdbAXsTX+wyi0E1U57dBnYGznSEmmAAXAwKjsG9+hFmj3LWJG2ePeDfkeKruRhvHZmGIc6VY0CIG469su5mtGGsRU8lxIU5END2+VWEPaOHiY+BQ/DMrDYL7AP8BPGbPBqi4WzfnoB02NtACWZrwP2YUo3mCwXOsZmmjyyAt6bZlk0rzNz1ajV/tal/oIudqV2Qtq9ZjNQEvceooJeL8daNaZjD5q/A72tMiKMEuW5+DZOi7y1gCx2UAHdUlT80p6prv5lCbOdVrF8v5ko7CxOqzr8QOIG5NvJexjXImPp5jntm+rncfegBn0N8N8Yw4iDOBNNm7UKiJjD8mDCLuZuD4HWRtrA75yRgRYlkv4zjPUhXybS1qZt5uAgT7SmjzlWWvY5MAySyY5r6+jOi470BScapi1/DpPZvV3CQ0g7va5DCanmbU9nvDlIJt6hdOg8zi2vVmxYiOaHfH4lEn+CYXwLHvNVvklvcb1vO3340hbzXhP5dEDFLPVU1rG7KGHrOOrgmjpajlVglaluPL/exn0cXJHhRc0wVuN1BSnnsXmONw9a/qLnOzuDOKixl+hfryjXr7s9wD1IDcZJeh2RwjjpfYxbxJVwMnMJwSg+Yhlj04Jq2sQnSE/oUyu2Z8jBiWw8chrC+c1CS7Mx24A4DjtDPVyixTfrdwhyMcob4uHtr1flQH3P8I3NDObOEiSZwc0Ro3JMwoqeRgOcBYoY9B4komkUS07ZWgvMcJVj2+18RhnJ2chK87fUM9QrQJtfxuzUS+ltmW1xj7E2d+7P1HXXo7RNdwzZhYEARrciEvKORyLpM9atuNjkYD39GFOEvcRB+lAxjAgl3fK0SqapNfCaJ7Y5EQyUxzV6CIGBE+nCV5spgcHZgPgCcTujYnEKqiL4LadmbpBHZZxZ/fzewQwqDCZRAPjnhmTaeM5EQ0SSCM1vAlGjvOYT+i3raWu+Qg9FcoqajJJiPONJfD+yPlMbo5iSuRvDe4exVK2XO0T2wXhNvBd5L+b3UTfDaFCldvithHkodwISv9dWMRgrzjzuD1iPo5cBTkFSHxDWsk3nKpNW7kMSaqoldmdoGwGURxjcqhnGOEsRVDLfn9jEZjD7JjGPI+VTgZQWlzDyaxkokaW4FktB3uUqly1K0MBvnE4HN9Z77Yq57nb95pM5Vev89Cc9b0SdBK3qWgwjuLsopHEzGmPLmKTNejeTmHKxM6OycWoYRvI2R8Oc0s0qS+de0jYOVcJZt5rR3tBGT5bcdBlYHa4jNf38HXxsFzqDt04Qy7lSfZJ2YhiHDtYqAdfdnECGSv1GiFIxg3FZO+TQkCqJdgbSVJoE9GUmWSurxDXCurk+aMFDUnp3nMFl5aTswU/rdmSljsYO1AEnecp/lXo3I337GM2gBwAkl5lOEbULTriBG4lyVgyDthphg3404njdSQWWNY3Jr6Dj+pCazPIKfPf+N+swkgv8IcFbC+bKktM2AA6jOj9fSOf8b8BnqUzrItMEjEtbbcpOuRnJn4sq72D68QRl4IuOtI9O4LEGFqrOm0dSDd+0IzGqmyp+sklZjiGOwd71dCVInxfz0TsTPEueINoR9MVLaoaxDHxedZAdsRQFCkfSsolFPPcqLnrK1P0PNCb/Tv3HX7/XvTUh4ZfTs/yHj3baHOyBRZVfq8yx571DgaYQJnbZuWWc4cCTcpAi6jj73JsRn9o8UwaynhLPKAqdmPvsPJGt+OaM189vZeYnuT5LgFiDhzycRn/lte7GhzivxDNaJadgArxgj01RUMl065LFbR8NP6IFq0n/oZj9zNiQ7KAHJjIlchYRR/1eKRG0q9REljt+N7nGjfDpI+ZIsASaapV1H2AJxQKddW+vf7QiT4tx5XpBD0zFCY1nfmyDO78MQX9SNwK+BDwNPcu7Lk6vzSh1bnFnFnnEOkih4QYLZy571NGAPqo0atPDgryO+w5Uj3P9ehpZu5t6HEV/nRfrvFvF1x3oRIbC2TMMQYznw2xFI62VrScNQWU01fj/i8G1RTknqohLO67PUWeBU/e5/lHk0U9Tj/ZQQlpHs9w8lXmsI8wlmVKP59xzmBfM/1FmIMVND2mXlP1ZH5mFr/CskE75JGDyRRC/crG83TyNQLfFDiKn2eMQ5nmYf70YIHgkEbxXwPX3HqSm0K0pAq9ozY7CTSJXa9UdkHTEivwTp7BfnDzRN7QJlug8iyatxjNdM2tsSmptbdWUahjzXKYKMiz8jOv6bkEibqpu+22E/Ww/nhIMcwwLTcg5PIAwm6T2IZBo3VML5XoJQYJrLIqSQ2yD4ab/bVxnqfwLHAR9HirhdhJRNSNN6ekpM646P5lPJeyWt19uQqsOThAl8We91Nbmeo4msh0QxLUX8DHH4YWv6z8DzExi4jeG/HWHjMpKje+yZezjmskZJZzvJZDeFBAOMau8t8jDJJGf+ttMcHPhWxvnqpWgutdI0XEl93Mo3GIFcjSQmVi2Z2oE5wfn3MImaEYlXICF6caGQhsDfVwnHxvcNkhOk7BmHqZTabxSMPWdv4GPA/wU+qlrZKx0JLcscc9oY4GMeTSMuEzxKFO9DQowvIEzgw2EgeaqrNhzcmFET4Lkp2pxlIicJWbaPX3XunwW+mULQo07hoKSzlka0R8UwukgY8IEk+zIaiM/qZw4O/Bzxc6UxXguhX+u5dWEaNqjLa24KyNpEqL4OlTm1/oZEqXRHYMrLMiu4qvNPkKiYjdSM9TfVKIME9biDhLruzeB2add80o4QwCRiYoEF1yFVTi2HoM54l6VdWKHB+QnzNuKyHKkF9jpHgDMGYgQyrmxI3JgmlcDvhgRouNnmts9bIj6BNIJ3u2rwGyH+s42U6CVVjHDDTzcjvpdEXvy+Bvgp6QmywQhpZg94M7A4QcCyeVhNsU312kA/I0WQCEioAVaH5D47wPcpcsB4VoutS77GMJDVema8MIWwG9M4IwaZpzLWyNTj7wyIC0X3wBjGw3oY29S/T8pdquHmOWMzSsiTCKUxh3P02hlJ+Hoxkp+waYRm9DJMQCbJvoUw2c/93IpbxiXz2TM3RzLYg8hYk6KzLNlvse7hpyievW1neY0yn+tJTtwclaBgddvelrIHLUdzPyRhfVspDOm1iHn3TlcrqQPTMGS9HimjMIz8giql75t1kR9XEZIZMd5cEfm3DKe9apxZoUF6uYKAMM+hKFN6NpJ5eyXD6RFvTr8HkBpaN1O/3vRxkvhBwC8LjLWbYdqBMHLm13odr1L+dspInqXXkgxJ2+zp26l0u8KR2vMWt5xHcZ+BnZG3ISGmM32akhYiwRR7Kx4uqgnjsETDvZBItU6GgLS4D6bUdvboQy5drgPXjEro49oBzyTuNUgSTZUakyHuexhuZqpbSnnfnOajfnIRXPNXb8B1cpsDpY2xg1Rl3QVx4NaZYcQd8rxXK0ZKt++2QNq6WuOehhLsCSSg4WrgK6o57ISUFbmO7F7g6ynTMEHVpNgtcxLhojhkeLo1kojXr5nTosJuRpIGzY8wavN50fPR63MNQaIM57Q6qAOBtjGMsz/DPXwQ5mtUbSI6EKllNEt6k5iytZwiTVv6yXo29diVpBp9jrdFdqKZHaKPIE7DiTFiGCuZ25Uv64pjorbeRygTOB2JaApUCJqNrKlpmJco4cqS4ruOechwpkhxy34z51OjgAo8YxK4ECmVM+pChbZXponnYYj9VB9w/U5zem2M2jzlNjf/TcXS+TAlgMupviS5beonVBI4zmEmVTBeM4HNR2ykaUJHkTE0U9Rjs9m+m2LVes2Gv8xhAq918D3uwEwgIczPIKyMW2cBxuZwiEr8ecvy29qcjfhDbF3XQxzW1h/8TSph/xwpiPg7xFH+iD5jkTL095IcWGCf36+XvesFSKhtWp5MXhwKEvDQzsJzkSTEqwc4j1bX7SQ1tb2D0fbWiDLDpJyVbgFaktbO9kjEN1kLn4Yhza9VYhpXf0bU1PY74A4kCqhKG6jZNj+gh/ho5129it71aqT3cJodtVHS+yw65OOIbTkv47AckpMJC+fdpAw2yenaUYLwCV3HupW+TmIab+3z99cq05hAIpH2R1qsth1CvESvoxWPH0T8jl3E3r1FzHii59uY9xp9VzcHwSuKQz3So8KOVvPSIGBh4kcgyW97jIBxuNGF+2QIpkEJQqsx3meo5vlLoFkHTQPm+jPGnWlYVu2yITANHOJ2FGFiXFDBWubpmWGH93byFW8MEMdqK0WzsTj0L1O8N8h6jnnqBDV3PSeB4TWddfwx0ldgHPwaRZM6DR9nI8TwSGf/ms69XeezjfWKe17aHp/ivGs7UrKNHbiB9Ox0w60N9JlpgsfeehZvZ+1KvUXOtq3zfkhpnO3JdkJXwTQOI7lnho1xpWrZaWfQvtuO0FkeJOzvMco0Rq5pDMufEUdAq2JQrl9jvyGto1XfPFgZx4H6/7LmaBLHbkjUTJpZoYPE+v8257N/rPfHPXPQXhtdhyha6OevVOKNk07NxPMNJMT04TEwUzX7WBPXHNFBit3tGLMHjRjN1a2QG6QwjBkl0P+lxGZCcfLtJPfMMN/VjSpM5IFNkHylxTF7Gu218f4BBThbnweVEV2l7x1WRFWb7IoJpmV/WM1peeBIpJhh3J5Y4MKeylz+OEpHuPkzVqh5CqqNNsrzWZnvuoLhtFo1sEP5WiXECyknI9bdrzSnojk4r1SGEVdK3L2sPPg3U8ZoTM9q6/S7Z3aQbiH0/XQy1P/PU5/S11ULHB/Suc5mSKVuImGQgv/WPfLXKhXbem+IlEBPOheGr6c7OJ0VCXY/ybWUXEHgLUpwZ0rQ7FpIRvX+MVpIlQJ2Vm02tzjh9xwNMWn97Lvvq9mxlTAPm/PbgN4omYbbX/tBqumvbYh5iL7nRr1uQCKAqIAo2Bx+j7SFrLoOVRzjeLkyDvfQDaoSPxEpG+KaNdwsa7P/nxbREpIuu/9nSF0h9NnthOuIGERuZ1zR4nxN4LOIObRFGHHk/gbExn+wSld5e0LnGU+3DwLVrugyWKDrYL0wAue9nRwE0RyuHYeQTSDlSPZQodA0vQOUccwkzA3C4oRE3p8UMhoQ1lLqJqz5DJId/lrm5qlkrVEnReJvKe5adenZArhIH2Owcb89cubcy9b1QiRooZGxhrZff9P9sii8uLG3lUluMGpNwzVNNSp8x+FIBc4d9Ho6EgFRhUms5yDRVRVrNUmMYwapI3R4CdKy7csHlcBMsHa58SZh97Yfpkh9ceu0WiWdZsKzp/TvnkiIoc1xff087jfznN9GbdKBCgzTKg03E94ZIHWTnpTT/LCh/nYyZTwLC5o5N0yZY7+XOz5UKn2xCgRWJ6zJ3PIhQQxz6DrraaVKmmoqOkxNjn8n9J+shxSObDh7Gnf9D1L0s5nj3BijuVQFtMmEZ9p+ftjZg/mRvYnDuQ0y3j0BfBEJuJjMsfZRWJAyBnvehs5vX4M4pZPwbErX7ZsFBUXT+JsJe2P49xjgvaP0adghvKwC4h21a652EB6HWAWR+3slv/8SpHT4KOzcXaQL14kM5sy1wzGtEmCcycsY0zIlOnl9KeZk/RqSQZ8WBdNEkrWuQMI+z4gwhbj7fx/ZV/v8j8o49kpQ803anlRGdVuOQ/g9JPqom7I+RXrFrFGtbX5FZuHlkc//W6/NdM67I2Gx2yDBCBMJa7BGNcVrVbv9ie5PEHnnE/Sst0mPdPpCQYJnOSMfTNlPV0h5HGFjqu8n3O/iSdbZsOistu5/Eg4/EGPKui5lDLZP9zvM8bGKZ92U+1cgPqRegTPYQ3ywX0EqOMThsM1rXrBkyY6rlOMNW8sIkDDKbXRhynI4xhGsy/UguEzjMj0YWb8dZAxPRUI9BzUR9WP6ayDlTLZluHkHdXccj8sYRyFoxGmIC5GSNZuqdme0YrUSqOWqGbQjz+r4JV03YVSahnHyGwmTfrolPnuCMNxuAWGYoEu4N1H1c7UjWc6WbBb7A/C/SrhHVbMmKJmoZEGnzzE2cu5tr8B4khLEigQo5E0ya+bEi24Fa97vOenF7Jvb87yD+Bhu0yvPWLspOFDFGrmCWlAAP/PiXKck/I3Do6JjLnp/FWe8N8qMRtMAypLwbdNORuzftrgLVEoisrH/pET9EWdM5zN42QF7luVPXDViplEWdCrGh86Qx9MZg/XpjOhsdiIEMU1T7hXYvyrn0x0CzpX9rG7F91eCb6NiGmX7MyxCaUPEVj2V83ebRv5/CGIbXVGiCWMpUpLBg4dxhGH1nPcwJtAaERJa68/rS+aggT7XTd7KIyX1nN+WZc6xOV1JGOfswYMHD2MNozCXuP2085SayMMo3CvatSyrpWfc/UWraSbNM0BCEP84JPXSgwcPHtY5pmEMwsIPmwOO3Rxn1j+4N+DYZiPPHGSdLIrkSs80PHjw4JlG/5oBDO7PMALsJp9sjvgz+nlmD0my2TzyzDKI/dLI3D148OBhLGHYdnYLdXwESQbqh2mY9P5ypCTEhKOtLKZY1m2UkS1EEtRW6v8trf4/kJIBRePPjdlcRVh6oMx6UB48PFohSLFieKhwrYbNNCw/42bgHvqry2QLsB+SPFc2xJV/PlCZRtDHfAMkxv1WpPCeZxrlQHNI69glvkJy3hj/XglnsJtxTgZZi6KteNPOZbOkNYl7tvkbeynPiN5XtBlYMMAe5IUs3CnjPXHl7fu5pzaaBoQ2futh0A9MExb8cjuyBSWM0cZpzx6kMqbN8QplGuOer1EXGGXGcVkEBMpp9FTWWhgh6Wd+PcpvWmVMoBMzx/mENaXaSJJuXJHBZs41GgY+BSXjDilzbUfovNXa6iCWnmjhSjehs1ZMwwj6pSUiVF6pr8hzg4hUUIZEuxQp5Oa1jHL2aE+kCF6VAk6gWvFvmVufbFukcFyW1vhL4F6SIwTnIw2JmhljuEE11bjnNPUZ/dSo6iCm2HuRUiD3OYSk4TDIrL3oIXWRnkd269ergb+QHTXZdJjFIn327kjfj8cjOVku01il4/8zEpl5LRLS/0DO8e+G9MOOjt/+fwVSlqffRGT73VOQgqlJ77lV97tIVGkQIfhbIp32dgOepnuziDDh+GG19PxOBfiluie59n2YTMP8GWuAa3Ii5LoANsdlhI1pvImqf2ZheT7fYu3kzCrgBKQPdtPRDP4V8adlwR5Ij+1ox0Gbx0ZIk6IseB/wyYhmbs+YAM5E6kINAg8iFRKWItV9r40Q7zRi2AGeDXw3x3sOBU7NsDLYOzdHKjS8QRlFFjxJx2F9Lu5FOjCeTmhe7iWM/4NIz5YkuEKJcNAn3gZIoM35SL29JPgyUoE7rxXG1soY3ztUoFqc8pvNdK121f1YBVwEfEnXK3Xfh2kmsc26VblcMyLNF72CIROrfsdpG3CHHkrwDrsy4EHCemGdCq5pR5WPwprIPdFrlny1zLpI8xu3f0XcGFZXuBYm1GyoBPc9KtSdj3TPy9vO1Ho5zGSs53ROInigStzvU4bRddbITDyuL6bL3B4TXSWOByDVey9UITmJbjyUMv4ZJbBvob9EXZvT/1GGMZ2yPqsKPNfMTY8DzkYiUg9QhtGJrFfSWnWQAKB9VMA5T8eYOM9hMg1DzosiCFv0mtG/00Mc+3Tk3UUvm+/PHkUaVtXQHNLVSBAi8vw2KGkejQrXIprvZE13XolE/R2ak3GUsSZGXI8DzkI61LUd7bLljDmaiGs9PawHhDV1m3aYcztlLRspY27pM05ACp0W8UuaJrOVaqxdwj4ucddEAYbRBl6mWuEBDq3pMbcnStpaWWFXo8d76/NeTXz716GapwxZNkV6zTboz/lkCLNj5LlVjnkJUuCwXyeWORc3HsKY62RKytKqfInyeu2XW621rcTta0rITqHakuf27IOAjzoEvjXgnKwPyKcGwDWjVZso4/h3h5HkGUNXzZkLSe73QQHaYKar/ZW5NpIIfIF1cs2vG6qJ0kyJLddUNkymYYN6syLGIMSiEfPcKse8O+I06pZwKKse86ik/k6COTKPydKFCcorUe8hfb2DDEnWhKQvIk7lqytiHEZYtwBOciT5JOKaJ+QWR0NapuNvMFjZ8I6aqL6FVOjOWgv7/qUquXdKOPv2zJcowzDLRStj33sJtChp33vA15Hui+e5cx1VwcKyQmODIY+5MUZjHgaYCeBkZaxt59DeoapuXJ9piyT5DhLdYcx4EnF8XoRv5FOl9odDbNIIjhHZAPg8YtevQjM0yfkwxB6fJjXn6YXSiTDJL0fwblD4IvBM5zz3UtZ6Eume2SvxvG2B+DAaZJvKjFEFMZ8n+YYbDm6cjviW/mKft0aEuGWUQg/GbMzrolnKJMQzkIb3LjwNOBL4XES9NWbwBsIoF4MbkOidPBJhI0brLJshrkt7Fpe8lydc3UyruwDPQfwcZTN0Y0x7ZwhW9t1ViH/wLv3tBkg00NOBnZDwUrv/HuAHEWYyKHN7ugo3n42abmLuPRYxbZehZVhY7ecQM38WczWzUw8JRV6pa7O1M5ZeCuNo6/1fRHxcwag0jXE9iD5ENlmKWaaIfCwSLGAI+Z9IGOZyR0rqqTR5AnOjdwLEVjxDet6CScgvVykuTr1uA+8kjHZpJhyoHtJX+i8pUui9kbmO6x5dhvSLaTqfbaZmkyMd/E7q3x3oWl1V8llww4+3TtHobczfAV6fIsRtiYQ6H6h/z0byEpKIez+Mowt8COnvHZe7YULP45BQ3jISem3f/hlxendyMAyzApyKRK3OIObfJyNugncyt41E3FnqICG8L1CBrul7PHgYFOxAfEQ1hy0cxDXm8EbCKI62HrjHOipyE/gq8KucUmyPMHw5Ce6OMJokuAm4PaekPs7wEGGJfoPfI4m2d6jUnMQYTbPfuYK1MOLm9h9PW/+/Rt7v1p5rq/Zxml67EyYSlpk131UJ/ETgNTEMwe75tN6X5fwuIpwembEHJpitAV4HXBD5fha4BQmt/inwQ0czC1Ked4wyDV/OwkMpZo9AVd93OxqFa4bajTDseAdF/I5DjO5HwiwbBQhSUl7MpPM3DywgjNIZdT5QlWBMe8KZm4VcfkX3oEm6fX6Lksw8cTCToQlYsc9jEQftC1U7mVUCucb5/ZTO0xhi2d0HDbdfrVK4y2ztuxeoEFVUQ22lmKXWVzMRKc80Ie5wZRiTETwOnPOxVLXxtHNn/pCXqGba8UzDQ5kmkLOAS2K0hS8w12nechhOQxnG/RQrYJmVG9Mb8nPGgblH52bJXasdM1zafCcrGhe6//dnjCFQ3DkEuFhNLpcj4cCHAv+iQsC0MpNBQ3bzaEhfICzh0nAI/0klvsueuzNhnkiQcg6vRyK8rG6ei8eGBzP6/Q+QcjdJfkRjWAuBZ3lNw0MVcBRz6xd1FNn3V6ns+Q5yNoHrVHL00VLVQlzynWkdixBzYZZ5ZE1OE0pRptFUInaVw8izhJSuEtBdkSCMryGZ7L9DAjP2InRGV6ExGm5vA7xf/z2hfw9H8sjK8oPZ2HfMWB9jDGcVmG+AlKHJY/La0TMND2VrGy3gRiTawpiAaRgnAt9grtOth0Sh+Az56sFKjLhlMmZ17d+DRCB1SHaEgzh9q6QbJ8YQwCSTieGVWzqkBzwR8aH9SCXuAx1Ju2zGYTj+LqRNwyziiP8w1VSzfkJOjeR68pnkbF1ucOaTxlye4JmGhyoYR0MPzd3OwQ6QEMEtHLW+icSAX+m1jMo1DHT9d0H8S89FnMT7IRFA7yfsdZMGyyrQNFyzyjLg44QJZp0cc3NLhwTMLduzg0rdZxNWxA0qWNspFZS6wCeUAccxqUFNnYtzMo37C77vARUmslILFsHoQm49rJtgPgpzin+btROt7LA9iBSja+BLiVQJRkieQ9jHJmnf0r7rIpnBecxHgzAOC4h4n/Muk9rzEP1GRJLuICGq85BIp7JL11jwwAsR38p+xCcglqHpFCmVXjlCefBQ9uGPOsUDRxI0bWQ5/XVvXNe0gGEy9Wil007GOEx7PAcJ1WxWuF/2rvcDL0ain9zINnPKmgM/i4hatNgMUsX1zWSX3EiCdorJxxjR2x2NJo5h/IHsEjlp2t6KjN/avmxWEL82IV/LhpWeaXioGo5CSou77TfN+X1KxQSoSsiqsNxz1fkUZrFAiUwWzJQ07rhKp80MQtlSc8exDKfApOHIxUjQxPORiLtbWLt6q2uOyvKBdJFktqL1p+y5DyGlVJKEnKRcEPv93ao9ZZkA02jyX3IyjWfnZBrGiP/FYdpp6/AXzzQ8VKltgDjF/0RogjKk/q4SpHGtcvv3jENpc9qG+MgdI9qPdwha2gG/fwRzNIn8IZXS7xqiVmiRSE3VNo5C/BNPV23hS0ik1YMO8wsyiGMDKeexFenmuCRYrEzjohTG00xYxwD4ANIFsp/6V4ZPN2RoIzanN5Ce4R999kEZ9xoO3+CZhodRmV/GNWnODvvtGVKhze0VrG2Pt1yDLmGnuG6GqeL2CPHoF/ImudmYb0KS1C4folZoDHXWYR5T+u6bkOCJIxBn/vZIP4lvEV8Y032mMcEtC5puXJzt6bvbOffDTLW/RTLUNxkQ736jGksS8zZmtgSJSmxHtDK7mmqOagMHI/6upPBgY7Ar0G6Onml4qBJ6fX5X9/n8kTAZsZdiDnkJkpsyw1x/wjRSZ+lQkqu2mn15BZLERglEO8ih3Zlf4RKk+F/e0i5lgBHm04FvKlOY1fUy4jWFOLUnkJ7gFyFZzcfk0ISsPW6/hHsD3fvPF2SiR2doCHnwroWYen+YgQvGOD6NhB7PRhiqhSnPIBntp5AeHmz7fqFqdk3PNDx4KHZ4m2qyWeYcwDQC/X0k2esxSuw2VnPPL/TfSc5Hi6G/xjHDDMJordvldAbjMPPJzkj572FphDa/bZHcioNVsv6xmk+2cuawhrUdylnMwPbjgQGEFjOpfgS4LcPU5BZYvFg/m+5Ty3GZxBdJN+26/qozkICU5yMlVyaV8e2qTPlcxcm0qDT7/ET7wIfcehiGScdt7Tvu3frsEJ0JvCrHYVuoB/14xBeyiLCDY5ZtPUDClqH/XhBGvC4lbH62D1LmIs4k4RYQPF2Zx+wQ9s2KWR6u/55WreJf9VqjGtctiLnuQf3dRjrGPTK0NpBSKX8agGmYpP4w4mc5P2FPTBB4iLAeW7eEc9TU+Z8KvI3k0uiBM9YD9fo78A9gPSRnx12DIIVJthAf5LWmcXqm4aFqWI+1o3Smxng+FqL6IySEctsM9d4CABYRRlN1HUKZRCAaSA+EcyinSusqpHgfSL2klyLF7+IYhxHwpwCfVNNPWaXFk5hjR5npm3TNJpkbPDEPcYQ/PQdDj9uzlhL5hxnc3DaBFAM8F8n9iK6hve+jSBb9JPkj4FoZjMNyWF6BZL+nVSa2sTR0bTeO4GQz410tZbTvdDVdb57yUDVcCVyB9HO4VP/95wGkvTqYqEwSfqdD8NKK7DWdg2q/T2MyxpiORYoJlpEAGa0C/FaV1pM0CGMSRwMv0n9X1U/E1udNSH9qN6+nGVm/dsyVFSoaqLb0qZI0JnvmMSq995hbpqWhGsFJEQbVKeG9IH6ufVX7ytNyNojgX5Cxlx0Hrw8gkk/1aGMaPXz28bDhIKR0xe6IbXU3pKxDGYdolNpGE3EOnqCSZzsDt6L9q5Pws63P+zzi9CzTCd11CMJdyhDS8haMWZ2qWlIV9ZuMOE0qI0vS2mz9WjFXM2O+TTUT3VqyqehOpMlSizBE2JjyMY520StRSLJ3X4N0OnyEsDDjoPiHIxx0lDFdHMXBR4t5Kq5P7rh2Yhs3iHOyrQvM2w7ve5HS2EdFDl0R4tpzTBoTSE/rY6kuzNXedSYSQbN3hplqa6Qz46EVmKmM4O2NREvZ+Dr0H5rt9j5vIPWsTiyZAdv4voQUK9zcWdebmZvP0aho/36mWuCZiJl0UPyzxMk7VNhbGrffjwam4druluvfLZwD6U1066Z2ZwehG0N4eyWYKXoO/hyNlOQ+Xs0rLuFKikzpRUwFLaRMw3GI47xB/n4eaVnR3chf9/MAKX2xG+JQbkfOg41vBulhcZ5qV3HE113voMAYTfO5UtfvYMJmT+5zITlhzcUxt4HW3UgF32/nYBjdhPH3iA/ldd/5tgRhqZuAM3Eam/v+PGDM4Wqkz8VHgMMI/YXdyFyS1sxtyNVBcl4+gPgyYgWEdZ1gGpc/Sxd2O5Vmnq0mkqIlBTyMD0xFzAXu1Yz8HZRxWLvandWsdDdzO+M1EsZg3y9HnNM798EwIAw2iOs+aGaTBTFEqqHvPpL47oVNZw1BomiemCBs2VwmSO6oaN/HEa87kZpTT0Oyvs8jtKW7Zqhmylra+G9TIrpzToaBrk/c+JuRtUnSlqJXLwFfGglzsPWZ3wd9W6Ga7j8jJVfujOBf2po1gL8hPW2epdrkvY4GuDY3XLJkx1Wk9+YdV7BwseNUPY2D45AIh/Y6pnXZob5TGeVqxj/UtYg5rKfz3prsEh1XIJFFg66PS5gWq/S+K5KduyUSwmq+j38oY7lZ3385YQhpURNKA3geEl2URqjuQxL1ovO0/++uBCsto3oSycq+w/md/d0UeEbKets4biLMao6OIyrELVYmspOu41b6nkUqFFgv7AeR3uE3qcayTHE+z3raOHZSE1MavlzO3FpqRXFyEVKenpT1uQvJIC/yjuja2Xuei5RfeTySn2H4t1Jpw826XldG8C9VYFlXmcasLtDxKr20mBu+Z7bSNhJS+B7nN55peOgX3EqsSdJoJ+X7HqMp4Fgn3HCjzdISJ1vOWY+DFvkq4T5a8M81QQ2Ef+uiT8OI/5cchhFFno6DeO9VzvyOdYxxeAKezxlYpnmyG5H83FBH97AmfT+IlpPXlJb0XbPAHNMykfv9vTuWdsw6uXPoRZhF3Hq2K8CXQXElzxoNIjik4Z/1BR8Y/1qsWzZ9I/pnIIXFminShhsxcLgyjjeugxrHo9VnM8qS63FScpDx/SDQqcEzehXgWtIzo2tZxru7I8KLscO/BpJW32X8G+EYsT8PcaRl2uaYGwFzEBIXP0F2o5S6g83rNsJkI2+aGv2e+Dwhv5Zjv2YNpBpig9HZU8tYDEuI+jnSbjEgf/SJW39lP6SQnDGOcURKN+v4izFShgcPHjwMxDS+g6TXDxp+OCow38TPkQSh2QgzKKKazugzjHEEY7qnLeAzSG0cH1bswYOH8gjukiU7Wkz4GxE/wPZKdMaBYHaRELWzkHIOZorpV2Oy304iEVWvR8Ilx4WZziKlEk5G4tPLKJngwYMHD/8f/h+IAPklJzbMTgAAAABJRU5ErkJggg==";
+</script>
+<script>
+/* ═══════════ CONFIGURACIÓN ═══════════ */
+// URL del Apps Script (opcional). También se puede pasar como ?u=<url> en el enlace.
+let APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzRy38Sb12KPaemOo_Wx0ZQBCcZCGzwuGXVpwFzThsnDGZi8jabp21zBu8-Ja-VltUc/exec';   // ← pegue aquí la URL /exec del Apps Script (vea Code_PAA_2027.gs)
+let ACCESS_KEY = '', ACCESS = null;   // clave del enlace personal (?k=) y CITE que le corresponde
+const ANIO = 2027, YY = String(ANIO).slice(-2);
+const LIM = { go: 25, af: 10, contra: 10, varAct: 10 };   // % (ajustables por la DCITAT)
+let STORE_KEY = 'paa2027_borrador';
+const DES_LABELS = ['Primer desembolso', 'Segundo desembolso (*)'];
+
+const CITES = {
+  'CITE AREQUIPA':'Privado','CITE AYACUCHO':'Público','CITE CAMÉLIDOS SUDAMERICANOS':'Privado',
+  'CITE CHULUCANAS':'Privado','CITE HUANCAVELICA':'Privado',
+  'CITE SIPÁN':'Público','CITE UCAYALI':'Público','CITE UTCUMBAMBA':'Privado'
+};
+const PRODUCTOS = [
+  {n:1, nombre:'Transferencia Tecnológica',            mod:'Transferencia Tecnológica'},
+  {n:2, nombre:'Servicios de Capacitación',            mod:'Capacitación'},
+  {n:3, nombre:'Investigación, desarrollo e innovación', mod:'I + D + i'},
+  {n:4, nombre:'Difusión de información',              mod:'Difusión de Información'},
+  {n:5, nombre:'Articulación',                         mod:'Articulación'}
+];
+const CLASIF = {"1": {"mod": "Servicios de Transferencia Tecnológica", "serv": [{"n": "Asistencia técnica para necesidades tecnológicas y de innovación", "act": [{"n": "Asistencia técnica", "u": "Asistencia técnica"}]}, {"n": "Acceso a equipamiento con transferencia de conocimiento", "act": [{"n": "Asesoramiento para uso de equipos", "u": "Acceso al equipamiento tecnológico"}]}, {"n": "Diseño, desarrollo y/o mejora de productos, bienes y servicios", "act": [{"n": "Diseño y desarrollo de colecciones", "u": "Colección"}, {"n": "Diseño y/o rediseño de productos artesanales", "u": "Producto artesanal"}, {"n": "Diseño, desarrollo o mejora de productos artesanales", "u": "Producto artesanal"}, {"n": "Diseño y desarrollo de servicios turísticos vinculado a la artesanía", "u": "Servicio turístico"}]}, {"n": "Estudios y análisis técnicos de productos o procesos", "act": [{"n": "Análisis técnico aplicado", "u": "Estudio o análisis técnico"}]}, {"n": "Demostraciones prácticas de maquinaria, equipos y plantas experimentales", "act": [{"n": "Demostración tecnológica", "u": "Demostración tecnológica"}]}, {"n": "Asistencia en gestión de la innovación", "act": [{"n": "Gestión de innovación", "u": "Asistencia técnica"}]}, {"n": "Promoción de concursos de innovación", "act": [{"n": "Promoción de concursos de innovación", "u": "Postulación"}]}, {"n": "Intervenciones innovadoras de articulación turismo–artesanía", "act": [{"n": "Innovación turismo-artesanía", "u": "Servicio turístico"}]}, {"n": "Transferencia de tecnologías desarrolladas por el CITE", "act": [{"n": "Transferencia de tecnologías desarrolladas o adaptadas por el CITE", "u": "Transferencia tecnológica"}]}, {"n": "Implementación tecnológica", "act": [{"n": "Implementación de tecnologías", "u": "Unidad productiva con tecnología implementada"}]}, {"n": "Transferencia de paquetes tecnológicos", "act": [{"n": "Transferencia de paquetes tecnológicos", "u": "Paquete tecnológico transferido"}]}, {"n": "Licenciamiento y explotación de tecnologías y resultados de I+D+i", "act": [{"n": "Gestión de licenciamiento o acuerdos de explotación de tecnologías", "u": "Acuerdo"}]}, {"n": "Desarrollo y mejora de experiencias y servicios turísticos", "act": [{"n": "Diseño y estructuración de experiencias y servicios turísticos", "u": "Experiencia o servicio turístico desarrollado y/o mejorado"}]}, {"n": "Control de calidad de procesos y productos", "act": [{"n": "Control de calidad", "u": "Evaluación de control de calidad"}]}]}, "2": {"mod": "Servicios de capacitación", "serv": [{"n": "Capacitación en producción, gestión, comercialización y tecnología", "act": [{"n": "Capacitación técnico-productiva", "u": "Capacitación"}, {"n": "Capacitación técnico-gestión", "u": "Capacitación"}, {"n": "Capacitación técnico-comercialización", "u": "Capacitación"}, {"n": "Capacitación técnico-tecnología", "u": "Capacitación"}]}, {"n": "Oferta formativa articulada a certificación de competencias", "act": [{"n": "Certificación de competencias", "u": "Programa formativo"}]}, {"n": "Planes de capacitación con Amautas de la Artesanía Peruana", "act": [{"n": "Transmisión de saberes", "u": "Plan de capacitación"}]}]}, "3": {"mod": "Servicios de investigación, desarrollo e innovación", "serv": [{"n": "Investigación aplicada para nuevos planteamientos y soluciones", "act": [{"n": "Investigación aplicada", "u": "Investigación aplicada culminada"}]}, {"n": "Adaptación, desarrollo y optimización de nuevos planteamientos y soluciones tecnológicas", "act": [{"n": "Adaptación tecnológica", "u": "Solución tecnológica adaptada y validada"}]}, {"n": "Diseño y fabricación de prototipos y validación", "act": [{"n": "Diseño y fabricación de prototipos y validación", "u": "Prototipo"}]}, {"n": "Ensayos y análisis de laboratorio", "act": [{"n": "Ensayos de laboratorio", "u": "Ensayo o análisis de laboratorio"}]}, {"n": "Certificación de calidad de procesos y productos", "act": [{"n": "Certificación", "u": "Certificado de calidad"}]}, {"n": "Gestión y valorización de resultados de I+D+i", "act": [{"n": "Elaboración de paquetes tecnológicos", "u": "Paquete tecnológico"}]}]}, "4": {"mod": "Servicios de difusión de información", "serv": [{"n": "Servicios de información tecnológica", "act": [{"n": "Información tecnológica", "u": "Producto de información"}]}, {"n": "Ventanilla de acceso a instrumentos financieros y no financieros", "act": [{"n": "Promoción de financiamiento productivo", "u": "Orientación"}]}, {"n": "Difusión de diseños, desarrollo y mejora de productos", "act": [{"n": "Difusión de innovación", "u": "Diseño o producto difundido"}]}, {"n": "Difusión de estudios y análisis técnicos de productos o procesos", "act": [{"n": "Difusión técnica", "u": "Estudio o análisis técnico"}]}]}, "5": {"mod": "Servicios de articulación", "serv": [{"n": "Ruedas de negocios, activaciones, presentaciones, exposiciones o community management", "act": [{"n": "Articulación comercial", "u": "Espacio de articulación comercial"}]}, {"n": "Participación en ferias, concursos, premiaciones y eventos", "act": [{"n": "Participación en ferias", "u": "Participación en feria"}, {"n": "Participación en concursos", "u": "Participación en concurso"}, {"n": "Participación en premiaciones", "u": "Participación en premiación"}, {"n": "Participación en eventos", "u": "Participación en evento"}]}, {"n": "Promoción y difusión eficiente en canales tradicionales y digitales", "act": [{"n": "Promoción multicanal", "u": "Acción de promoción y difusión"}]}, {"n": "Puntos de venta de productos artesanales", "act": [{"n": "Implementación y gestión de puntos de venta", "u": "Punto de venta"}]}, {"n": "Promoción de exportación de productos artesanales", "act": [{"n": "Preparación exportadora", "u": "Acompañamiento técnico"}]}, {"n": "Participación en mesas de elaboración de normas técnicas", "act": [{"n": "Participación en mesas de elaboración de normas técnicas", "u": "Participación técnica"}]}, {"n": "Comunicación con centros análogos para intercambio de experiencias y pasantías tecnológicas", "act": [{"n": "Pasantía tecnológica", "u": "Pasantía tecnológica"}]}, {"n": "Gestión de proyectos con actores públicos y privados y fondos de cooperación", "act": [{"n": "Gestión de proyectos", "u": "Proyecto o iniciativa formulada y gestionada"}]}, {"n": "Promoción y articulación de la oferta artesanal", "act": [{"n": "Organización y ejecución de visitas de familiarización (Fam Trip y Press Tour)", "u": "Visita de familiarización"}]}]}};
+const unitsOf = p => [...new Set((CLASIF[p]?.serv || []).flatMap(s => s.act.map(a => a.u)))];
+const servOf = (p, s) => (CLASIF[p]?.serv || []).find(x => x.n === s);
+const unitOf = (p, s, act) => (servOf(p, s)?.act.find(x => x.n === act) || {}).u || '';
+
+const CLASIF_IND = ["Propósito","Objetivo general","Producto 1: Transferencia Tecnológica","Producto 2: Servicios de Capacitación","Producto 3: Investigación, desarrollo e innovación","Producto 4: Difusión de información","Producto 5: Articulación"];
+const MES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Set','Oct','Nov','Dic'];
+const MESL = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Setiembre','Octubre','Noviembre','Diciembre'];
+const TRIM = ['I Trim','II Trim','III Trim','IV Trim'];
+
+/* ═══════════ ESTADO ═══════════ */
+const Z = () => Array(12).fill(0);
+const uid = () => Math.random().toString(36).slice(2, 9);
+function blank(){
+  return {schema:1, anio:ANIO, cite:'', etapa:'Programación', responsable:'', cargo:'', correo:'', telefono:'', docRef:'',
+    indicadores:[], actividades:[], gastos:[],
+    desembolsos:DES_LABELS.map((c, i) => ({id:'d'+(i+1), concepto:c, monto:0})),
+    hitos:[], afAutorizado:false, afDoc:'', base:null, grabado:null, dirty:true, actualizado:null};
+}
+function newIns(soloC){ return {id:uid(), nombre:'', clas:'', af:false, m:Z(), soloC:!!soloC, cm:soloC?Z():null, citeM:0, citeNM:0, entM:0, entNM:0}; }
+function newAct(p){ return {id:uid(), p, codigo:'', nombre:'', unidad:'', m:Z(), serv:'', actv:'', objetivo:'', aten:Z(), benef:Z(), ventas:0, ubic:[], obs:'', insumos:[]}; }
+let S = blank();
+
+const tipo = () => CITES[S.cite] || '';
+const isPriv = () => tipo() === 'Privado';
+const isPub = () => tipo() === 'Público';
+const acts = p => S.actividades.filter(a => a.p === p);
+const allIns = () => [...S.actividades.flatMap(a => a.insumos), ...S.gastos];
+const findAct = id => S.actividades.find(a => a.id === id);
+const findIns = id => allIns().find(i => i.id === id);
+const sum = a => a.reduce((x, y) => x + (+y || 0), 0);
+const trims = m => [0,1,2,3].map(q => (+m[q*3]||0) + (+m[q*3+1]||0) + (+m[q*3+2]||0));
+const addArr = (a, b) => { for (let i = 0; i < 12; i++) a[i] += (+b[i] || 0); return a; };
+const cmOf = ins => ins.cm || (ins.soloC ? Z() : ins.m);
+const r2 = v => Math.round((+v || 0) * 100) / 100;
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function fmt(v, d){ v = +v || 0; return v.toLocaleString('es-PE', {minimumFractionDigits:d, maximumFractionDigits:d}); }
+
+/* ═══════════ PERSISTENCIA LOCAL ═══════════ */
+let saveTimer = null;
+function saveLocal(){ clearTimeout(saveTimer); saveTimer = setTimeout(() => { try { localStorage.setItem(STORE_KEY, JSON.stringify(S)); } catch(e){} }, 300); }
+function normalize(){
+  if (S.etapa === 'Formulación') S.etapa = 'Programación';
+  if (S.base && S.base.etapa === 'Formulación') S.base.etapa = 'Programación';
+  if (!S.base) S.etapa = 'Programación';
+  S.desembolsos = DES_LABELS.map((c, i) => ({id:'d'+(i+1), concepto:c, monto: +((S.desembolsos || [])[i] || {}).monto || 0}));
+  S.actividades.forEach(a => { if (a.serv === undefined) a.serv = ''; if (a.actv === undefined) a.actv = ''; delete a.tipo; });
+}
+function loadLocal(){ try { const t = localStorage.getItem(STORE_KEY); if (t) S = Object.assign(blank(), JSON.parse(t)); } catch(e){} normalize(); }
+function markDirty(){ S.dirty = true; S.actualizado = new Date().toISOString(); updatePill(); saveLocal(); }
+function updatePill(){
+  const p = document.getElementById('statusPill');
+  if (S.grabado && !S.dirty){ p.className = 'status-pill saved'; p.textContent = 'Grabado ' + new Date(S.grabado).toLocaleString('es-PE', {dateStyle:'short', timeStyle:'short'}); }
+  else { p.className = 'status-pill'; p.textContent = S.grabado ? 'Cambios sin grabar' : 'Borrador'; }
+}
+
+/* ═══════════ CÁLCULOS ═══════════ */
+let K = {};
+function compute(){
+  K = {};
+  const put = (pre, m) => { m.forEach((v, i) => K[pre+':m'+i] = v); trims(m).forEach((v, q) => K[pre+':q'+q] = v); K[pre+':t'] = sum(m); };
+  const F = ['mi','cM','cN','eM','eN'];
+  const zf = () => ({mi:0,cM:0,cN:0,eM:0,eN:0});
+  const addF = (a, b) => { F.forEach(k => a[k] += b[k]); return a; };
+  const putF = (pre, f, ctot) => { F.forEach(k => K[pre+':'+k] = f[k]); K[pre+':dif'] = r2(ctot - sum(F.map(k => f[k]))); };
+  S.indicadores.forEach(x => K['iv:'+x.id] = (+x.res||0) - (+x.lb||0));
+  // Anexo A
+  const AT = Z();
+  PRODUCTOS.forEach(P => { const pm = Z(); acts(P.n).forEach(a => { put('a:'+a.id, a.m); addArr(pm, a.m); }); put('ap:'+P.n, pm); addArr(AT, pm); });
+  put('at', AT);
+  // Anexo B y C
+  const BC = Z(), CC = Z(), FC = zf();
+  const insRow = ins => {
+    const b = ins.soloC ? Z() : ins.m, c = cmOf(ins);
+    put('bi:'+ins.id, b); put('ci:'+ins.id, c);
+    const f = {mi: ins.soloC ? 0 : sum(ins.m), cM:+ins.citeM||0, cN:+ins.citeNM||0, eM:+ins.entM||0, eN:+ins.entNM||0};
+    putF('ci:'+ins.id, f, sum(c));
+    return {b, c, f};
+  };
+  PRODUCTOS.forEach(P => {
+    const pb = Z(), pc = Z(), pf = zf();
+    acts(P.n).forEach(a => {
+      const ab = Z(), ac = Z(), af = zf();
+      a.insumos.forEach(ins => { const r = insRow(ins); addArr(ab, r.b); addArr(ac, r.c); addF(af, r.f); });
+      put('ba:'+a.id, ab); put('ca:'+a.id, ac); putF('ca:'+a.id, af, sum(ac));
+      addArr(pb, ab); addArr(pc, ac); addF(pf, af);
+    });
+    put('bp:'+P.n, pb); put('cp:'+P.n, pc); putF('cp:'+P.n, pf, sum(pc));
+    addArr(BC, pb); addArr(CC, pc); addF(FC, pf);
+  });
+  put('bc', BC); put('cc', CC); putF('cc', FC, sum(CC));
+  const gb = Z(), gc = Z(), gf = zf();
+  S.gastos.forEach(ins => { const r = insRow(ins); addArr(gb, r.b); addArr(gc, r.c); addF(gf, r.f); });
+  put('bg', gb); put('cg', gc); putF('cg', gf, sum(gc));
+  put('bt', addArr(BC.slice(), gb)); const ct = addArr(CC.slice(), gc); put('ct', ct); putF('ct', addF(Object.assign({}, FC), gf), sum(ct));
+  K['dt'] = sum(S.desembolsos.map(d => d.monto));
+  K['af'] = sum(allIns().filter(i => i.af && !i.soloC).map(i => sum(i.m)));
+  K['contra'] = K['ct:cM'] + K['ct:cN'] + K['ct:eM'] + K['ct:eN'];
+  return K;
+}
+function updateComputed(){
+  compute();
+  document.querySelectorAll('[data-k]').forEach(el => {
+    const v = K[el.dataset.k]; const d = +(el.dataset.f || 0);
+    el.textContent = fmt(v, d);
+    if (el.dataset.dif !== undefined){ const bad = Math.abs(v || 0) > 0.005; el.classList.toggle('bad', bad); el.classList.toggle('okc', !bad); }
+  });
+  document.querySelectorAll('input.cdef').forEach(el => {
+    const ins = findIns(el.dataset.ins); if (ins && !ins.cm) el.value = ins.m[+el.dataset.i] || '';
+  });
+  document.getElementById('k-act').textContent = S.actividades.length;
+  document.getElementById('k-contra').textContent = fmt(K['contra'], 2);
+  updateDots();
+}
+
+/* ═══════════ BINDING ═══════════ */
+function setVal(el){
+  const [kind, id, field, idx] = el.dataset.b.split(':');
+  let obj;
+  if (kind === 'g') obj = S;
+  else if (kind === 'ind') obj = S.indicadores.find(x => x.id === id);
+  else if (kind === 'act') obj = findAct(id);
+  else if (kind === 'ins') obj = findIns(id);
+  else if (kind === 'des') obj = S.desembolsos.find(x => x.id === id);
+  else if (kind === 'hit') obj = S.hitos.find(x => x.id === id);
+  else if (kind === 'hin') obj = S.hitos.flatMap(h => h.ind).find(x => x.id === id);
+  else if (kind === 'ub') obj = ubicRef(id);
+  if (!obj) return;
+  let v = el.type === 'checkbox' ? el.checked : el.value;
+  if (el.dataset.num !== undefined){ v = parseFloat(String(v).replace(',', '.')); if (!isFinite(v) || v < 0) v = 0; }
+  if (field === 'cm'){ if (!obj.cm) obj.cm = obj.m.slice(); obj.cm[+idx] = v; el.classList.remove('cdef'); }
+  else if (idx !== undefined && idx !== '') obj[field][+idx] = v;
+  else obj[field] = v;
+  return {kind, field};
+}
+document.addEventListener('input', e => {
+  const el = e.target; if (!el.dataset || !el.dataset.b) return;
+  const r = setVal(el); if (!r) return;
+  markDirty();
+  if (r.kind === 'g' && (r.field === 'cite' || r.field === 'etapa')) { renderAll(); return; }
+  if (r.kind === 'act' && (r.field === 'nombre' || r.field === 'codigo')) syncActLabels(el.dataset.b.split(':')[1]);
+  if (el.closest('#fichaModal')) updateFichaTotals();
+  updateComputed();
+});
+
+/* ═══════════ RENDER: GENERAL ═══════════ */
+function renderGeneral(){
+  const sel = document.getElementById('f-cite');
+  if (sel.options.length < 2) Object.keys(CITES).forEach(c => sel.add(new Option(c, c)));
+  sel.disabled = !!ACCESS;
+  ['cite','etapa','responsable','cargo','correo','telefono','docRef','afDoc'].forEach(k => { const el = document.getElementById('f-'+k); if (el) el.value = S[k] || ''; });
+  { const es = document.getElementById('f-etapa'); const lock = !S.base;
+    [...es.options].forEach(o => { o.disabled = o.value === 'Programación' ? !lock : lock; });
+    document.getElementById('etapaHint').textContent = lock ? 'Reprogramación y Reformulación se habilitan después de grabar la Programación.' : 'La Programación ya fue grabada: para modificar el PAA use Reprogramación o Reformulación.'; }
+  document.getElementById('f-afAut').checked = !!S.afAutorizado;
+  const t = tipo();
+  document.getElementById('tipoBox').innerHTML = t ? `<span class="tipo-badge ${t==='Público'?'pub':'pri'}">${t}</span>` : '<span class="tipo-badge none">Pendiente</span>';
+  document.getElementById('docRefRow').querySelector('.field').style.opacity = S.etapa === 'Reformulación' ? 1 : .5;
+  document.getElementById('f-base').value = S.base ? `${S.base.etapa} grabada el ${new Date(S.base.fecha).toLocaleString('es-PE',{dateStyle:'short',timeStyle:'short'})}` : 'Aún no fijada';
+  const note = document.getElementById('genNote');
+  if (!t) note.innerHTML = 'Seleccione un CITE para continuar.';
+  else if (isPub()) note.innerHTML = `<b>${esc(S.cite)} es un CITE público.</b> Llena el Anexo A, el Anexo B (con la columna <b>clasificador de gasto</b>) y el Anexo IV. Los Anexos C y D no corresponden.`;
+  else note.innerHTML = `<b>${esc(S.cite)} es un CITE privado.</b> Llena los Anexos A, B, C, D y IV. Se aplican las reglas de gastos operativos (≤ ${LIM.go} %), activos fijos (≤ ${LIM.af} %), contrapartida (≥ ${LIM.contra} %) y variación por actividad (≤ ${LIM.varAct} %).`;
+  document.getElementById('olC').style.display = isPub() ? 'none' : '';
+  document.getElementById('olD').style.display = isPub() ? 'none' : '';
+  document.getElementById('olClas').textContent = isPub() ? 'Como CITE público, indique el clasificador de gasto de cada insumo.' : '';
+  document.querySelectorAll('.citeName').forEach(e => e.textContent = S.cite || '[CITE]');
+  document.querySelectorAll('.privOnly').forEach(e => e.style.display = isPub() ? 'none' : '');
+  document.querySelector('[data-tab="C"]').classList.toggle('na', isPub());
+  document.querySelector('[data-tab="D"]').classList.toggle('na', isPub());
+  document.getElementById('btnLoadServer').disabled = !ACCESS;
+  document.getElementById('serverHint').textContent = ACCESS ? `Al grabar, el PAA de ${ACCESS.cite} se registra en la base de datos de la DCITAT. La descarga del Excel incluye solo sus anexos.` : 'Modo sin conexión: el PAA grabado queda solo en este navegador.';
+}
+
+/* ═══════════ helpers de tabla ═══════════ */
+const ICO_DEL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>';
+const ICO_UP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>';
+const ICO_DN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>';
+function monthHead(rowspanFirst){ // returns [row1 cells, row2 cells]
+  let h2 = '';
+  for (let q = 0; q < 4; q++){ for (let k = 0; k < 3; k++) h2 += `<th>${MES[q*3+k]}-${YY}</th>`; h2 += `<th class="trim">${TRIM[q]}</th>`; }
+  return h2;
+}
+// celdas mensuales: mode 'in' (inputs) o 'out' (calculadas)
+function monthCells(pre, opt){
+  let h = '';
+  for (let q = 0; q < 4; q++){
+    for (let k = 0; k < 3; k++){
+      const i = q*3 + k;
+      if (opt.input) h += `<td>${opt.input(i)}</td>`;
+      else h += `<td class="n" data-k="${pre}:m${i}" data-f="${opt.d}"></td>`;
+    }
+    h += `<td class="n trim" data-k="${pre}:q${q}" data-f="${opt.d}"></td>`;
+  }
+  return h;
+}
+const numIn = (b, v, cls) => `<input class="${cls||'num'}" type="number" min="0" step="any" inputmode="decimal" data-num data-b="${b}" value="${(+v)?v:''}" placeholder="0"/>`;
+
+/* ═══════════ RENDER: INDICADORES ═══════════ */
+function addIndicador(){ S.indicadores.push({id:uid(), nombre:'', clas:'', unidad:'', lb:'', res:'', com:''}); markDirty(); renderInd(); }
+function delIndicador(id){ S.indicadores = S.indicadores.filter(x => x.id !== id); markDirty(); renderInd(); }
+function renderInd(){
+  let h = `<thead><tr><th style="width:36px">N.°</th><th style="min-width:280px">NOMBRE DEL INDICADOR</th><th style="min-width:190px">CLASIFICACIÓN</th><th style="min-width:130px">UNIDAD DE MEDIDA</th><th>LÍNEA DE BASE</th><th>RESULTADO FINAL<br>ESPERADO (${ANIO})</th><th>VARIACIÓN</th><th style="min-width:220px">COMENTARIOS</th><th></th></tr></thead><tbody>`;
+  h += `<tr class="band"><td colspan="9">Según lineamientos PAA</td></tr>`;
+  S.indicadores.forEach((x, i) => {
+    const b = f => `ind:${x.id}:${f}`;
+    h += `<tr><td class="n" style="text-align:center">${i+1}</td>
+      <td><textarea rows="2" data-b="${b('nombre')}" maxlength="400">${esc(x.nombre)}</textarea></td>
+      <td><input list="dl-clasif" data-b="${b('clas')}" value="${esc(x.clas)}" placeholder="Seleccione o escriba"/></td>
+      <td><input data-b="${b('unidad')}" value="${esc(x.unidad)}" placeholder="Ej.: Porcentaje"/></td>
+      <td>${numIn(b('lb'), x.lb, 'money')}</td><td>${numIn(b('res'), x.res, 'money')}</td>
+      <td class="n" data-k="iv:${x.id}" data-f="2"></td>
+      <td><textarea rows="2" data-b="${b('com')}" maxlength="400" placeholder="Fórmula / fuente">${esc(x.com)}</textarea></td>
+      <td><button class="ico" title="Eliminar" onclick="delIndicador('${x.id}')">${ICO_DEL}</button></td></tr>`;
+  });
+  h += `<tr class="addrow"><td colspan="9"><button class="mini" onclick="addIndicador()">+ Agregar indicador</button></td></tr></tbody>`;
+  document.getElementById('tblInd').innerHTML = h;
+  updateComputed();
+}
+
+/* ═══════════ RENDER: ANEXO A ═══════════ */
+function nextCode(p){ const n = acts(p).length + 1; return `${p}.${n}`; }
+function addAct(p){ const a = newAct(p); a.codigo = nextCode(p); S.actividades.push(a); markDirty(); renderA(); renderB(); renderC();
+  setTimeout(() => { const el = document.querySelector(`[data-b="act:${a.id}:nombre"]`); if (el) el.focus(); }, 30); }
+function delAct(id){
+  const a = findAct(id); if (!a) return;
+  if ((a.insumos.length || a.nombre) && !confirm(`¿Eliminar la actividad "${a.nombre || a.codigo}"${a.insumos.length ? ' y sus ' + a.insumos.length + ' insumo(s) del Anexo B/C' : ''}?`)) return;
+  S.actividades = S.actividades.filter(x => x.id !== id); markDirty(); renderA(); renderB(); renderC();
+}
+function moveAct(id, dir){
+  const arr = S.actividades, i = arr.findIndex(a => a.id === id), a = arr[i];
+  let j = i + dir; while (j >= 0 && j < arr.length && arr[j].p !== a.p) j += dir;
+  if (j < 0 || j >= arr.length) return;
+  [arr[i], arr[j]] = [arr[j], arr[i]]; markDirty(); renderA(); renderB(); renderC();
+}
+function fichaState(a){ return (a.serv && a.actv && a.objetivo && a.objetivo.trim()) ? 'ok' : 'pend'; }
+function renderA(){
+  let h = `<thead><tr><th rowspan="2" class="sticky1" style="left:0;min-width:84px">CÓDIGO</th><th rowspan="2" class="sticky2 namecell" style="left:84px">COMPONENTE / ACTIVIDAD</th><th rowspan="2" style="min-width:210px">UNIDAD DE MEDIDA</th><th rowspan="2">CANTIDAD<br>ANUAL</th><th colspan="16">PROGRAMACIÓN MENSUAL</th><th rowspan="2">FICHA</th><th rowspan="2"></th></tr><tr>${monthHead()}</tr></thead><tbody>`;
+  PRODUCTOS.forEach(P => {
+    h += `<tr class="prod"><td class="sticky1" style="left:0;text-align:center">${P.n}</td><td class="sticky2" style="left:84px">PRODUCTO ${P.n}: ${P.nombre}</td><td></td><td class="n" data-k="ap:${P.n}:t"></td>${monthCells('ap:'+P.n, {d:0})}<td></td><td></td></tr>`;
+    acts(P.n).forEach(a => {
+      const b = f => `act:${a.id}:${f}`;
+      h += `<tr><td class="sticky1" style="left:0"><input class="code" data-b="${b('codigo')}" value="${esc(a.codigo)}" maxlength="15"/></td>
+        <td class="sticky2" style="left:84px"><textarea rows="1" data-b="${b('nombre')}" maxlength="300" placeholder="Nombre de la actividad">${esc(a.nombre)}</textarea></td>
+        <td><select data-b="${b('unidad')}"><option value="">– Seleccione –</option>${[...unitsOf(a.p), ...(a.unidad && !unitsOf(a.p).includes(a.unidad) ? [a.unidad] : [])].map(u => `<option ${u === a.unidad ? 'selected' : ''}>${esc(u)}</option>`).join('')}</select></td>
+        <td class="n" style="font-weight:700" data-k="a:${a.id}:t"></td>
+        ${monthCells('a:'+a.id, {d:0, input: i => numIn(`${b('m')}:${i}`, a.m[i])})}
+        <td><button class="ficha-btn ${fichaState(a)}" id="fb-${a.id}" onclick="openFicha('${a.id}')">${fichaState(a)==='ok'?'✓ Ficha':'Ficha'}</button></td>
+        <td><div class="rowtools"><button class="ico" title="Subir" onclick="moveAct('${a.id}',-1)">${ICO_UP}</button><button class="ico" title="Bajar" onclick="moveAct('${a.id}',1)">${ICO_DN}</button><button class="ico" title="Eliminar" onclick="delAct('${a.id}')">${ICO_DEL}</button></div></td></tr>`;
+    });
+    h += `<tr class="addrow"><td class="sticky1" style="left:0"></td><td class="sticky2" style="left:84px"><button class="mini" onclick="addAct(${P.n})">+ Agregar actividad al Producto ${P.n}</button></td><td colspan="20"></td></tr>`;
+  });
+  h += `<tr class="tot"><td class="sticky1" style="left:0"></td><td class="sticky2" style="left:84px;text-align:center">TOTAL</td><td></td><td class="n" data-k="at:t"></td>${monthCells('at', {d:0})}<td></td><td></td></tr></tbody>`;
+  document.getElementById('tblA').innerHTML = h;
+  document.querySelectorAll('#tblA td.trim, #tblA tr.tot td').forEach(td => { if (td.closest('tr.tot')) td.classList.remove('trim'); });
+  updateComputed();
+}
+function syncActLabels(id){
+  const a = findAct(id); if (!a) return;
+  document.querySelectorAll(`[data-actlabel="${id}"]`).forEach(el => el.textContent = a.nombre || '(actividad sin nombre)');
+  document.querySelectorAll(`[data-actcode="${id}"]`).forEach(el => el.textContent = a.codigo);
+}
+
+/* ═══════════ RENDER: ANEXO B ═══════════ */
+function addIns(aid){ const a = findAct(aid); const ins = newIns(false); a.insumos.push(ins); markDirty(); renderB(); renderC();
+  setTimeout(() => { const el = document.querySelector(`#tblB [data-b="ins:${ins.id}:nombre"]`); if (el) el.focus(); }, 30); }
+function addGasto(){ const g = newIns(false); S.gastos.push(g); markDirty(); renderB(); renderC(); goTab('B');
+  setTimeout(() => { const el = document.querySelector(`#tblB [data-b="ins:${g.id}:nombre"]`); if (el) el.focus(); }, 30); }
+function delIns(id){
+  S.actividades.forEach(a => a.insumos = a.insumos.filter(i => i.id !== id));
+  S.gastos = S.gastos.filter(i => i.id !== id); markDirty(); renderB(); renderC();
+}
+function renderB(){
+  const pub = isPub(), priv = isPriv();
+  const W = pub ? 2 : 1; // columnas extra (clasificador / activo fijo)
+  document.getElementById('noteB').innerHTML = pub
+    ? 'CITE público: registre el <b>clasificador de gasto</b> de cada insumo (ej.: 2.3.2 7.11 99).'
+    : `CITE privado: marque <b>“AF”</b> en los insumos que sean <b>activos fijos para innovación y transferencia tecnológica</b> (límite ${LIM.af} % de la subvención). Los gastos de operación no deben superar el ${LIM.go} % de la subvención.`;
+  let h = `<thead><tr><th rowspan="2" class="sticky1" style="left:0;min-width:84px">CÓDIGO</th><th rowspan="2" class="sticky2 namecell" style="left:84px">COMPONENTE / ACTIVIDAD / INSUMO</th>${pub?'<th rowspan="2" style="min-width:120px">CLASIFICADOR<br>DE GASTO</th>':''}${priv?'<th rowspan="2" title="Activo fijo para innovación y transferencia tecnológica">AF</th>':''}<th rowspan="2">TOTAL AÑO</th><th colspan="16">PROGRAMACIÓN MENSUAL (S/)</th><th rowspan="2"></th></tr><tr>${monthHead()}</tr></thead><tbody>`;
+  const extra = (pub ? 1 : 0) + (priv ? 1 : 0);
+  const insRow = (ins, code) => {
+    const b = f => `ins:${ins.id}:${f}`;
+    return `<tr><td class="sticky1" style="left:0;color:var(--muted);font-size:11px">${code}</td>
+      <td class="sticky2" style="left:84px"><input class="ins-name" data-b="${b('nombre')}" value="${esc(ins.nombre)}" placeholder="Insumo / concepto de gasto" maxlength="250"/></td>
+      ${pub ? `<td><input data-b="${b('clas')}" value="${esc(ins.clas)}" placeholder="2.3.x x.xx xx" maxlength="20"/></td>` : ''}
+      ${priv ? `<td style="text-align:center"><input type="checkbox" data-b="${b('af')}" ${ins.af?'checked':''} title="Activo fijo" style="width:auto"/></td>` : ''}
+      <td class="n" style="font-weight:700" data-k="bi:${ins.id}:t" data-f="2"></td>
+      ${monthCells('bi:'+ins.id, {d:2, input: i => numIn(`${b('m')}:${i}`, ins.m[i], 'money')})}
+      <td><button class="ico" title="Eliminar insumo" onclick="delIns('${ins.id}')">${ICO_DEL}</button></td></tr>`;
+  };
+  PRODUCTOS.forEach(P => {
+    h += `<tr class="prod"><td class="sticky1" style="left:0;text-align:center">${P.n}</td><td class="sticky2" style="left:84px">PRODUCTO ${P.n}: ${P.nombre}</td>${'<td></td>'.repeat(extra)}<td class="n" data-k="bp:${P.n}:t" data-f="2"></td>${monthCells('bp:'+P.n, {d:2})}<td></td></tr>`;
+    const list = acts(P.n);
+    if (!list.length) h += `<tr><td class="sticky1" style="left:0"></td><td class="sticky2 hint" style="left:84px;padding:8px">Sin actividades. Agréguelas en el Anexo A.</td><td colspan="${18+extra}"></td></tr>`;
+    list.forEach(a => {
+      h += `<tr class="act"><td class="sticky1" style="left:0" data-actcode="${a.id}">${esc(a.codigo)}</td><td class="sticky2" style="left:84px" data-actlabel="${a.id}">${esc(a.nombre || '(actividad sin nombre)')}</td>${'<td></td>'.repeat(extra)}<td class="n" data-k="ba:${a.id}:t" data-f="2"></td>${monthCells('ba:'+a.id, {d:2})}<td></td></tr>`;
+      a.insumos.filter(i => !i.soloC).forEach((ins, k) => h += insRow(ins, ''));
+      h += `<tr class="addrow"><td class="sticky1" style="left:0"></td><td class="sticky2" style="left:84px"><button class="mini" onclick="addIns('${a.id}')">+ Insumo</button></td><td colspan="${18+extra}"></td></tr>`;
+    });
+  });
+  h += `<tr class="prod"><td class="sticky1" style="left:0;text-align:center">6</td><td class="sticky2" style="left:84px">GASTOS DE OPERACIÓN</td>${'<td></td>'.repeat(extra)}<td class="n" data-k="bg:t" data-f="2"></td>${monthCells('bg', {d:2})}<td></td></tr>`;
+  S.gastos.filter(i => !i.soloC).forEach(g => h += insRow(g, ''));
+  h += `<tr class="addrow"><td class="sticky1" style="left:0"></td><td class="sticky2" style="left:84px"><button class="mini" onclick="addGasto()">+ Gasto de operación</button></td><td colspan="${18+extra}"></td></tr>`;
+  h += `<tr class="tot"><td class="sticky1" style="left:0"></td><td class="sticky2" style="left:84px">TOTAL AÑO ${ANIO} (APORTE MINCETUR)</td>${'<td></td>'.repeat(extra)}<td class="n" data-k="bt:t" data-f="2"></td>${monthCells('bt', {d:2})}<td></td></tr></tbody>`;
+  document.getElementById('tblB').innerHTML = h;
+  document.querySelectorAll('#tblB tr.tot td.trim').forEach(td => td.classList.remove('trim'));
+  updateComputed();
+}
+
+/* ═══════════ RENDER: ANEXO C ═══════════ */
+function addInsC(aid){ const ins = newIns(true); if (aid) findAct(aid).insumos.push(ins); else S.gastos.push(ins); markDirty(); renderC();
+  setTimeout(() => { const el = document.querySelector(`#tblC [data-b="ins:${ins.id}:nombre"]`); if (el) el.focus(); }, 30); }
+function resetCm(id){ const ins = findIns(id); if (ins && !ins.soloC){ ins.cm = null; markDirty(); renderC(); } }
+function renderC(){
+  const pub = isPub();
+  document.getElementById('naC').classList.toggle('hidden', !pub);
+  document.getElementById('wrapC').classList.toggle('hidden', pub);
+  if (pub){ document.getElementById('tblC').innerHTML = ''; return; }
+  const fcells = pre => ['mi','cM','cN','eM','eN'].map(k => `<td class="n" data-k="${pre}:${k}" data-f="2"></td>`).join('') + `<td class="n" data-dif data-k="${pre}:dif" data-f="2"></td>`;
+  let h = `<thead><tr><th rowspan="2" class="sticky1" style="left:0;min-width:84px">CÓDIGO</th><th rowspan="2" class="sticky2 namecell" style="left:84px">COMPONENTE / ACTIVIDAD / INSUMO</th><th rowspan="2">TOTAL AÑO</th><th colspan="16">PROGRAMACIÓN MENSUAL – TODAS LAS FUENTES (S/)</th><th rowspan="2" class="src">APORTE<br>MINCETUR</th><th colspan="2" class="src">APORTE DEL CITE SOLICITANTE</th><th colspan="2" class="src">APORTE DE LA ENTIDAD ASOCIADA</th><th rowspan="2">Dif.</th><th rowspan="2"></th></tr>
+    <tr>${monthHead()}<th class="src">Monetario</th><th class="src">No monetario</th><th class="src">Monetario</th><th class="src">No monetario</th></tr></thead><tbody>`;
+  h += `<tr class="tot"><td class="sticky1" style="left:0"></td><td class="sticky2" style="left:84px">COMPONENTES (Productos 1 a 5)</td><td class="n" data-k="cc:t" data-f="2"></td>${monthCells('cc', {d:2})}${fcells('cc')}<td></td></tr>`;
+  const insRow = ins => {
+    const b = f => `ins:${ins.id}:${f}`;
+    const c = cmOf(ins);
+    const name = ins.soloC
+      ? `<input class="ins-name" data-b="${b('nombre')}" value="${esc(ins.nombre)}" placeholder="Insumo financiado solo con contrapartida" maxlength="250"/>`
+      : `<div class="ins-name" style="padding:5px" data-insname="${ins.id}">${esc(ins.nombre || '(insumo sin nombre)')}</div>`;
+    const mi = i => `<input class="money ${ins.cm ? '' : 'cdef'}" data-ins="${ins.id}" data-i="${i}" type="number" min="0" step="any" data-num data-b="${b('cm')}:${i}" value="${(+c[i]) ? c[i] : ''}" placeholder="0"/>`;
+    const fin = f => `<td>${numIn(b(f), ins[f], 'money')}</td>`;
+    return `<tr><td class="sticky1" style="left:0;font-size:10px;color:var(--muted)">${ins.soloC ? 'Solo contrap.' : ''}</td><td class="sticky2" style="left:84px">${name}</td>
+      <td class="n" style="font-weight:700" data-k="ci:${ins.id}:t" data-f="2"></td>
+      ${monthCells('ci:'+ins.id, {d:2, input: mi})}
+      <td class="n" data-k="ci:${ins.id}:mi" data-f="2"></td>${fin('citeM')}${fin('citeNM')}${fin('entM')}${fin('entNM')}
+      <td class="n" data-dif data-k="ci:${ins.id}:dif" data-f="2"></td>
+      <td><div class="rowtools">${ins.soloC ? `<button class="ico" title="Eliminar" onclick="delIns('${ins.id}')">${ICO_DEL}</button>` : (ins.cm ? `<button class="ico" title="Volver a copiar la programación del Anexo B" onclick="resetCm('${ins.id}')">↺</button>` : '')}</div></td></tr>`;
+  };
+  PRODUCTOS.forEach(P => {
+    h += `<tr class="prod"><td class="sticky1" style="left:0;text-align:center">${P.n}</td><td class="sticky2" style="left:84px">PRODUCTO ${P.n}: ${P.nombre}</td><td class="n" data-k="cp:${P.n}:t" data-f="2"></td>${monthCells('cp:'+P.n, {d:2})}${fcells('cp:'+P.n)}<td></td></tr>`;
+    acts(P.n).forEach(a => {
+      h += `<tr class="act"><td class="sticky1" style="left:0" data-actcode="${a.id}">${esc(a.codigo)}</td><td class="sticky2" style="left:84px" data-actlabel="${a.id}">${esc(a.nombre || '(actividad sin nombre)')}</td><td class="n" data-k="ca:${a.id}:t" data-f="2"></td>${monthCells('ca:'+a.id, {d:2})}${fcells('ca:'+a.id)}<td></td></tr>`;
+      a.insumos.forEach(ins => h += insRow(ins));
+      h += `<tr class="addrow"><td class="sticky1" style="left:0"></td><td class="sticky2" style="left:84px"><button class="mini" onclick="addInsC('${a.id}')">+ Insumo solo con contrapartida</button></td><td colspan="25"></td></tr>`;
+    });
+  });
+  h += `<tr class="prod"><td class="sticky1" style="left:0;text-align:center">6</td><td class="sticky2" style="left:84px">GASTOS DE OPERACIÓN</td><td class="n" data-k="cg:t" data-f="2"></td>${monthCells('cg', {d:2})}${fcells('cg')}<td></td></tr>`;
+  S.gastos.forEach(g => h += insRow(g));
+  h += `<tr class="addrow"><td class="sticky1" style="left:0"></td><td class="sticky2" style="left:84px"><button class="mini" onclick="addInsC(null)">+ Gasto solo con contrapartida</button></td><td colspan="25"></td></tr>`;
+  h += `<tr class="tot"><td class="sticky1" style="left:0"></td><td class="sticky2" style="left:84px">TOTAL AÑO ${ANIO} (TODAS LAS FUENTES)</td><td class="n" data-k="ct:t" data-f="2"></td>${monthCells('ct', {d:2})}${fcells('ct')}<td></td></tr></tbody>`;
+  document.getElementById('tblC').innerHTML = h;
+  document.querySelectorAll('#tblC tr.tot td.trim').forEach(td => td.classList.remove('trim'));
+  updateComputed();
+}
+
+/* ═══════════ RENDER: ANEXO D ═══════════ */
+function renderD(){
+  const pub = isPub();
+  document.getElementById('naD').classList.toggle('hidden', !pub);
+  document.getElementById('wrapD').classList.toggle('hidden', pub);
+  let h = `<thead><tr><th style="width:40px">N.°</th><th style="min-width:260px">DESEMBOLSO</th><th style="min-width:160px">SUBVENCIÓN ECONÓMICA (S/)</th><th></th></tr></thead><tbody>`;
+  S.desembolsos.forEach((d, i) => {
+    h += `<tr><td class="n" style="text-align:center">${i+1}</td><td style="padding:8px 10px;font-weight:600">${esc(d.concepto)}</td><td>${numIn(`des:${d.id}:monto`, d.monto, 'money')}</td><td></td></tr>`;
+  });
+  h += `<tr class="tot"><td></td><td style="text-align:center">Total S/</td><td class="n" data-k="dt" data-f="2"></td><td></td></tr></tbody>`;
+  document.getElementById('tblD').innerHTML = h;
+  updateComputed();
+}
+
+/* ═══════════ RENDER: ANEXO IV ═══════════ */
+const newHin = () => ({id:uid(), desc:'', unidad:'', meta:'', fecha:''});
+function addHito(){ S.hitos.push({id:uid(), nombre:'', ind:[newHin()]}); markDirty(); renderIV(); }
+function delHito(id){ const h = S.hitos.find(x => x.id === id); if (h && h.nombre && !confirm(`¿Eliminar el hito "${h.nombre}"?`)) return; S.hitos = S.hitos.filter(x => x.id !== id); markDirty(); renderIV(); }
+function addHin(hid){ S.hitos.find(x => x.id === hid).ind.push(newHin()); markDirty(); renderIV(); }
+function delHin(hid, iid){ const h = S.hitos.find(x => x.id === hid); h.ind = h.ind.filter(x => x.id !== iid); if (!h.ind.length) h.ind.push(newHin()); markDirty(); renderIV(); }
+function renderIV(){
+  let h = `<thead><tr><th rowspan="2" style="min-width:230px">HITO</th><th colspan="2">INDICADOR</th><th rowspan="2" style="min-width:150px">UNIDAD DE MEDIDA</th><th rowspan="2" style="min-width:110px">META</th><th rowspan="2" style="min-width:140px">FECHA DE<br>CUMPLIMIENTO</th><th rowspan="2"></th></tr><tr><th style="width:40px">N.°</th><th style="min-width:300px">Descripción</th></tr></thead><tbody>`;
+  if (!S.hitos.length) h += `<tr><td colspan="7" class="hint" style="padding:12px">Aún no hay hitos. Use “+ Agregar hito”.</td></tr>`;
+  S.hitos.forEach((x, i) => {
+    x.ind.forEach((d, k) => {
+      const b = f => `hin:${d.id}:${f}`;
+      h += `<tr>${k===0 ? `<td rowspan="${x.ind.length+1}" style="vertical-align:top;background:var(--act)"><div style="display:flex;gap:6px;align-items:flex-start"><b style="padding-top:6px">${i+1}.</b><textarea rows="2" data-b="hit:${x.id}:nombre" placeholder="Nombre del hito" maxlength="250">${esc(x.nombre)}</textarea><button class="ico" title="Eliminar hito" onclick="delHito('${x.id}')">${ICO_DEL}</button></div></td>` : ''}
+        <td class="n" style="text-align:center">${k+1}</td>
+        <td><textarea rows="1" data-b="${b('desc')}" maxlength="300" placeholder="Descripción del indicador">${esc(d.desc)}</textarea></td>
+        <td><input data-b="${b('unidad')}" value="${esc(d.unidad)}" maxlength="80"/></td>
+        <td><input data-b="${b('meta')}" value="${esc(d.meta)}" maxlength="60" placeholder="Ej.: 20"/></td>
+        <td><input type="date" data-b="${b('fecha')}" value="${esc(d.fecha)}" min="${ANIO}-01-01" max="${ANIO}-12-31"/></td>
+        <td><button class="ico" title="Eliminar indicador" onclick="delHin('${x.id}','${d.id}')">${ICO_DEL}</button></td></tr>`;
+    });
+    h += `<tr class="addrow"><td colspan="6"><button class="mini" onclick="addHin('${x.id}')">+ Indicador para el hito ${i+1}</button></td></tr>`;
+  });
+  h += `<tr class="addrow"><td colspan="7"><button class="mini solid" onclick="addHito()">+ Agregar hito</button></td></tr></tbody>`;
+  document.getElementById('tblIV').innerHTML = h;
+  updateComputed();
+}
+
+/* ═══════════ FICHA DE ACTIVIDAD ═══════════ */
+let fichaId = null;
+function ubicRef(key){ const [aid, k] = key.split('~'); const a = findAct(aid); return a ? a.ubic[+k] : null; }
+function openFicha(id){
+  fichaId = id; const a = findAct(id); const P = PRODUCTOS.find(p => p.n === a.p);
+  document.getElementById('fichaTitle').textContent = `Ficha de la actividad ${a.codigo || ''}`;
+  document.getElementById('fichaSub').textContent = a.nombre || '(sin nombre)';
+  const b = f => `act:${a.id}:${f}`;
+  const servs = (CLASIF[a.p]?.serv || []), sv = servOf(a.p, a.serv);
+  const oS = servs.map(s => `<option ${s.n===a.serv?'selected':''}>${esc(s.n)}</option>`).join('');
+  const oA = (sv ? sv.act : []).map(x => `<option ${x.n===a.actv?'selected':''}>${esc(x.n)}</option>`).join('');
+  const mg = (field, label) => `<div class="lbl">${label}</div>${a[field].map((v, i) => `<input class="${i>5?'hide-s':''}" type="number" min="0" step="1" data-num data-b="${b(field)}:${i}" value="${(+v)?v:''}" placeholder="0"/>`).join('')}<div class="tt" id="ft-${field}">0</div>`;
+  let h = `<div class="field"><label>Modalidad de intervención</label><input class="ro" readonly value="${esc(CLASIF[a.p]?.mod || P.mod)} (Producto ${P.n})"/></div>
+    <div class="grid" style="margin-top:12px">
+      <div class="field"><label>Servicio estandarizado <span class="req">*</span></label><select onchange="onFichaServ(this)"><option value="">– Seleccione –</option>${oS}</select></div>
+      <div class="field"><label>Actividad <span class="req">*</span></label><select onchange="onFichaAct(this)" ${sv ? '' : 'disabled'}><option value="">${sv ? '– Seleccione –' : 'Primero elija el servicio'}</option>${oA}</select></div>
+    </div>
+    <div class="field" style="margin-top:12px"><label>Unidad de medida <span class="hint">(según el clasificador; se copia al Anexo A)</span></label><input class="ro" readonly value="${esc(a.unidad || '—')}"/></div>
+    <div class="field" style="margin-top:12px"><label>Objetivo de la actividad <span class="req">*</span></label><span class="hint">Máximo 500 caracteres</span><textarea rows="3" maxlength="500" data-b="${b('objetivo')}" placeholder="Describa el objetivo principal...">${esc(a.objetivo)}</textarea></div>
+    <div class="section-title" style="margin-top:16px">Atenciones y beneficiarios programados por mes</div>
+    <p class="hint" style="margin-bottom:8px">Las metas físicas (actividades) y el presupuesto se registran en los Anexos A y B.</p>
+    <div class="mgrid"><div></div>${MES.map((m, i) => `<div class="h ${i>5?'hide-s':''}">${m}</div>`).join('')}<div class="h">Total</div>${mg('aten','Atenciones')}${mg('benef','Beneficiarios')}</div>
+    <div class="section-title" style="margin-top:16px">Lugares de ejecución <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--muted)">(máximo 6 nacionales y 2 en el extranjero)</span></div>
+    <div id="ubicBox"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="mini solid" onclick="addUbic('N')">+ Ubicación nacional</button><button class="mini solid" onclick="addUbic('E')">+ Actividad en el extranjero</button></div>
+    ${a.p === 5 ? `<div class="field" style="margin-top:16px;max-width:320px"><label>Ventas proyectadas (S/)</label><input type="number" min="0" step="0.01" data-num data-b="${b('ventas')}" value="${(+a.ventas)?a.ventas:''}" placeholder="0.00"/></div>` : ''}
+    <div class="field" style="margin-top:16px"><label>Observaciones</label><textarea rows="2" maxlength="500" data-b="${b('obs')}" placeholder="Comentarios adicionales (opcional)">${esc(a.obs)}</textarea></div>`;
+  document.getElementById('fichaBody').innerHTML = h;
+  renderUbic(); updateFichaTotals();
+  document.getElementById('fichaModal').classList.add('show');
+}
+function onFichaServ(sel){ const a = findAct(fichaId); a.serv = sel.value; const sv = servOf(a.p, a.serv); a.actv = (sv && sv.act.length === 1) ? sv.act[0].n : ''; if (a.actv) a.unidad = unitOf(a.p, a.serv, a.actv); markDirty(); openFicha(fichaId); }
+function onFichaAct(sel){ const a = findAct(fichaId); a.actv = sel.value; const u = unitOf(a.p, a.serv, a.actv); if (u) a.unidad = u; markDirty(); openFicha(fichaId); }
+function updateFichaTotals(){ const a = findAct(fichaId); if (!a) return; ['aten','benef'].forEach(f => { const el = document.getElementById('ft-'+f); if (el) el.textContent = fmt(sum(a[f]), 0); }); }
+function closeFicha(){ document.getElementById('fichaModal').classList.remove('show'); const a = findAct(fichaId);
+  if (a){ const el = document.getElementById('fb-'+a.id); if (el){ const st = fichaState(a); el.className = 'ficha-btn ' + st; el.textContent = st === 'ok' ? '✓ Ficha' : 'Ficha'; } }
+  fichaId = null; renderA(); }
+function addUbic(t){
+  const a = findAct(fichaId); const n = a.ubic.filter(u => u.t === t).length;
+  if (t === 'N' && n >= 6) return toast('Máximo 6 ubicaciones nacionales');
+  if (t === 'E' && n >= 2) return toast('Máximo 2 actividades en el extranjero');
+  a.ubic.push(t === 'N' ? {t, reg:'', prov:'', dist:''} : {t, pais:'', ciudad:''}); markDirty(); renderUbic();
+}
+function delUbic(k){ const a = findAct(fichaId); a.ubic.splice(k, 1); markDirty(); renderUbic(); }
+function onUbicGeo(sel, k, lvl){ const a = findAct(fichaId); const u = a.ubic[k]; u[lvl] = sel.value; if (lvl === 'reg'){ u.prov = ''; u.dist = ''; } if (lvl === 'prov') u.dist = ''; markDirty(); renderUbic(); }
+function renderUbic(){
+  const a = findAct(fichaId); const box = document.getElementById('ubicBox');
+  if (!a.ubic.length){ box.innerHTML = '<p class="hint" style="margin-bottom:8px">Sin lugares registrados.</p>'; return; }
+  const o = (list, v) => '<option value="">– Seleccione –</option>' + list.map(x => `<option ${x===v?'selected':''}>${esc(x)}</option>`).join('');
+  box.innerHTML = a.ubic.map((u, k) => {
+    if (u.t === 'N'){
+      const provs = u.reg ? Object.keys(ubigeoData[u.reg] || {}).sort() : [];
+      const dists = (u.reg && u.prov) ? (ubigeoData[u.reg][u.prov] || []).slice().sort() : [];
+      return `<div class="loc-card"><div class="field"><label>Región</label><select onchange="onUbicGeo(this,${k},'reg')">${o(Object.keys(ubigeoData).sort(), u.reg)}</select></div>
+        <div class="field"><label>Provincia</label><select onchange="onUbicGeo(this,${k},'prov')" ${u.reg?'':'disabled'}>${o(provs, u.prov)}</select></div>
+        <div class="field"><label>Distrito</label><select onchange="onUbicGeo(this,${k},'dist')" ${u.prov?'':'disabled'}>${o(dists, u.dist)}</select></div>
+        <button class="ico" title="Quitar" onclick="delUbic(${k})">${ICO_DEL}</button></div>`;
+    }
+    return `<div class="loc-card f"><div class="field"><label>País</label><input data-b="ub:${a.id}~${k}:pais" value="${esc(u.pais)}" maxlength="60"/></div>
+      <div class="field"><label>Ciudad</label><input data-b="ub:${a.id}~${k}:ciudad" value="${esc(u.ciudad)}" maxlength="60"/></div>
+      <button class="ico" title="Quitar" onclick="delUbic(${k})">${ICO_DEL}</button></div>`;
+  }).join('');
+}
+const ubicTxt = a => a.ubic.map(u => u.t === 'N' ? [u.reg, u.prov, u.dist].filter(Boolean).join('/') : `${u.pais||''}${u.ciudad?' – '+u.ciudad:''} (extranjero)`).filter(s => s.trim()).join('; ');
+
+/* ═══════════ VALIDACIÓN ═══════════ */
+function validate(){
+  compute();
+  const E = [], W = [];
+  const e = (tab, msg) => E.push({tab, msg}), w = (tab, msg) => W.push({tab, msg});
+  // Generales
+  if (!S.cite) e('gen', 'Seleccione el CITE.');
+  if (!S.responsable.trim()) e('gen', 'Registre el nombre del responsable.');
+  if (S.etapa !== 'Programación' && !S.base) e('gen', 'Primero debe grabar la Programación; recién entonces se habilitan Reprogramación y Reformulación.');
+  if (S.base && S.etapa === 'Programación' && S.dirty) e('gen', 'La Programación ya fue grabada y no se puede volver a grabar. Para modificar el PAA, cambie la etapa a Reprogramación (variación máxima de 10 % por actividad) o a Reformulación (con documento de aprobación).');
+  if (S.etapa === 'Reformulación' && !S.docRef.trim()) e('gen', 'En la etapa “Reformulación” debe indicar el documento de aprobación.');
+  // Anexo A – indicadores
+  if (!S.indicadores.length) w('A', 'No ha registrado indicadores (programación de indicadores).');
+  S.indicadores.forEach((x, i) => {
+    if (!x.nombre.trim()) e('A', `Indicador ${i+1}: falta el nombre.`);
+    else if (!x.unidad.trim()) w('A', `Indicador ${i+1}: falta la unidad de medida.`);
+  });
+  // Anexo A – actividades
+  if (!S.actividades.length) e('A', 'Registre al menos una actividad en el Anexo A.');
+  const codes = {};
+  S.actividades.forEach(a => {
+    const id = `Actividad ${a.codigo || '(sin código)'}${a.nombre ? ' “' + a.nombre.slice(0, 50) + (a.nombre.length > 50 ? '…' : '') + '”' : ''}`;
+    if (!a.codigo.trim()) e('A', `${id}: falta el código.`);
+    else { const c = a.codigo.trim(); if (codes[c]) e('A', `Código ${c} repetido en dos actividades.`); codes[c] = 1; }
+    if (!a.nombre.trim()) e('A', `${id}: falta el nombre.`);
+    if (!a.unidad.trim()) e('A', `${id}: falta la unidad de medida.`);
+    if (sum(a.m) <= 0) e('A', `${id}: la cantidad anual es 0; programe la meta mensual.`);
+    if (fichaState(a) !== 'ok') e('A', `${id}: complete la ficha (servicio estandarizado, actividad y objetivo).`);
+    if (a.unidad.trim() && !unitsOf(a.p).includes(a.unidad)) e('A', `${id}: la unidad de medida “${a.unidad}” no figura en el clasificador del Producto ${a.p}.`);
+    else if (a.actv && unitOf(a.p, a.serv, a.actv) && a.unidad !== unitOf(a.p, a.serv, a.actv)) e('A', `${id}: la unidad de medida debe ser “${unitOf(a.p, a.serv, a.actv)}”, según la actividad del clasificador.`);
+    if (!a.ubic.length) w('A', `${id}: no tiene lugares de ejecución en la ficha.`);
+    const tb = K['ba:'+a.id+':t'] || 0;
+    if (tb <= 0 && !(isPriv() && K['ca:'+a.id+':t'] > 0)) w('B', `${id}: no tiene presupuesto programado.`);
+  });
+  PRODUCTOS.forEach(P => { if (!acts(P.n).length) w('A', `Producto ${P.n} (${P.nombre}) no tiene actividades.`); });
+  // Anexo B
+  allIns().filter(i => !i.soloC).forEach(ins => {
+    const owner = S.actividades.find(a => a.insumos.includes(ins));
+    const where = owner ? `actividad ${owner.codigo}` : 'gastos de operación';
+    if (!ins.nombre.trim()) e('B', `Hay un insumo sin nombre en ${where}.`);
+    if (sum(ins.m) <= 0) w('B', `Insumo “${ins.nombre || 'sin nombre'}” (${where}) sin monto programado.`);
+    if (isPub() && !String(ins.clas).trim()) e('B', `Insumo “${ins.nombre || 'sin nombre'}” (${where}): falta el clasificador de gasto.`);
+  });
+  if ((K['bt:t'] || 0) <= 0) e('B', 'El presupuesto MINCETUR del Anexo B es 0.');
+  const subv = K['bt:t'] || 0;
+  const R = {subv, go: subv ? K['bg:t'] / subv * 100 : 0, af: subv ? K['af'] / subv * 100 : 0, contra: subv ? K['contra'] / subv * 100 : 0, var: []};
+  if (isPriv()){
+    // Anexo C
+    allIns().forEach(ins => {
+      const d = K['ci:'+ins.id+':dif'];
+      if (Math.abs(d) > 0.005) e('C', `Insumo “${ins.nombre || 'sin nombre'}”: total año (${fmt(K['ci:'+ins.id+':t'],2)}) ≠ suma de aportes (diferencia ${fmt(d,2)}).`);
+      if (ins.soloC && !ins.nombre.trim()) e('C', 'Hay un insumo de contrapartida sin nombre.');
+    });
+    // Anexo D
+    if (Math.abs(K['dt'] - subv) > 0.005) e('D', `El total de desembolsos (S/ ${fmt(K['dt'],2)}) debe ser igual al presupuesto MINCETUR del Anexo B (S/ ${fmt(subv,2)}).`);
+    // Reglas DCITAT
+    if (R.go > LIM.go + 1e-9) e('val', `Gastos operativos = ${fmt(R.go,2)} % de la subvención; el límite es ≤ ${LIM.go} %.`);
+    if (R.af > LIM.af + 1e-9 && !(S.afAutorizado && S.afDoc.trim())) e('val', `Activos fijos para innovación y TT = ${fmt(R.af,2)} % de la subvención; el límite es ≤ ${LIM.af} % (más solo con sustento técnico y autorización de la DCITAT).`);
+    if (subv > 0 && R.contra < LIM.contra - 1e-9) e('val', `Aporte del CITE y/o aliados (contrapartida) = ${fmt(R.contra,2)} % de la subvención; el mínimo es ${LIM.contra} %.`);
+    if (S.etapa === 'Reprogramación'){
+      if (!S.base) w('val', 'No hay una programación de referencia grabada; no se puede controlar la variación por actividad.');
+      else S.actividades.forEach(a => {
+        const b0 = S.base.acts[a.id]; const now = K['ca:'+a.id+':t'] || 0;
+        if (b0 === undefined){ if (now > 0) w('val', `Actividad ${a.codigo} es nueva respecto a la programación de referencia.`); return; }
+        if (b0 > 0 && now > b0 * (1 + LIM.varAct/100) + 0.005){ R.var.push(a.codigo); e('val', `Actividad ${a.codigo}: el presupuesto (S/ ${fmt(now,2)}) supera en ${fmt((now/b0-1)*100,1)} % lo programado (S/ ${fmt(b0,2)}). Requiere reformulación previa aprobada (no retroactiva).`); }
+      });
+    }
+  }
+  // Anexo IV
+  if (!S.hitos.length) e('IV', 'Registre al menos un hito de cumplimiento (Anexo IV).');
+  S.hitos.forEach((x, i) => {
+    if (!x.nombre.trim()) e('IV', `Hito ${i+1}: falta el nombre.`);
+    x.ind.forEach((d, k) => { const lbl = `Hito ${i+1}, indicador ${k+1}`;
+      if (!d.desc.trim()) e('IV', `${lbl}: falta la descripción.`);
+      if (!d.unidad.trim() || !String(d.meta).trim() || !d.fecha) e('IV', `${lbl}: complete unidad de medida, meta y fecha de cumplimiento.`);
+      else if (!d.fecha.startsWith(String(ANIO))) w('IV', `${lbl}: la fecha de cumplimiento no está en ${ANIO}.`);
+    });
+  });
+  return {E, W, R};
+}
+const TABN = {gen:'Datos generales', A:'Anexo A', B:'Anexo B', C:'Anexo C', D:'Anexo D', IV:'Anexo IV', val:'Reglas'};
+function issuesHtml(E, W){
+  if (!E.length && !W.length) return '<div class="ok-big">✓ El PAA cumple todas las reglas de consistencia.</div>';
+  return '<div class="issues">' + E.map(x => `<div class="issue e"><span class="tag">${TABN[x.tab]}</span><span>${esc(x.msg)}</span><a onclick="closeRes();goTab('${x.tab}')">Ir</a></div>`).join('')
+    + W.map(x => `<div class="issue w"><span class="tag">Aviso · ${TABN[x.tab]}</span><span>${esc(x.msg)}</span><a onclick="closeRes();goTab('${x.tab}')">Ir</a></div>`).join('') + '</div>';
+}
+function renderVal(){
+  const {E, W, R} = validate();
+  const priv = isPriv();
+  document.getElementById('rulesSub').textContent = priv
+    ? 'Reglas para CITE privados (Directiva). Si alguna no se cumple, el sistema no permite grabar el PAA hasta corregirla. Base de cálculo: subvención MINCETUR del Anexo B.'
+    : (isPub() ? 'Las reglas de gastos operativos, activos fijos, contrapartida y variación aplican solo a CITE privados.' : 'Seleccione un CITE.');
+  const card = (t, v, lim, ok, na) => `<div class="rule ${na?'na':(ok?'ok':'bad')}"><div class="rt">${t}</div><div class="rv">${v}</div><div class="rl">${lim}</div></div>`;
+  const varErr = R.var.length;
+  document.getElementById('rulesBox').innerHTML =
+    card('Subvención MINCETUR', 'S/ ' + fmt(R.subv, 2), 'Total Anexo B', R.subv > 0, false) +
+    card('Gastos operativos', fmt(R.go, 1) + ' %', `Límite ≤ ${LIM.go} % · S/ ${fmt(K['bg:t'],2)}`, R.go <= LIM.go, !priv) +
+    card('Activos fijos (innovación y TT)', fmt(R.af, 1) + ' %', `Límite ≤ ${LIM.af} % · S/ ${fmt(K['af'],2)}`, R.af <= LIM.af || (S.afAutorizado && S.afDoc.trim()), !priv) +
+    card('Aporte CITE y/o aliados', fmt(R.contra, 1) + ' %', `Mínimo ${LIM.contra} % · S/ ${fmt(K['contra'],2)}`, R.contra >= LIM.contra, !priv) +
+    card('Variación por actividad', S.etapa === 'Reprogramación' ? (varErr ? varErr + ' excede(n)' : 'OK') : 'N.A.', S.etapa === 'Reprogramación' ? `Máximo +${LIM.varAct} % sobre lo programado` : 'Se controla en la etapa Reprogramación', !varErr, !priv || S.etapa !== 'Reprogramación') +
+    card('Anexo D vs Anexo B', 'S/ ' + fmt(K['dt'], 2), 'Total de desembolsos = subvención', Math.abs(K['dt'] - R.subv) < 0.005, !priv);
+  document.getElementById('afAuthBox').classList.toggle('hidden', !(priv && R.af > LIM.af));
+  document.getElementById('issuesBox').innerHTML = issuesHtml(E, W);
+  return {E, W};
+}
+function updateDots(){
+  let res; try { res = validate(); } catch(err){ return; }
+  const tabsWithErr = new Set(res.E.map(x => x.tab));
+  ['gen','A','B','C','D','IV','val'].forEach(t => {
+    const d = document.getElementById('dot-'+t); if (!d) return;
+    d.className = 'dot ' + (tabsWithErr.has(t) ? 'err' : 'ok');
+  });
+  if (document.getElementById('panel-val').classList.contains('active')) renderValLight(res);
+}
+function renderValLight(){ renderVal(); }
+
+/* ═══════════ GRABAR ═══════════ */
+function baseSnapshot(){ compute(); const acts = {}; S.actividades.forEach(a => acts[a.id] = r2(K['ca:'+a.id+':t'] || 0)); return {fecha:new Date().toISOString(), etapa:S.etapa, acts}; }
+async function grabar(){
+  const {E, W} = renderVal();
+  if (E.length){
+    showRes('No se puede grabar el PAA', `${E.length} error(es) por corregir${W.length ? ' · ' + W.length + ' aviso(s)' : ''}`, issuesHtml(E, W),
+      `<button class="btn btn-line" onclick="closeRes()">Cerrar y corregir</button>`);
+    return;
+  }
+  const fecha = new Date().toISOString();
+  const snap = (!S.base || S.etapa === 'Reformulación') ? baseSnapshot() : S.base;
+  if (ACCESS){
+    toast('Grabando en la base de datos de la DCITAT…');
+    document.querySelectorAll('.btn-primary').forEach(b => b.disabled = true);
+    try {
+      const paa = Object.assign({}, S, {base: snap, grabado: fecha, dirty: false});
+      const resp = await fetch(APPS_SCRIPT_URL, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify({action:'save', k:ACCESS_KEY, paa, flat:flatten()})});
+      const j = await resp.json();
+      if (!j.ok){
+        if (j.base !== undefined) { S.base = j.base; renderGeneral(); }
+        showRes('No se pudo grabar el PAA', 'El servidor de la DCITAT rechazó la grabación', `<div class="issue e"><span>${esc(j.error || 'Error desconocido')}</span></div>`, `<button class="btn btn-line" onclick="closeRes()">Cerrar</button>`);
+        return;
+      }
+      S.base = j.base;
+    } catch(err){
+      showRes('No se pudo grabar el PAA', 'Sin conexión con el servidor', '<div class="issue e"><span>No se pudo conectar con la base de datos de la DCITAT. Revise su conexión a internet y vuelva a intentarlo. Sus cambios siguen guardados en este navegador.</span></div>', `<button class="btn btn-line" onclick="closeRes()">Cerrar</button>`);
+      return;
+    } finally { document.querySelectorAll('.btn-primary').forEach(b => b.disabled = false); }
+  } else S.base = snap;
+  S.grabado = fecha; S.dirty = false;
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(S)); } catch(e){}
+  updatePill(); renderGeneral();
+  showRes('PAA grabado', `${S.cite} · ${S.etapa} · ${new Date(S.grabado).toLocaleString('es-PE')}`,
+    (W.length ? `<p style="margin-bottom:10px">Se grabó con ${W.length} aviso(s) que conviene revisar:</p>` + issuesHtml([], W) : '<div class="ok-big">✓ El PAA cumple todas las reglas y fue grabado.</div>')
+    + (ACCESS ? '<p style="margin-top:10px;color:var(--green);font-weight:600">✓ Registrado en la base de datos de la DCITAT.</p>' : '<p class="note red" style="margin-top:10px">Modo sin conexión: el PAA quedó grabado solo en este navegador.</p>'),
+    `<button class="btn btn-line" onclick="closeRes()">Cerrar</button><button class="btn btn-green" onclick="closeRes();downloadExcel()">Descargar Excel</button>`);
+}
+function showRes(t, s, body, foot){ document.getElementById('resTitle').textContent = t; document.getElementById('resSub').textContent = s; document.getElementById('resBody').innerHTML = body; document.getElementById('resFoot').innerHTML = foot; document.getElementById('resModal').classList.add('show'); }
+function closeRes(){ document.getElementById('resModal').classList.remove('show'); }
+
+/* ═══════════ DATOS PLANOS (Google Sheets) ═══════════ */
+function flatten(){
+  compute();
+  const c = S.cite, t = tipo(), f = new Date().toISOString();
+  const pn = p => `Producto ${p}: ${PRODUCTOS[p-1].nombre}`;
+  const out = {
+    A_Indicadores: S.indicadores.map((x, i) => [f, c, t, i+1, x.nombre, x.clas, x.unidad, +x.lb||0, +x.res||0, (+x.res||0)-(+x.lb||0), x.com]),
+    A_Metas: S.actividades.map(a => [f, c, t, pn(a.p), a.codigo, a.nombre, a.unidad, sum(a.m), ...a.m]),
+    B_Presupuesto: [], C_Fuentes: [],
+    D_Desembolsos: t !== 'Privado' ? [] : S.desembolsos.map((d, i) => [f, c, t, i+1, d.concepto, +d.monto||0]),
+    IV_Hitos: S.hitos.flatMap((x, i) => x.ind.map((d, k) => [f, c, t, i+1, x.nombre, k+1, d.desc, d.unidad, d.meta, d.fecha])),
+    Fichas: S.actividades.map(a => [f, c, t, pn(a.p), CLASIF[a.p]?.mod || PRODUCTOS[a.p-1].mod, a.codigo, a.nombre, a.serv, a.actv, a.objetivo, sum(a.aten), sum(a.benef), +a.ventas||0, ubicTxt(a), a.obs])
+  };
+  const push = (grp, cod, act, ins) => {
+    if (!ins.soloC) out.B_Presupuesto.push([f, c, t, grp, cod, act, ins.nombre, ins.clas||'', ins.af?'Sí':'No', sum(ins.m), ...ins.m]);
+    if (t === 'Privado'){ const cm = cmOf(ins); out.C_Fuentes.push([f, c, t, grp, cod, act, ins.nombre, sum(cm), ...cm, ins.soloC?0:sum(ins.m), +ins.citeM||0, +ins.citeNM||0, +ins.entM||0, +ins.entNM||0]); }
+  };
+  S.actividades.forEach(a => a.insumos.forEach(ins => push(pn(a.p), a.codigo, a.nombre, ins)));
+  S.gastos.forEach(ins => push('6: Gastos de operación', '6', 'Gastos de operación', ins));
+  return {meta:{fecha:f, cite:c, tipo:t, etapa:S.etapa, responsable:S.responsable, docRef:S.docRef, subvencion:K['bt:t'], contrapartida:K['contra']}, sheets:out};
+}
+async function fetchServer(){
+  const r = await fetch(APPS_SCRIPT_URL + '?action=load&k=' + encodeURIComponent(ACCESS_KEY)); return r.json();
+}
+function applyServer(j, askLocal){
+  const local = (S.cite === j.cite) ? S : null;
+  const srvTime = j.paa && j.paa.grabado ? Date.parse(j.paa.grabado) : 0;
+  const keepLocal = local && local.dirty && local.actualizado && Date.parse(local.actualizado) > srvTime && (local.actividades.length || local.indicadores.length) &&
+    (!askLocal || confirm(`En este equipo hay cambios sin grabar de ${j.cite} (${new Date(local.actualizado).toLocaleString('es-PE')}), posteriores a lo último grabado.\n\nAceptar: continuar con esos cambios.\nCancelar: cargar lo último grabado en la base de datos.`));
+  if (!keepLocal) S = j.paa ? Object.assign(blank(), j.paa) : blank();
+  S.cite = j.cite; S.base = j.base || null;
+  if (!keepLocal) { S.dirty = !j.paa; if (j.paa) S.grabado = j.paa.grabado || S.grabado; }
+  normalize(); saveLocal();
+}
+async function loadFromServer(){
+  if (!ACCESS) return;
+  if (!confirm(`¿Cargar el último PAA grabado de ${ACCESS.cite}? Reemplazará lo que tiene en pantalla.`)) return;
+  try { const j = await fetchServer(); if (!j.ok) return toast(j.error || 'No se pudo cargar');
+    if (!j.paa) return toast('Aún no hay un PAA grabado para su CITE');
+    S = blank(); applyServer(j, false); renderAll(); toast('PAA recuperado');
+  } catch(e){ toast('No se pudo conectar con la base de datos de la DCITAT'); }
+}
+
+/* ═══════════ RESPALDO JSON ═══════════ */
+function exportJSON(){
+  const blob = new Blob([JSON.stringify(S, null, 1)], {type:'application/json'});
+  saveBlob(blob, `PAA_${ANIO}_${fileSafe(S.cite||'CITE')}_respaldo.json`);
+}
+function importJSON(inp){
+  const f = inp.files[0]; if (!f) return;
+  const rd = new FileReader();
+  rd.onload = () => { try { const d = JSON.parse(rd.result); if (!d.actividades) throw 0; const keepBase = S.base; S = Object.assign(blank(), d); if (ACCESS){ S.cite = ACCESS.cite; S.base = keepBase; } normalize(); S.dirty = true; saveLocal(); renderAll(); toast('Copia cargada: revise y grabe para registrarla'); } catch(e){ toast('El archivo no es una copia válida del PAA'); } inp.value = ''; };
+  rd.readAsText(f);
+}
+function resetAll(){ if (!confirm('¿Borrar lo que tiene en pantalla y empezar un PAA en blanco? Lo ya grabado en la base de datos de la DCITAT no se borra. Descargue antes una copia si la necesita.')) return; const c = S.cite, b = S.base; S = blank(); if (ACCESS){ S.cite = c; S.base = b; } normalize(); saveLocal(); renderAll(); goTab('gen'); }
+const fileSafe = s => String(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Za-z0-9_-]+/g, '_');
+function saveBlob(blob, name){ const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500); }
+
+/* ═══════════ EXCEL ═══════════ */
+const XC = {dark:'FF2B2B2E', charcoal:'FF3A3A3D', red:'FFC8102E', prod:'FFE4E1DC', act:'FFFBF3E4', trim:'FFFFF2CC', trimP:'FFF2E2B6', band:'FFF3F0EA', src:'FF8A6A2A', white:'FFFFFFFF'};
+const thin = {style:'thin', color:{argb:'FFBFB8AC'}};
+const BORD = {top:thin, left:thin, bottom:thin, right:thin};
+function colL(n){ let s = ''; while (n > 0){ const m = (n - 1) % 26; s = String.fromCharCode(65 + m) + s; n = Math.floor((n - 1) / 26); } return s; }
+function fill(c){ return {type:'pattern', pattern:'solid', fgColor:{argb:c}}; }
+function styleRange(ws, r, c1, c2, st){ for (let c = c1; c <= c2; c++){ const cell = ws.getCell(r, c); Object.assign(cell, st); } }
+function hdr(cell, txt, color){ cell.value = txt; cell.fill = fill(color || XC.charcoal); cell.font = {bold:true, color:{argb:XC.white}, size:9, name:'Arial'}; cell.alignment = {horizontal:'center', vertical:'middle', wrapText:true}; cell.border = BORD; }
+function mHeader(ws, r, c0){ // dos filas: r (PROGRAMACIÓN MENSUAL) y r+1 (meses)
+  ws.mergeCells(r, c0, r, c0 + 15); hdr(ws.getCell(r, c0), 'PROGRAMACIÓN MENSUAL');
+  for (let j = 0; j < 16; j++){ const q = Math.floor(j / 4), k = j % 4; hdr(ws.getCell(r+1, c0 + j), k === 3 ? TRIM[q] : `${MES[q*3+k]}-${YY}`, k === 3 ? 'FF6B5A2E' : XC.charcoal); }
+}
+const mCol = (c0, i) => c0 + i + Math.floor(i / 3);
+const qCol = (c0, q) => c0 + q*4 + 3;
+function sheetTitle(wb, ws, logoId, lines, lastCol, estado){
+  ws.addImage(logoId, {tl:{col:0.15, row:0.25}, ext:{width:205, height:61}});
+  lines.forEach((t, i) => { const r = i + 1; ws.mergeCells(r, 3, r, lastCol); const c = ws.getCell(r, 3); c.value = t; c.alignment = {horizontal:'center', vertical:'middle'}; c.font = {name:'Arial', bold:true, size: i === 0 ? 13 : 10, color:{argb: i === 0 ? XC.red : XC.dark}}; });
+  const r = lines.length + 1; ws.mergeCells(r, 3, r, lastCol); const c = ws.getCell(r, 3); c.value = estado; c.alignment = {horizontal:'center'}; c.font = {name:'Arial', italic:true, size:8, color:{argb:'FF6B6B6B'}};
+  for (let i = 1; i <= lines.length; i++) ws.getRow(i).height = 17;
+}
+function band(ws, r, c1, c2, txt, color){ ws.mergeCells(r, c1, r, c2); const c = ws.getCell(r, c1); c.value = txt; c.fill = fill(color || XC.dark); c.font = {name:'Arial', bold:true, size:9, color:{argb:XC.white}}; c.alignment = {vertical:'middle'}; ws.getRow(r).height = 16; }
+function fx(f, res){ return {formula:f, result: r2(res)}; }
+function writeMonths(ws, r, c0, vals, kind, ctx){
+  // kind: 'val' (valores) | 'sub' (SUBTOTAL de rango rows [r1,r2]) ; trims siempre fórmula
+  for (let i = 0; i < 12; i++){
+    const col = mCol(c0, i), cell = ws.getCell(r, col);
+    cell.value = kind === 'val' ? (+vals[i] || 0) : fx(`SUBTOTAL(9,${colL(col)}${ctx.r1}:${colL(col)}${ctx.r2})`, vals[i]);
+  }
+  const tq = trims(vals);
+  for (let q = 0; q < 4; q++){
+    const col = qCol(c0, q), cell = ws.getCell(r, col);
+    if (kind === 'val') cell.value = fx(`SUM(${colL(col-3)}${r}:${colL(col-1)}${r})`, tq[q]);
+    else cell.value = fx(`SUBTOTAL(9,${colL(col)}${ctx.r1}:${colL(col)}${ctx.r2})`, tq[q]);
+  }
+}
+function rowStyle(ws, r, c1, c2, kind, c0, numFmt){
+  for (let c = c1; c <= c2; c++){
+    const cell = ws.getCell(r, c); cell.border = BORD;
+    cell.font = {name:'Arial', size:9, bold: kind !== 'ins' && kind !== 'row', italic: kind === 'ins', color:{argb: kind === 'tot' ? XC.white : 'FF2C2C2C'}};
+    const isTrim = c0 && c >= c0 && c < c0 + 16 && (c - c0) % 4 === 3;
+    let bg = null;
+    if (kind === 'prod') bg = isTrim ? XC.trimP : XC.prod;
+    else if (kind === 'act') bg = isTrim ? XC.trimP : XC.act;
+    else if (kind === 'tot') bg = XC.dark;
+    else if (isTrim) bg = XC.trim;
+    if (bg) cell.fill = fill(bg);
+    if (typeof cell.value === 'number' || (cell.value && cell.value.formula)) { cell.numFmt = numFmt; cell.alignment = {horizontal:'right', vertical:'middle'}; }
+    else cell.alignment = {vertical:'middle', wrapText:true, horizontal: c === c1 ? 'center' : 'left'};
+  }
+}
+async function downloadExcel(){
+  if (typeof ExcelJS === 'undefined') return toast('No se pudo cargar la librería de Excel. Revise su conexión a internet.');
+  const {E} = validate();
+  if (!S.cite) return toast('Seleccione su CITE antes de descargar');
+  if (E.length && !confirm(`El PAA tiene ${E.length} error(es) de consistencia. ¿Descargar de todos modos como BORRADOR?`)) return;
+  compute();
+  const estado = (!E.length && S.grabado && !S.dirty) ? `Etapa: ${S.etapa} · Validado y grabado el ${new Date(S.grabado).toLocaleString('es-PE')} · Responsable: ${S.responsable}` : `BORRADOR — no validado · Etapa: ${S.etapa} · Generado el ${new Date().toLocaleString('es-PE')} · Responsable: ${S.responsable || '-'}`;
+  const wb = new ExcelJS.Workbook(); wb.creator = 'Formulario PAA 2027 – DCITAT'; wb.created = new Date();
+  wb.calcProperties = {fullCalcOnLoad:true};
+  const logo = wb.addImage({base64: LOGO_DARK, extension:'png'});
+  const page = {orientation:'landscape', paperSize:9, fitToPage:true, fitToWidth:1, fitToHeight:0, margins:{left:.3, right:.3, top:.4, bottom:.4, header:.2, footer:.2}};
+  const pub = isPub();
+  const NI = '#,##0', NM = '#,##0.00';
+
+  /* ── Anexo A ── */
+  { const ws = wb.addWorksheet('Anexo A', {pageSetup:page, properties:{tabColor:{argb:XC.red}}});
+    const C0 = 5, LAST = 20;
+    ws.columns = [{width:13},{width:52},{width:18},{width:10}, ...Array(16).fill({width:8})];
+    sheetTitle(wb, ws, logo, ['ANEXO A', `PLAN ANUAL DE ACTIVIDADES - AÑO ${ANIO}: Programación de Metas y Actividades`, 'PROGRAMA PRESUPUESTAL 087: INCREMENTO DE LA COMPETITIVIDAD DEL SECTOR ARTESANÍA', S.cite], LAST, estado);
+    let r = 7; band(ws, r, 1, LAST, 'PROGRAMACIÓN DE INDICADORES'); r++;
+    const segs = [[1,1,'N.°'],[2,2,'NOMBRE DEL INDICADOR'],[3,3,'CLASIFICACIÓN'],[4,7,'UNIDAD DE MEDIDA'],[8,10,'LÍNEA DE BASE'],[11,13,`RESULTADO FINAL ESPERADO (${ANIO})`],[14,16,'VARIACIÓN'],[17,20,'COMENTARIOS']];
+    segs.forEach(([a, b, t]) => { if (b > a) ws.mergeCells(r, a, r, b); hdr(ws.getCell(r, a), t); for (let c = a; c <= b; c++) ws.getCell(r, c).border = BORD; });
+    ws.getRow(r).height = 28; r++;
+    ws.mergeCells(r, 1, r, LAST); const sg = ws.getCell(r, 1); sg.value = 'SEGÚN LINEAMIENTOS PAA'; sg.fill = fill('FFD9D9D9'); sg.font = {name:'Arial', bold:true, size:9}; r++;
+    if (!S.indicadores.length){ ws.mergeCells(r, 1, r, LAST); ws.getCell(r, 1).value = '(Sin indicadores registrados)'; ws.getCell(r,1).font = {italic:true, size:9, name:'Arial'}; r++; }
+    S.indicadores.forEach((x, i) => {
+      segs.forEach(([a, b]) => { if (b > a) ws.mergeCells(r, a, r, b); });
+      ws.getCell(r, 1).value = i + 1; ws.getCell(r, 2).value = x.nombre; ws.getCell(r, 3).value = x.clas; ws.getCell(r, 4).value = x.unidad;
+      ws.getCell(r, 8).value = +x.lb || 0; ws.getCell(r, 11).value = +x.res || 0; ws.getCell(r, 14).value = fx(`K${r}-H${r}`, (+x.res||0) - (+x.lb||0)); ws.getCell(r, 17).value = x.com;
+      for (let c = 1; c <= LAST; c++){ const cell = ws.getCell(r, c); cell.border = BORD; cell.font = {name:'Arial', size:9}; cell.alignment = {vertical:'middle', wrapText:true, horizontal: [1,8,11,14].includes(c) ? 'center' : 'left'}; }
+      [8, 11, 14].forEach(c => ws.getCell(r, c).numFmt = '#,##0.00');
+      ws.getRow(r).height = Math.max(24, Math.ceil(Math.max(x.nombre.length / 55, x.com.length / 40)) * 12); r++;
+    });
+    r += 1; band(ws, r, 1, LAST, 'PROGRAMACIÓN DE METAS FÍSICAS'); r++;
+    const h1 = r;
+    [[1,'CÓDIGOS DEL COMPONENTE Y DE LA ACTIVIDAD'],[2,'COMPONENTE / ACTIVIDAD'],[3,'UNIDAD DE MEDIDA'],[4,'CANTIDAD ANUAL']].forEach(([c, t]) => { ws.mergeCells(h1, c, h1+1, c); hdr(ws.getCell(h1, c), t); ws.getCell(h1+1, c).border = BORD; });
+    mHeader(ws, h1, C0); ws.getRow(h1).height = 24; ws.getRow(h1+1).height = 34; r = h1 + 2;
+    const prodRows = []; const firstData = r;
+    PRODUCTOS.forEach(P => {
+      const pr = r++; const list = acts(P.n);
+      list.forEach(a => {
+        ws.getCell(r, 1).value = a.codigo; ws.getCell(r, 2).value = a.nombre; ws.getCell(r, 3).value = a.unidad;
+        writeMonths(ws, r, C0, a.m, 'val');
+        ws.getCell(r, 4).value = fx([0,1,2,3].map(q => colL(qCol(C0,q)) + r).join('+'), sum(a.m));
+        rowStyle(ws, r, 1, LAST, 'row', C0, NI); r++;
+      });
+      ws.getCell(pr, 1).value = String(P.n); ws.getCell(pr, 2).value = `PRODUCTO ${P.n}: ${P.nombre}`;
+      const ctx = {r1: pr + 1, r2: Math.max(pr + 1, r - 1)};
+      if (list.length){ writeMonths(ws, pr, C0, K['ap:'+P.n+':m0'] !== undefined ? MES.map((_, i) => K[`ap:${P.n}:m${i}`]) : Z(), 'sub', ctx); ws.getCell(pr, 4).value = fx(`SUBTOTAL(9,D${ctx.r1}:D${ctx.r2})`, K[`ap:${P.n}:t`]); }
+      else { for (let c = 4; c <= LAST; c++) ws.getCell(pr, c).value = 0; }
+      rowStyle(ws, pr, 1, LAST, 'prod', C0, NI); prodRows.push(pr);
+    });
+    const tr = r; ws.mergeCells(tr, 1, tr, 3); ws.getCell(tr, 1).value = 'TOTAL';
+    for (let c = 4; c <= LAST; c++){ const L = colL(c); ws.getCell(tr, c).value = fx(`SUBTOTAL(9,${L}${firstData}:${L}${tr-1})`, c === 4 ? K['at:t'] : (((c - C0) % 4 === 3) ? K[`at:q${Math.floor((c - C0)/4)}`] : K[`at:m${(c - C0) - Math.floor((c - C0)/4)}`])); }
+    rowStyle(ws, tr, 1, LAST, 'tot', C0, NI); ws.getCell(tr, 1).alignment = {horizontal:'center'};
+    r = tr + 2; ws.getCell(r, 1).value = `[*] Los meses se identifican con los dos últimos dígitos del año del PAA (p. ej., Ene-${YY}).`; ws.getCell(r, 1).font = {name:'Arial', size:8, italic:true};
+    ws.views = [{state:'frozen', xSplit:2, ySplit:h1+1}];
+  }
+
+  /* ── Anexo B ── */
+  { const ws = wb.addWorksheet('Anexo B', {pageSetup:page, properties:{tabColor:{argb:XC.red}}});
+    const hasCl = pub; const CT = hasCl ? 4 : 3, C0 = CT + 1, LAST = C0 + 15;
+    ws.columns = [{width:11},{width:52}, ...(hasCl ? [{width:14}] : []), {width:13}, ...Array(16).fill({width:11})];
+    sheetTitle(wb, ws, logo, ['ANEXO B', `PLAN ANUAL DE ACTIVIDADES - AÑO ${ANIO}: Programación de Presupuesto, fuente de financiamiento MINCETUR`, '(Metas Financieras - En Soles)', S.cite], LAST, estado);
+    let r = 7; band(ws, r, 1, LAST, 'PROGRAMACIÓN DE METAS FINANCIERAS'); r++;
+    const h1 = r;
+    const fixed = [[1,'CÓDIGO DEL COMPONENTE Y DE LA ACTIVIDAD'],[2,'COMPONENTE / ACTIVIDAD'], ...(hasCl ? [[3,'CLASIFICADOR DE GASTO']] : []), [CT,'TOTAL AÑO']];
+    fixed.forEach(([c, t]) => { ws.mergeCells(h1, c, h1+1, c); hdr(ws.getCell(h1, c), t); ws.getCell(h1+1, c).border = BORD; });
+    mHeader(ws, h1, C0); ws.getRow(h1).height = 24; ws.getRow(h1+1).height = 34; r = h1 + 2;
+    const firstData = r;
+    const insW = (ins) => { ws.getCell(r, 2).value = ins.nombre; if (hasCl) ws.getCell(r, 3).value = ins.clas;
+      writeMonths(ws, r, C0, ins.m, 'val'); ws.getCell(r, CT).value = fx([0,1,2,3].map(q => colL(qCol(C0,q)) + r).join('+'), sum(ins.m));
+      rowStyle(ws, r, 1, LAST, 'ins', C0, NM); ws.getCell(r, 2).alignment = {indent:2, vertical:'middle', wrapText:true}; r++; };
+    const grp = (row, label, code, kind, pre, hasRows) => {
+      ws.getCell(row, 1).value = String(code); ws.getCell(row, 2).value = label;
+      const ctx = {r1: row + 1, r2: Math.max(row + 1, r - 1)};
+      if (hasRows){ writeMonths(ws, row, C0, MES.map((_, i) => K[`${pre}:m${i}`]), 'sub', ctx); ws.getCell(row, CT).value = fx(`SUBTOTAL(9,${colL(CT)}${ctx.r1}:${colL(CT)}${ctx.r2})`, K[pre+':t']); }
+      else for (let c = CT; c <= LAST; c++) ws.getCell(row, c).value = 0;
+      rowStyle(ws, row, 1, LAST, kind, C0, NM);
+    };
+    PRODUCTOS.forEach(P => {
+      const pr = r++; const list = acts(P.n);
+      list.forEach(a => { const ar = r++; const ins = a.insumos.filter(i => !i.soloC); ins.forEach(insW); grp(ar, a.nombre, a.codigo, 'act', 'ba:'+a.id, ins.length); });
+      grp(pr, `PRODUCTO ${P.n}: ${P.nombre}`, P.n, 'prod', 'bp:'+P.n, list.length);
+    });
+    const gr = r++; const gl = S.gastos.filter(i => !i.soloC); gl.forEach(insW); grp(gr, 'GASTOS DE OPERACIÓN', 6, 'prod', 'bg', gl.length);
+    const tr = r; ws.getCell(tr, 2).value = `TOTAL AÑO ${ANIO} (APORTE MINCETUR)`;
+    for (let c = CT; c <= LAST; c++){ const L = colL(c); ws.getCell(tr, c).value = fx(`SUBTOTAL(9,${L}${firstData}:${L}${tr-1})`, c === CT ? K['bt:t'] : (((c - C0) % 4 === 3) ? K[`bt:q${Math.floor((c - C0)/4)}`] : K[`bt:m${(c - C0) - Math.floor((c - C0)/4)}`])); }
+    rowStyle(ws, tr, 1, LAST, 'tot', C0, NM);
+    r = tr + 2; ws.getCell(r, 1).value = `[*] Ene-${YY} … Dic-${YY}: meses del año ${ANIO}.${hasCl ? ' Clasificador de gasto: aplica a CITE públicos.' : ''}`; ws.getCell(r, 1).font = {name:'Arial', size:8, italic:true};
+    ws.views = [{state:'frozen', xSplit:2, ySplit:h1+1}];
+  }
+
+  /* ── Anexo C (privados) ── */
+  if (!pub){ const ws = wb.addWorksheet('Anexo C', {pageSetup:page, properties:{tabColor:{argb:XC.red}}});
+    const CT = 3, C0 = 4, CF = C0 + 16, LAST = CF + 4;
+    ws.columns = [{width:11},{width:50},{width:13}, ...Array(16).fill({width:11}), ...Array(5).fill({width:13})];
+    sheetTitle(wb, ws, logo, ['ANEXO C', 'PROGRAMACIÓN DEL PRESUPUESTO (METAS FINANCIERAS) - TOTAL SEGÚN FUENTES DE FINANCIAMIENTO', `PLAN ANUAL DE ACTIVIDADES - AÑO ${ANIO}`, S.cite], LAST, estado);
+    let r = 7; band(ws, r, 1, LAST, 'PROGRAMACIÓN DE METAS FINANCIERAS'); r++;
+    const h1 = r;
+    [[1,'CÓDIGO DEL COMPONENTE Y DE LA ACTIVIDAD'],[2,'COMPONENTE / ACTIVIDAD'],[CT,'TOTAL AÑO'],[CF,'APORTE MINCETUR']].forEach(([c, t]) => { ws.mergeCells(h1, c, h1+1, c); hdr(ws.getCell(h1, c), t, c === CF ? XC.src : null); ws.getCell(h1+1, c).border = BORD; });
+    mHeader(ws, h1, C0);
+    ws.mergeCells(h1, CF+1, h1, CF+2); hdr(ws.getCell(h1, CF+1), 'APORTE DEL CITE SOLICITANTE', XC.src);
+    ws.mergeCells(h1, CF+3, h1, CF+4); hdr(ws.getCell(h1, CF+3), 'APORTE DE LA ENTIDAD ASOCIADA', XC.src);
+    ['Monetario','No Monetario','Monetario','No Monetario'].forEach((t, k) => hdr(ws.getCell(h1+1, CF+1+k), t, XC.src));
+    ws.getRow(h1).height = 28; ws.getRow(h1+1).height = 34; r = h1 + 2;
+    const FK = ['mi','cM','cN','eM','eN'];
+    const compRow = r++; const firstData = r;
+    const insW = ins => { const cm = cmOf(ins); ws.getCell(r, 2).value = ins.nombre + (ins.soloC ? ' (solo contrapartida)' : '');
+      writeMonths(ws, r, C0, cm, 'val'); ws.getCell(r, CT).value = fx([0,1,2,3].map(q => colL(qCol(C0,q)) + r).join('+'), sum(cm));
+      [ins.soloC ? 0 : sum(ins.m), +ins.citeM||0, +ins.citeNM||0, +ins.entM||0, +ins.entNM||0].forEach((v, k) => ws.getCell(r, CF + k).value = v);
+      rowStyle(ws, r, 1, LAST, 'ins', C0, NM); ws.getCell(r, 2).alignment = {indent:2, vertical:'middle', wrapText:true}; r++; };
+    const grp = (row, label, code, kind, pre, hasRows) => {
+      ws.getCell(row, 1).value = String(code); ws.getCell(row, 2).value = label;
+      const ctx = {r1: row + 1, r2: Math.max(row + 1, r - 1)};
+      if (hasRows){ writeMonths(ws, row, C0, MES.map((_, i) => K[`${pre}:m${i}`]), 'sub', ctx);
+        ws.getCell(row, CT).value = fx(`SUBTOTAL(9,${colL(CT)}${ctx.r1}:${colL(CT)}${ctx.r2})`, K[pre+':t']);
+        FK.forEach((k, j) => { const L = colL(CF + j); ws.getCell(row, CF + j).value = fx(`SUBTOTAL(9,${L}${ctx.r1}:${L}${ctx.r2})`, K[pre+':'+k]); }); }
+      else for (let c = CT; c <= LAST; c++) ws.getCell(row, c).value = 0;
+      rowStyle(ws, row, 1, LAST, kind, C0, NM);
+    };
+    PRODUCTOS.forEach(P => {
+      const pr = r++; const list = acts(P.n);
+      list.forEach(a => { const ar = r++; a.insumos.forEach(insW); grp(ar, a.nombre, a.codigo, 'act', 'ca:'+a.id, a.insumos.length); });
+      grp(pr, `PRODUCTO ${P.n}: ${P.nombre}`, P.n, 'prod', 'cp:'+P.n, list.length);
+    });
+    const lastComp = r - 1;
+    // fila COMPONENTES
+    ws.getCell(compRow, 2).value = 'COMPONENTES';
+    for (let c = CT; c <= LAST; c++){ const L = colL(c); const key = c === CT ? 'cc:t' : c >= CF ? 'cc:' + FK[c - CF] : (((c - C0) % 4 === 3) ? `cc:q${Math.floor((c - C0)/4)}` : `cc:m${(c - C0) - Math.floor((c - C0)/4)}`);
+      ws.getCell(compRow, c).value = lastComp >= firstData ? fx(`SUBTOTAL(9,${L}${firstData}:${L}${lastComp})`, K[key]) : 0; }
+    rowStyle(ws, compRow, 1, LAST, 'tot', C0, NM);
+    const gr = r++; S.gastos.forEach(insW); grp(gr, 'GASTOS DE OPERACIÓN', 6, 'prod', 'cg', S.gastos.length);
+    const tr = r; ws.getCell(tr, 2).value = `TOTAL AÑO ${ANIO} (TODAS LAS FUENTES)`;
+    for (let c = CT; c <= LAST; c++){ const L = colL(c); const key = c === CT ? 'ct:t' : c >= CF ? 'ct:' + FK[c - CF] : (((c - C0) % 4 === 3) ? `ct:q${Math.floor((c - C0)/4)}` : `ct:m${(c - C0) - Math.floor((c - C0)/4)}`);
+      ws.getCell(tr, c).value = fx(`SUBTOTAL(9,${L}${firstData}:${L}${tr-1})`, K[key]); }
+    rowStyle(ws, tr, 1, LAST, 'tot', C0, NM);
+    r = tr + 2; ws.getCell(r, 1).value = `Total año = Aporte MINCETUR + Aporte del CITE solicitante + Aporte de la entidad asociada. Ene-${YY} … Dic-${YY}: meses del año ${ANIO}.`; ws.getCell(r, 1).font = {name:'Arial', size:8, italic:true};
+    ws.views = [{state:'frozen', xSplit:2, ySplit:h1+1}];
+  }
+
+  /* ── Anexo D (privados) ── */
+  if (!pub){ const ws = wb.addWorksheet('Anexo D', {pageSetup:Object.assign({}, page, {orientation:'portrait'}), properties:{tabColor:{argb:XC.red}}});
+    ws.columns = [{width:6},{width:42},{width:24},{width:8}];
+    ws.addImage(logo, {tl:{col:1, row:0.2}, ext:{width:170, height:51}});
+    ['ANEXO D', 'PROGRAMACIÓN DE DESEMBOLSO DE LA SUBVENCIÓN ECONÓMICA', '(En Soles)', S.cite].forEach((t, i) => { const r = i + 5; ws.mergeCells(r, 1, r, 3); const c = ws.getCell(r, 1); c.value = t; c.alignment = {horizontal:'center'}; c.font = {name:'Arial', bold:true, size: i === 0 ? 13 : 10, color:{argb: i === 0 ? XC.red : XC.dark}}; });
+    ws.mergeCells(9, 1, 9, 3); ws.getCell(9, 1).value = estado; ws.getCell(9, 1).font = {name:'Arial', italic:true, size:8, color:{argb:'FF6B6B6B'}}; ws.getCell(9,1).alignment = {horizontal:'center', wrapText:true}; ws.getRow(9).height = 24;
+    let r = 11; hdr(ws.getCell(r, 1), 'N.°'); hdr(ws.getCell(r, 2), 'DESEMBOLSO'); hdr(ws.getCell(r, 3), 'SUBVENCIÓN ECONÓMICA'); r++;
+    const f0 = r;
+    S.desembolsos.forEach((d, i) => { ws.getCell(r, 1).value = i + 1; ws.getCell(r, 2).value = d.concepto; ws.getCell(r, 3).value = +d.monto || 0; rowStyle(ws, r, 1, 3, 'row', null, NM); ws.getCell(r, 2).alignment = {horizontal:'center'}; r++; });
+    ws.getCell(r, 2).value = 'Total S/'; ws.getCell(r, 3).value = fx(S.desembolsos.length ? `SUM(C${f0}:C${r-1})` : '0', K['dt']); rowStyle(ws, r, 1, 3, 'tot', null, NM); ws.getCell(r, 2).alignment = {horizontal:'center'};
+    r += 2; ws.mergeCells(r, 1, r, 3); ws.getCell(r, 1).value = '(*) Supeditado a la evaluación del cumplimiento de los hitos (Anexo IV).'; ws.getCell(r, 1).font = {name:'Arial', size:8, italic:true};
+  }
+
+  /* ── Anexo IV ── */
+  { const ws = wb.addWorksheet('Anexo IV Hitos', {pageSetup:page, properties:{tabColor:{argb:XC.red}}});
+    ws.columns = [{width:34},{width:6},{width:56},{width:22},{width:16},{width:18}];
+    sheetTitle(wb, ws, logo, ['ANEXO IV: HITOS DE CUMPLIMIENTO', `PLAN ANUAL DE ACTIVIDADES - AÑO ${ANIO} (Directiva N.° 008)`, S.cite], 6, estado);
+    let r = 6; const h1 = r;
+    ws.mergeCells(h1, 1, h1+1, 1); hdr(ws.getCell(h1, 1), 'HITO'); ws.getCell(h1+1, 1).border = BORD;
+    ws.mergeCells(h1, 2, h1, 3); hdr(ws.getCell(h1, 2), 'INDICADOR'); ws.getCell(h1, 3).border = BORD;
+    hdr(ws.getCell(h1+1, 2), 'N.°'); hdr(ws.getCell(h1+1, 3), 'Descripción');
+    [[4,'UNIDAD DE MEDIDA'],[5,'META'],[6,'FECHA DE CUMPLIMIENTO']].forEach(([c, t]) => { ws.mergeCells(h1, c, h1+1, c); hdr(ws.getCell(h1, c), t); ws.getCell(h1+1, c).border = BORD; });
+    r = h1 + 2;
+    S.hitos.forEach((x, i) => {
+      const r0 = r;
+      x.ind.forEach((d, k) => {
+        ws.getCell(r, 2).value = k + 1; ws.getCell(r, 3).value = d.desc; ws.getCell(r, 4).value = d.unidad;
+        const mv = String(d.meta).trim(); ws.getCell(r, 5).value = (mv !== '' && isFinite(+mv)) ? +mv : mv;
+        if (d.fecha){ const [y, m, dd] = d.fecha.split('-').map(Number); ws.getCell(r, 6).value = new Date(Date.UTC(y, m-1, dd)); ws.getCell(r, 6).numFmt = 'dd/mm/yyyy'; }
+        for (let c = 1; c <= 6; c++){ const cell = ws.getCell(r, c); cell.border = BORD; cell.font = {name:'Arial', size:9}; cell.alignment = {vertical:'middle', wrapText:true, horizontal: c === 3 || c === 1 ? 'left' : 'center'}; }
+        ws.getRow(r).height = Math.max(18, Math.ceil(d.desc.length / 60) * 13); r++;
+      });
+      ws.getCell(r0, 1).value = `${i+1}. ${x.nombre}`;
+      if (r - 1 > r0) ws.mergeCells(r0, 1, r - 1, 1);
+      const hc = ws.getCell(r0, 1); hc.font = {name:'Arial', size:9, bold:true}; hc.fill = fill(XC.act); hc.alignment = {vertical:'middle', wrapText:true}; hc.border = BORD;
+    });
+    if (!S.hitos.length){ ws.mergeCells(r, 1, r, 6); ws.getCell(r, 1).value = '(Sin hitos registrados)'; }
+    ws.views = [{state:'frozen', ySplit:h1+1}];
+  }
+
+  /* ── Fichas de actividad ── */
+  { const ws = wb.addWorksheet('Fichas actividades', {pageSetup:page});
+    const heads = ['Código','Producto','Modalidad','Servicio estandarizado','Actividad (clasificador)','Nombre de la actividad','Unidad de medida','Meta anual','Objetivo','Atenciones (total)','Beneficiarios (total)', ...MES.map(m => `Atenc. ${m}-${YY}`), ...MES.map(m => `Benef. ${m}-${YY}`), 'Ventas proyectadas (S/)','Lugares de ejecución','Observaciones'];
+    ws.columns = heads.map((h, i) => ({width: [3,5,8,36,37].includes(i) ? 40 : [1,2,4].includes(i) ? 26 : i >= 11 && i < 35 ? 9 : 14}));
+    ws.mergeCells(1, 1, 1, 8); ws.getCell(1, 1).value = `FICHA DE ACTIVIDADES – PAA ${ANIO} – ${S.cite}`; ws.getCell(1, 1).font = {name:'Arial', bold:true, size:12, color:{argb:XC.red}};
+    ws.mergeCells(2, 1, 2, 8); ws.getCell(2, 1).value = estado; ws.getCell(2, 1).font = {name:'Arial', italic:true, size:8};
+    heads.forEach((h, i) => hdr(ws.getCell(4, i + 1), h)); ws.getRow(4).height = 30;
+    let r = 5;
+    S.actividades.slice().sort((a, b) => a.p - b.p).forEach(a => {
+      const P = PRODUCTOS[a.p - 1];
+      const vals = [a.codigo, `Producto ${P.n}: ${P.nombre}`, CLASIF[a.p]?.mod || P.mod, a.serv, a.actv, a.nombre, a.unidad, sum(a.m), a.objetivo, sum(a.aten), sum(a.benef), ...a.aten.map(v => +v||0), ...a.benef.map(v => +v||0), +a.ventas||0, ubicTxt(a), a.obs];
+      vals.forEach((v, i) => { const c = ws.getCell(r, i + 1); c.value = v; c.border = BORD; c.font = {name:'Arial', size:9}; c.alignment = {vertical:'top', wrapText:true}; if (typeof v === 'number') c.numFmt = i === heads.length - 3 ? NM : NI; });
+      r++;
+    });
+    ws.views = [{state:'frozen', ySplit:4, xSplit:1}];
+  }
+
+  const buf = await wb.xlsx.writeBuffer();
+  const d = new Date(); const stamp = `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+  saveBlob(new Blob([buf], {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}), `PAA_${ANIO}_${fileSafe(S.cite.replace(/^CITE\s+/,''))}_${stamp}${E.length ? '_BORRADOR' : ''}.xlsx`);
+  toast('Excel generado');
+}
+
+/* ═══════════ NAVEGACIÓN / UTIL ═══════════ */
+function goTab(t){
+  document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b.dataset.tab === t));
+  document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + t));
+  if (t === 'val') renderVal();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+document.getElementById('tabs').addEventListener('click', e => { const b = e.target.closest('.tab'); if (b) goTab(b.dataset.tab); });
+let toastT;
+function toast(msg){ const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2800); }
+function renderAll(){ renderGeneral(); renderInd(); renderA(); renderB(); renderC(); renderD(); renderIV(); updatePill(); if (document.getElementById('panel-val').classList.contains('active')) renderVal(); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape'){ if (document.getElementById('fichaModal').classList.contains('show')) closeFicha(); closeRes(); } });
+
+/* ═══════════ INICIO ═══════════ */
+function gate(title, msg){ document.getElementById('gateTitle').textContent = title; document.getElementById('gateMsg').innerHTML = msg; document.getElementById('gate').classList.remove('hide'); }
+(async function init(){
+  const q = new URLSearchParams(location.search); if (q.get('u')) APPS_SCRIPT_URL = decodeURIComponent(q.get('u'));
+  ACCESS_KEY = (q.get('k') || '').trim();
+  document.getElementById('gateLogo').src = document.querySelector('.header-logo').src;
+  document.getElementById('dl-clasif').innerHTML = CLASIF_IND.map(u => `<option value="${esc(u)}">`).join('');
+  if (!APPS_SCRIPT_URL){
+    document.getElementById('modeBanner').classList.remove('hidden');
+    loadLocal(); renderAll(); document.getElementById('gate').classList.add('hide'); return;
+  }
+  if (!ACCESS_KEY) return gate('Use el enlace personal de su CITE', 'Este formulario solo se abre con el enlace que la DCITAT envió al responsable de cada CITE. Si no lo tiene, solicítelo a la DCITAT.');
+  try {
+    const j = await fetchServer();
+    if (!j.ok) return gate('Enlace no válido', esc(j.error || 'Solicite su enlace personal a la DCITAT.'));
+    ACCESS = {cite: j.cite, tipo: j.tipo};
+    STORE_KEY = 'paa2027_' + j.cite.replace(/\s+/g, '_');
+    loadLocal();
+    applyServer(j, true);
+    renderAll();
+    document.getElementById('gate').classList.add('hide');
+  } catch(e){
+    gate('Sin conexión', 'No se pudo conectar con la base de datos de la DCITAT. Revise su conexión a internet y vuelva a cargar la página.');
+  }
+})();
+</script>
+</body>
+</html>
