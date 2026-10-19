@@ -257,7 +257,7 @@ footer{text-align:center;padding:20px 20px 30px;color:var(--muted);font-size:11p
         <li><b>Anexo B:</b> las actividades del Anexo A aparecen solas; agregue debajo de cada una sus insumos con el presupuesto mensual MINCETUR. Registre también los gastos de operación. <span id="olClas"></span></li>
         <li id="olC"><b>Anexo C (solo CITE privados):</b> registre los aportes del CITE y de la entidad asociada y la programación mensual total por fuentes.</li>
         <li id="olD"><b>Anexo D (solo CITE privados):</b> registre el monto del primer y del segundo desembolso de la subvención.</li>
-        <li><b>Anexo IV:</b> registre los hitos de cumplimiento y sus indicadores.</li>
+        <li id="olIV"><b>Anexo IV (solo CITE privados):</b> registre los hitos de cumplimiento y sus indicadores.</li>
         <li><b>Validar, grabar y descargar:</b> el sistema revisa las reglas de consistencia; si hay errores, no permite grabar. Luego descargue el Excel (un anexo por hoja).</li>
       </ol>
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
@@ -333,10 +333,11 @@ footer{text-align:center;padding:20px 20px 30px;color:var(--muted);font-size:11p
 <!-- ═════════ ANEXO IV ═════════ -->
 <section class="panel" id="panel-IV">
   <div class="card">
-    <div class="card-head"><div><span class="k">Anexo IV · Directiva N.° 008</span><h2>Hitos de cumplimiento</h2><p><b class="citeName"></b>. Aplica a CITE públicos y privados. Cada hito puede tener uno o más indicadores.</p></div>
-      <button class="mini solid" onclick="addHito()">+ Agregar hito</button></div>
+    <div class="card-head"><div><span class="k">Anexo IV · Directiva N.° 008</span><h2>Hitos de cumplimiento</h2><p><b class="citeName"></b>. Solo CITE privados. Cada hito puede tener uno o más indicadores.</p></div>
+      <button class="mini solid privOnly" onclick="addHito()">+ Agregar hito</button></div>
     <div class="card-body">
-      <div class="tbl-wrap" style="max-height:none"><table class="grid-t" id="tblIV"></table></div>
+      <div class="note red hidden" id="naIV">El Anexo IV no aplica a los CITE públicos.</div>
+      <div class="tbl-wrap" id="wrapIV" style="max-height:none"><table class="grid-t" id="tblIV"></table></div>
     </div>
   </div>
 </section>
@@ -347,6 +348,13 @@ footer{text-align:center;padding:20px 20px 30px;color:var(--muted);font-size:11p
     <div class="card-head"><div><span class="k">Reglas de consistencia</span><h2>Control del presupuesto</h2><p id="rulesSub"></p></div></div>
     <div class="card-body">
       <div class="rules" id="rulesBox"></div>
+      <div id="nmBox" class="hidden" style="margin-top:14px">
+        <div class="note red"><b>Acreditar y sustentar el aporte no monetario.</b> El PAA registra un aporte no monetario de S/ <b data-k="nm:t" data-f="2"></b>. Solo puede grabar si declara que cuenta con los documentos que lo acreditan y sustentan.</div>
+        <div class="grid g2" style="margin-top:10px">
+          <label style="display:flex;gap:8px;align-items:center;font-size:12.5px;font-weight:600"><input type="checkbox" id="f-nmAcredita" data-b="g::nmAcredita"/> Acredito y sustento el aporte no monetario <span style="color:#c8102e">*</span></label>
+          <div class="field"><input id="f-nmDoc" data-b="g::nmDoc" placeholder="Documento(s) de acreditación y sustento (N.°, tipo)" maxlength="200"/></div>
+        </div>
+      </div>
       <div id="afAuthBox" class="hidden" style="margin-top:14px">
         <div class="note red">Los activos fijos superan el límite. Solo puede grabar si cuenta con <b>sustento técnico y autorización de la DCITAT</b>.</div>
         <div class="grid g2" style="margin-top:10px">
@@ -422,7 +430,7 @@ const LOGO_DARK = "iVBORw0KGgoAAAANSUhEUgAAAY0AAAB4CAYAAAAOj67PAAA1bklEQVR42u2dd
 let APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzRy38Sb12KPaemOo_Wx0ZQBCcZCGzwuGXVpwFzThsnDGZi8jabp21zBu8-Ja-VltUc/exec';   // ← pegue aquí la URL /exec del Apps Script (vea Code_PAA_2027.gs)
 let ACCESS_KEY = '', ACCESS = null;   // clave del enlace personal (?k=) y CITE que le corresponde
 const ANIO = 2027, YY = String(ANIO).slice(-2);
-const LIM = { go: 25, af: 10, contra: 10, varAct: 10 };   // % (ajustables por la DCITAT)
+const LIM = { go: 25, af: 10, contra: 10, varAct: 10, trimMin: 70, trimMax: 80 };   // % (ajustables por la DCITAT)
 let STORE_KEY = 'paa2027_borrador';
 const DES_LABELS = ['Primer desembolso', 'Segundo desembolso (*)'];
 
@@ -455,7 +463,7 @@ function blank(){
   return {schema:1, anio:ANIO, cite:'', etapa:'Programación', responsable:'', cargo:'', correo:'', telefono:'', docRef:'',
     indicadores:[], actividades:[], gastos:[],
     desembolsos:DES_LABELS.map((c, i) => ({id:'d'+(i+1), concepto:c, monto:0})),
-    hitos:[], afAutorizado:false, afDoc:'', base:null, grabado:null, dirty:true, actualizado:null};
+    hitos:[], afAutorizado:false, afDoc:'', nmAcredita:false, nmDoc:'', base:null, grabado:null, dirty:true, actualizado:null};
 }
 function newIns(soloC){ return {id:uid(), nombre:'', clas:'', af:false, sinPre:false, m:Z(), soloC:!!soloC, cm:soloC?Z():null, citeM:0, citeNM:0, entM:0, entNM:0}; }
 function newAct(p){ return {id:uid(), p, codigo:'', nombre:'', unidad:'', m:Z(), serv:'', actv:'', noReq:false, objetivo:'', aten:Z(), benef:Z(), ventas:0, ubic:[], obs:'', insumos:[]}; }
@@ -538,6 +546,7 @@ function compute(){
   K['dt'] = sum(S.desembolsos.map(d => d.monto));
   K['af'] = sum(allIns().filter(i => i.af && !i.soloC).map(i => sum(i.m)));
   K['contra'] = K['ct:cM'] + K['ct:cN'] + K['ct:eM'] + K['ct:eN'];
+  K['nm:t'] = (K['ct:cN'] || 0) + (K['ct:eN'] || 0);
   return K;
 }
 function updateComputed(){
@@ -595,21 +604,23 @@ function renderGeneral(){
   const sel = document.getElementById('f-cite');
   if (sel.options.length < 2) Object.keys(CITES).forEach(c => sel.add(new Option(c, c)));
   sel.disabled = !!ACCESS;
-  ['cite','etapa','responsable','cargo','correo','telefono','docRef','afDoc'].forEach(k => { const el = document.getElementById('f-'+k); if (el) el.value = S[k] || ''; });
+  ['cite','etapa','responsable','cargo','correo','telefono','docRef','afDoc','nmDoc'].forEach(k => { const el = document.getElementById('f-'+k); if (el) el.value = S[k] || ''; });
   { const es = document.getElementById('f-etapa'); const lock = !S.base;
     [...es.options].forEach(o => { o.disabled = o.value === 'Programación' ? !lock : lock; });
     document.getElementById('etapaHint').textContent = lock ? 'Reprogramación y Reformulación se habilitan después de grabar la Programación.' : 'La Programación ya fue grabada: para modificar el PAA use Reprogramación o Reformulación.'; }
   document.getElementById('f-afAut').checked = !!S.afAutorizado;
+  document.getElementById('f-nmAcredita').checked = !!S.nmAcredita;
   const t = tipo();
   document.getElementById('tipoBox').innerHTML = t ? `<span class="tipo-badge ${t==='Público'?'pub':'pri'}">${t}</span>` : '<span class="tipo-badge none">Pendiente</span>';
   document.getElementById('docRefRow').querySelector('.field').style.opacity = S.etapa === 'Reformulación' ? 1 : .5;
   document.getElementById('f-base').value = S.base ? `${S.base.etapa} grabada el ${new Date(S.base.fecha).toLocaleString('es-PE',{dateStyle:'short',timeStyle:'short'})}` : 'Aún no fijada';
   const note = document.getElementById('genNote');
   if (!t) note.innerHTML = 'Seleccione un CITE para continuar.';
-  else if (isPub()) note.innerHTML = `<b>${esc(S.cite)} es un CITE público.</b> Llena el Anexo A, el Anexo B (con la columna <b>clasificador de gasto</b>) y el Anexo IV. Los Anexos C y D no corresponden.`;
-  else note.innerHTML = `<b>${esc(S.cite)} es un CITE privado.</b> Llena los Anexos A, B, C, D y IV. Se aplican las reglas de gastos operativos (≤ ${LIM.go} %), activos fijos (≤ ${LIM.af} %), contrapartida (≥ ${LIM.contra} %) y variación por actividad (≤ ${LIM.varAct} %).`;
+  else if (isPub()) note.innerHTML = `<b>${esc(S.cite)} es un CITE público.</b> Llena el Anexo A y el Anexo B (con la columna <b>clasificador de gasto</b>). Los Anexos C, D y IV no corresponden.`;
+  else note.innerHTML = `<b>${esc(S.cite)} es un CITE privado.</b> Llena los Anexos A, B, C, D y IV. Se aplican las reglas de gastos operativos (≤ ${LIM.go} %), activos fijos (≤ ${LIM.af} %), contrapartida (≥ ${LIM.contra} %), presupuesto del I al III trimestre (entre ${LIM.trimMin} % y ${LIM.trimMax} % de la subvención), acreditación del aporte no monetario y variación por actividad (≤ ${LIM.varAct} %).`;
   document.getElementById('olC').style.display = isPub() ? 'none' : '';
   document.getElementById('olD').style.display = isPub() ? 'none' : '';
+  document.getElementById('olIV').style.display = isPub() ? 'none' : '';
   document.getElementById('olClas').textContent = isPub() ? 'Como CITE público, indique el clasificador de gasto de cada insumo.' : '';
   document.querySelectorAll('.citeName').forEach(e => e.textContent = S.cite || '[CITE]');
   document.querySelectorAll('.privOnly').forEach(e => e.style.display = isPub() ? 'none' : '');
@@ -878,6 +889,8 @@ function delHito(id){ const h = S.hitos.find(x => x.id === id); if (h && h.nombr
 function addHin(hid){ S.hitos.find(x => x.id === hid).ind.push(newHin()); markDirty(); renderIV(); }
 function delHin(hid, iid){ const h = S.hitos.find(x => x.id === hid); h.ind = h.ind.filter(x => x.id !== iid); if (!h.ind.length) h.ind.push(newHin()); markDirty(); renderIV(); }
 function renderIV(){
+  document.getElementById('naIV').classList.toggle('hidden', !isPub());
+  document.getElementById('wrapIV').classList.toggle('hidden', isPub());
   let h = `<thead><tr><th rowspan="2" style="min-width:230px">HITO</th><th colspan="2">INDICADOR</th><th rowspan="2" style="min-width:150px">UNIDAD DE MEDIDA</th><th rowspan="2" style="min-width:110px">META</th><th rowspan="2" style="min-width:140px">FECHA DE<br>CUMPLIMIENTO</th><th rowspan="2"></th></tr><tr><th style="width:40px">N.°</th><th style="min-width:300px">Descripción</th></tr></thead><tbody>`;
   if (!S.hitos.length) h += `<tr><td colspan="7" class="hint" style="padding:12px">Aún no hay hitos. Use “+ Agregar hito”.</td></tr>`;
   S.hitos.forEach((x, i) => {
@@ -1010,7 +1023,7 @@ function validate(){
   });
   if ((K['bt:t'] || 0) <= 0) e('B', 'El presupuesto MINCETUR del Anexo B es 0.');
   const subv = K['bt:t'] || 0;
-  const R = {subv, go: subv ? K['bg:t'] / subv * 100 : 0, af: subv ? K['af'] / subv * 100 : 0, contra: subv ? K['contra'] / subv * 100 : 0, var: []};
+  const R = {subv, go: subv ? K['bg:t'] / subv * 100 : 0, af: subv ? K['af'] / subv * 100 : 0, contra: subv ? K['contra'] / subv * 100 : 0, var: [], trim: subv ? ((K['bt:q0']||0) + (K['bt:q1']||0) + (K['bt:q2']||0)) / subv * 100 : 0, nm: (K['ct:cN']||0) + (K['ct:eN']||0)};
   if (isPriv()){
     // Anexo C
     allIns().forEach(ins => {
@@ -1021,6 +1034,8 @@ function validate(){
     // Reglas DCITAT
     if (R.go > LIM.go + 1e-9) e('val', `Gastos operativos = ${fmt(R.go,2)} % de la subvención; el límite es ≤ ${LIM.go} %.`);
     if (R.af > LIM.af + 1e-9 && !(S.afAutorizado && S.afDoc.trim())) e('val', `Activos fijos para innovación y TT = ${fmt(R.af,2)} % de la subvención; el límite es ≤ ${LIM.af} % (más solo con sustento técnico y autorización de la DCITAT).`);
+    if (subv > 0 && (R.trim < LIM.trimMin - 1e-9 || R.trim > LIM.trimMax + 1e-9)) e('val', `Presupuesto programado del I, II y III trimestre = ${fmt(R.trim,2)} % de la subvención MINCETUR (S/ ${fmt(subv * R.trim / 100,2)}); debe estar entre ${LIM.trimMin} % y ${LIM.trimMax} %.`);
+    if (R.nm > 0.005 && !(S.nmAcredita && String(S.nmDoc||'').trim())) e('val', `Acreditar y sustentar el aporte no monetario (S/ ${fmt(R.nm,2)}): marque la declaración e indique el documento de sustento en “Reglas de consistencia”.`);
     if (subv > 0 && R.contra < LIM.contra - 1e-9) e('val', `Aporte del CITE y/o aliados (contrapartida) = ${fmt(R.contra,2)} % de la subvención; el mínimo es ${LIM.contra} %.`);
     if (S.etapa === 'Reprogramación'){
       if (!S.base) w('val', 'No hay una programación de referencia grabada; no se puede controlar la variación por actividad.');
@@ -1031,7 +1046,8 @@ function validate(){
       });
     }
   }
-  // Anexo IV
+  // Anexo IV (solo CITE privados)
+  if (isPriv()){
   if (!S.hitos.length) e('IV', 'Registre al menos un hito de cumplimiento (Anexo IV).');
   S.hitos.forEach((x, i) => {
     if (!x.nombre.trim()) e('IV', `Hito ${i+1}: falta el nombre.`);
@@ -1041,6 +1057,7 @@ function validate(){
       else if (!d.fecha.startsWith(String(ANIO))) w('IV', `${lbl}: la fecha de cumplimiento no está en ${ANIO}.`);
     });
   });
+  }
   return {E, W, R};
 }
 const TABN = {gen:'Datos generales', A:'Anexo A', B:'Anexo B', C:'Anexo C', D:'Anexo D', IV:'Anexo IV', val:'Reglas'};
@@ -1054,17 +1071,20 @@ function renderVal(){
   const priv = isPriv();
   document.getElementById('rulesSub').textContent = priv
     ? 'Reglas para CITE privados (Directiva). Si alguna no se cumple, el sistema no permite grabar el PAA hasta corregirla. Base de cálculo: subvención MINCETUR del Anexo B.'
-    : (isPub() ? 'Las reglas de gastos operativos, activos fijos, contrapartida y variación aplican solo a CITE privados.' : 'Seleccione un CITE.');
+    : (isPub() ? 'Las reglas de gastos operativos, activos fijos, trimestres I–III, aporte no monetario, contrapartida y variación aplican solo a CITE privados.' : 'Seleccione un CITE.');
   const card = (t, v, lim, ok, na) => `<div class="rule ${na?'na':(ok?'ok':'bad')}"><div class="rt">${t}</div><div class="rv">${v}</div><div class="rl">${lim}</div></div>`;
   const varErr = R.var.length;
   document.getElementById('rulesBox').innerHTML =
     card('Subvención MINCETUR', 'S/ ' + fmt(R.subv, 2), 'Total Anexo B', R.subv > 0, false) +
     card('Gastos operativos', fmt(R.go, 1) + ' %', `Límite ≤ ${LIM.go} % · S/ ${fmt(K['bg:t'],2)}`, R.go <= LIM.go, !priv) +
     card('Activos fijos (innovación y TT)', fmt(R.af, 1) + ' %', `Límite ≤ ${LIM.af} % · S/ ${fmt(K['af'],2)}`, R.af <= LIM.af || (S.afAutorizado && S.afDoc.trim()), !priv) +
+    card('I, II y III trimestre', fmt(R.trim, 1) + ' %', `Entre ${LIM.trimMin} % y ${LIM.trimMax} % · S/ ${fmt(R.subv * R.trim / 100,2)}`, R.trim >= LIM.trimMin - 1e-9 && R.trim <= LIM.trimMax + 1e-9, !priv) +
+    card('Aporte no monetario', 'S/ ' + fmt(R.nm, 2), R.nm > 0.005 ? (S.nmAcredita && String(S.nmDoc||'').trim() ? 'Acreditado y sustentado' : 'Acreditar y sustentar') : 'Sin aporte no monetario', !(R.nm > 0.005) || (S.nmAcredita && String(S.nmDoc||'').trim()), !priv) +
     card('Aporte CITE y/o aliados', fmt(R.contra, 1) + ' %', `Mínimo ${LIM.contra} % · S/ ${fmt(K['contra'],2)}`, R.contra >= LIM.contra, !priv) +
     card('Variación por actividad', S.etapa === 'Reprogramación' ? (varErr ? varErr + ' excede(n)' : 'OK') : 'N.A.', S.etapa === 'Reprogramación' ? `Máximo +${LIM.varAct} % sobre lo programado` : 'Se controla en la etapa Reprogramación', !varErr, !priv || S.etapa !== 'Reprogramación') +
     card('Anexo D vs Anexo B', 'S/ ' + fmt(K['dt'], 2), 'Total de desembolsos = subvención', Math.abs(K['dt'] - R.subv) < 0.005, !priv);
   document.getElementById('afAuthBox').classList.toggle('hidden', !(priv && R.af > LIM.af));
+  document.getElementById('nmBox').classList.toggle('hidden', !(priv && R.nm > 0.005));
   document.getElementById('issuesBox').innerHTML = issuesHtml(E, W);
   return {E, W};
 }
@@ -1129,7 +1149,7 @@ function flatten(){
     A_Metas: S.actividades.map(a => [f, c, t, pn(a.p), a.codigo, a.nombre, a.unidad, sum(a.m), ...a.m]),
     B_Presupuesto: [], C_Fuentes: [],
     D_Desembolsos: t !== 'Privado' ? [] : S.desembolsos.map((d, i) => [f, c, t, i+1, d.concepto, +d.monto||0]),
-    IV_Hitos: S.hitos.flatMap((x, i) => x.ind.map((d, k) => [f, c, t, i+1, x.nombre, k+1, d.desc, d.unidad, d.meta, d.fecha])),
+    IV_Hitos: t !== 'Privado' ? [] : S.hitos.flatMap((x, i) => x.ind.map((d, k) => [f, c, t, i+1, x.nombre, k+1, d.desc, d.unidad, d.meta, d.fecha])),
     Fichas: S.actividades.map(a => [f, c, t, pn(a.p), CLASIF[a.p]?.mod || PRODUCTOS[a.p-1].mod, a.codigo, a.nombre, a.serv, a.actv, a.objetivo, sum(a.aten), sum(a.benef), +a.ventas||0, ubicTxt(a), a.obs])
   };
   const push = (grp, cod, act, ins) => {
@@ -1379,7 +1399,7 @@ async function downloadExcel(){
   }
 
   /* ── Anexo IV ── */
-  { const ws = wb.addWorksheet('Anexo IV Hitos', {pageSetup:page, properties:{tabColor:{argb:XC.red}}});
+  if (!pub){ const ws = wb.addWorksheet('Anexo IV Hitos', {pageSetup:page, properties:{tabColor:{argb:XC.red}}});
     ws.columns = [{width:34},{width:6},{width:56},{width:22},{width:16},{width:18}];
     sheetTitle(wb, ws, logo, ['ANEXO IV: HITOS DE CUMPLIMIENTO', `PLAN ANUAL DE ACTIVIDADES - AÑO ${ANIO} (Directiva N.° 008)`, S.cite], 6, estado);
     let r = 6; const h1 = r;
