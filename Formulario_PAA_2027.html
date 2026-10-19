@@ -492,8 +492,8 @@ function normalize(){
   if (S.base && S.base.etapa === 'Formulación') S.base.etapa = 'Programación';
   if (!S.base) S.etapa = 'Programación';
   S.desembolsos = DES_LABELS.map((c, i) => ({id:'d'+(i+1), concepto:c, monto: +((S.desembolsos || [])[i] || {}).monto || 0}));
-  allIns().forEach(i => { if (i.sinPre === undefined) i.sinPre = false; if (i.sinPre) i.m = Z(); });
-  S.actividades.forEach(a => { if (a.serv === undefined) a.serv = ''; if (a.actv === undefined) a.actv = ''; if (a.noReq === undefined) a.noReq = false; delete a.tipo; clampAB(a); if (a.unidad && a.actv && unitOf(a.p, a.serv, a.actv) !== a.unidad) { a.serv = ''; a.actv = ''; } });
+  allIns().forEach(i => { i.sinPre = false; });   // opción “No requiere presupuesto” retirada
+  S.actividades.forEach(a => { if (a.serv === undefined) a.serv = ''; if (a.actv === undefined) a.actv = ''; a.noReq = false; delete a.tipo; clampAB(a); if (a.unidad && a.actv && unitOf(a.p, a.serv, a.actv) !== a.unidad) { a.serv = ''; a.actv = ''; } });
   if (S.telefono) S.telefono = String(S.telefono).replace(/\D/g, '');
 }
 function loadLocal(){ try { const t = localStorage.getItem(STORE_KEY); if (t) S = Object.assign(blank(), JSON.parse(t)); } catch(e){} normalize(); }
@@ -627,6 +627,7 @@ function renderGeneral(){
   document.querySelectorAll('.pubOnly').forEach(e => e.style.display = isPub() ? '' : 'none');
   document.querySelector('[data-tab="C"]').classList.toggle('na', isPub());
   document.querySelector('[data-tab="D"]').classList.toggle('na', isPub());
+  document.querySelector('[data-tab="IV"]').classList.toggle('na', isPub());
   document.getElementById('btnLoadServer').disabled = !ACCESS;
   document.getElementById('serverHint').textContent = ACCESS ? `Al grabar, el PAA de ${ACCESS.cite} se registra en la base de datos de la DCITAT. La descarga del Excel incluye solo sus anexos.` : 'Modo sin conexión: el PAA grabado queda solo en este navegador.';
 }
@@ -793,7 +794,7 @@ function renderB(){
   const insRow = (ins, code, aid) => {
     const b = f => `ins:${ins.id}:${f}`;
     return `<tr${ins.sinPre?' class="sinpre"':''}><td class="sticky1" style="left:0;color:var(--muted);font-size:11px" ${aid ? `data-inscode-of="${aid}" data-ins="${ins.id}"` : ''}>${code}</td>
-      <td class="sticky2" style="left:84px"><div class="insline"><input class="ins-name" data-b="${b('nombre')}" value="${esc(ins.nombre)}" placeholder="Insumo / concepto de gasto" maxlength="250"/>${(ins.sinPre || sum(ins.m) <= 0) ? `<button class="nrbtn${ins.sinPre?' on':''}" title="${ins.sinPre?'Quitar la marca “No requiere presupuesto” y programar montos':'Marcar el insumo como “No requiere presupuesto”: se mantiene el nombre, el monto queda en 0 y la revisión no lo observa'}" onclick="toggleSinPre('${ins.id}')">${ins.sinPre?'✓ No req.':'No req.'}</button>` : ''}</div>${ins.sinPre?'<div class="nr-tag">No requiere presupuesto</div>':''}</td>
+      <td class="sticky2" style="left:84px"><div class="insline"><input class="ins-name" data-b="${b('nombre')}" value="${esc(ins.nombre)}" placeholder="Insumo / concepto de gasto" maxlength="250"/></div>${ins.sinPre?'<div class="nr-tag">No requiere presupuesto</div>':''}</td>
       <td class="n sticky3" style="font-weight:700" data-k="bi:${ins.id}:t" data-f="2"></td>
       ${pub ? `<td><input data-b="${b('clas')}" value="${esc(ins.clas)}" placeholder="2.3.x x.xx xx" maxlength="20"/></td>` : ''}
       ${priv ? `<td style="text-align:center">${ins.sinPre ? '' : `<input type="checkbox" data-b="${b('af')}" ${ins.af?'checked':''} title="Activo fijo" style="width:auto"/>`}</td>` : ''}
@@ -812,7 +813,7 @@ function renderB(){
         h += `<tr class="addrow"><td class="sticky1" style="left:0"></td><td class="sticky2" style="left:84px"><button class="mini" onclick="toggleNoReq('${a.id}')">Quitar “No requiere” y agregar insumos</button></td><td class="sticky3"></td><td colspan="${17+extra}"></td></tr>`;
       } else {
         a.insumos.filter(i => !i.soloC).forEach(ins => h += insRow(ins, insCode(a, ins), a.id));
-        h += `<tr class="addrow"><td class="sticky1" style="left:0"></td><td class="sticky2" style="left:84px"><button class="mini" onclick="addIns('${a.id}')">+ Insumo</button> <button class="mini" onclick="toggleNoReq('${a.id}')" title="La actividad no requiere presupuesto para su cumplimiento">No requiere presupuesto</button></td><td class="sticky3"></td><td colspan="${17+extra}"></td></tr>`;
+        h += `<tr class="addrow"><td class="sticky1" style="left:0"></td><td class="sticky2" style="left:84px"><button class="mini" onclick="addIns('${a.id}')">+ Insumo</button></td><td class="sticky3"></td><td colspan="${17+extra}"></td></tr>`;
       }
     });
   });
@@ -1018,7 +1019,6 @@ function validate(){
     const owner = S.actividades.find(a => a.insumos.includes(ins));
     const where = owner ? `actividad ${owner.codigo}` : 'gastos de operación';
     if (!ins.nombre.trim()) e('B', `Hay un insumo sin nombre en ${where}.`);
-    if (!ins.sinPre && sum(ins.m) <= 0) w('B', `Insumo “${ins.nombre || 'sin nombre'}” (${where}) sin monto programado.`);
     if (isPub() && !ins.sinPre && !String(ins.clas).trim()) e('B', `Insumo “${ins.nombre || 'sin nombre'}” (${where}): falta el clasificador de gasto.`);
   });
   if ((K['bt:t'] || 0) <= 0) e('B', 'El presupuesto MINCETUR del Anexo B es 0.');
@@ -1075,7 +1075,7 @@ function renderVal(){
   const card = (t, v, lim, ok, na) => `<div class="rule ${na?'na':(ok?'ok':'bad')}"><div class="rt">${t}</div><div class="rv">${v}</div><div class="rl">${lim}</div></div>`;
   const varErr = R.var.length;
   document.getElementById('rulesBox').innerHTML =
-    card('Subvención MINCETUR', 'S/ ' + fmt(R.subv, 2), 'Total Anexo B', R.subv > 0, false) +
+    card(isPub() ? 'Presupuesto MINCETUR' : 'Subvención MINCETUR', 'S/ ' + fmt(R.subv, 2), 'Total Anexo B', R.subv > 0, false) +
     card('Gastos operativos', fmt(R.go, 1) + ' %', `Límite ≤ ${LIM.go} % · S/ ${fmt(K['bg:t'],2)}`, R.go <= LIM.go, !priv) +
     card('Activos fijos (innovación y TT)', fmt(R.af, 1) + ' %', `Límite ≤ ${LIM.af} % · S/ ${fmt(K['af'],2)}`, R.af <= LIM.af || (S.afAutorizado && S.afDoc.trim()), !priv) +
     card('I, II y III trimestre', fmt(R.trim, 1) + ' %', `Entre ${LIM.trimMin} % y ${LIM.trimMax} % · S/ ${fmt(R.subv * R.trim / 100,2)}`, R.trim >= LIM.trimMin - 1e-9 && R.trim <= LIM.trimMax + 1e-9, !priv) +
