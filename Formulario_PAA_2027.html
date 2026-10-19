@@ -100,6 +100,7 @@ table.grid-t{border-collapse:separate;border-spacing:0;font-size:12px;min-width:
 .grid-t input:hover,.grid-t select:hover,.grid-t textarea:hover{border-color:var(--border);background:#fff}
 .grid-t input:focus,.grid-t select:focus,.grid-t textarea:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 2px rgba(36,113,163,.15)}
 .grid-t input.num{text-align:right;width:62px;font-variant-numeric:tabular-nums}
+.grid-t input.money.full{width:100%;padding-right:10px}
 .grid-t input.money{text-align:right;width:84px;font-variant-numeric:tabular-nums}
 .grid-t input.cdef{color:#8a7d66;font-style:italic}
 .grid-t input.code{width:74px;font-weight:600}
@@ -634,7 +635,7 @@ function setupHScroll(tb){
     bar.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => { const x = b.dataset.go === '1' ? wrap.scrollWidth : 0; wrap.scrollLeft = x; hs.scrollLeft = x; }));
   }
   const inner = bar.querySelector('.hs > div');
-  requestAnimationFrame(() => { inner.style.width = tb.scrollWidth + 'px'; bar.querySelector('.hs').scrollLeft = wrap.scrollLeft; bar.style.display = tb.scrollWidth > wrap.clientWidth + 4 ? '' : 'none'; });
+  requestAnimationFrame(() => { inner.style.width = tb.scrollWidth + 'px'; bar.querySelector('.hs').scrollLeft = wrap.scrollLeft; bar.style.display = '';});
 }
 window.addEventListener('resize', () => ['tblA','tblB','tblC'].forEach(id => { const tb = document.getElementById(id); if (tb && tb.innerHTML) setupHScroll(tb); }));
 const ICO_DEL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>';
@@ -848,7 +849,7 @@ function renderD(){
   document.getElementById('wrapD').classList.toggle('hidden', pub);
   let h = `<thead><tr><th style="width:40px">N.°</th><th style="min-width:260px">DESEMBOLSO</th><th style="min-width:160px">SUBVENCIÓN ECONÓMICA (S/)</th><th></th></tr></thead><tbody>`;
   S.desembolsos.forEach((d, i) => {
-    h += `<tr><td class="n" style="text-align:center">${i+1}</td><td style="padding:8px 10px;font-weight:600">${esc(d.concepto)}</td><td>${numIn(`des:${d.id}:monto`, d.monto, 'money')}</td><td></td></tr>`;
+    h += `<tr><td class="n" style="text-align:center">${i+1}</td><td style="padding:8px 10px;font-weight:600">${esc(d.concepto)}</td><td>${numIn(`des:${d.id}:monto`, d.monto, 'money full')}</td><td></td></tr>`;
   });
   h += `<tr class="tot"><td></td><td style="text-align:center">Total S/</td><td class="n" data-k="dt" data-f="2"></td><td></td></tr></tbody>`;
   document.getElementById('tblD').innerHTML = h;
@@ -1417,6 +1418,7 @@ function goTab(t){
   document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b.dataset.tab === t));
   document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + t));
   if (t === 'val') renderVal();
+  const tb = {A:'tblA', B:'tblB', C:'tblC'}[t]; if (tb) setupHScroll(document.getElementById(tb));
   window.scrollTo({top: 0, behavior: 'smooth'});
 }
 document.getElementById('tabs').addEventListener('click', e => { const b = e.target.closest('.tab'); if (b) goTab(b.dataset.tab); });
