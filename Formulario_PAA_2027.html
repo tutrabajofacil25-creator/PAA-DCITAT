@@ -77,6 +77,14 @@ button{font-family:inherit}
 .grid-t .sticky3{position:sticky;left:404px;z-index:2;min-width:112px;box-shadow:inset -2px 0 0 #d8cfbf}
 .grid-t th.sticky3{z-index:4}
 .grid-t tr.noreq td{color:var(--muted);font-style:italic}
+.nrbtn{font-family:inherit;font-size:10px;font-weight:600;line-height:1;flex:none;white-space:nowrap;padding:5px 7px;border-radius:6px;border:1px dashed #b9b2a6;background:#fff;color:#6b6358;cursor:pointer}
+.nrbtn:hover{border-color:var(--red,#c8102e);color:var(--red,#c8102e)}
+.nrbtn.on{border-style:solid;background:#6b6358;border-color:#6b6358;color:#fff}
+.grid-t tr.sinpre td{background:#f6f4f0}
+.grid-t tr.sinpre .ins-name{color:#6b6358}
+.nr-tag{font-size:10px;font-weight:700;color:#8a6d1f;padding:1px 0 2px 18px;letter-spacing:.02em}
+.insline{display:flex;gap:4px;align-items:center}.insline .ins-name{flex:1;min-width:0}
+.nr-cell{display:block;text-align:center;color:#b9b2a6}
 .tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius);background:var(--white);max-height:72vh;overflow-y:auto}
 table.grid-t{border-collapse:separate;border-spacing:0;font-size:12px;min-width:100%}
 .grid-t thead{position:sticky;top:0;z-index:5}
@@ -449,7 +457,7 @@ function blank(){
     desembolsos:DES_LABELS.map((c, i) => ({id:'d'+(i+1), concepto:c, monto:0})),
     hitos:[], afAutorizado:false, afDoc:'', base:null, grabado:null, dirty:true, actualizado:null};
 }
-function newIns(soloC){ return {id:uid(), nombre:'', clas:'', af:false, m:Z(), soloC:!!soloC, cm:soloC?Z():null, citeM:0, citeNM:0, entM:0, entNM:0}; }
+function newIns(soloC){ return {id:uid(), nombre:'', clas:'', af:false, sinPre:false, m:Z(), soloC:!!soloC, cm:soloC?Z():null, citeM:0, citeNM:0, entM:0, entNM:0}; }
 function newAct(p){ return {id:uid(), p, codigo:'', nombre:'', unidad:'', m:Z(), serv:'', actv:'', noReq:false, objetivo:'', aten:Z(), benef:Z(), ventas:0, ubic:[], obs:'', insumos:[]}; }
 let S = blank();
 
@@ -476,6 +484,7 @@ function normalize(){
   if (S.base && S.base.etapa === 'Formulación') S.base.etapa = 'Programación';
   if (!S.base) S.etapa = 'Programación';
   S.desembolsos = DES_LABELS.map((c, i) => ({id:'d'+(i+1), concepto:c, monto: +((S.desembolsos || [])[i] || {}).monto || 0}));
+  allIns().forEach(i => { if (i.sinPre === undefined) i.sinPre = false; if (i.sinPre) i.m = Z(); });
   S.actividades.forEach(a => { if (a.serv === undefined) a.serv = ''; if (a.actv === undefined) a.actv = ''; if (a.noReq === undefined) a.noReq = false; delete a.tipo; clampAB(a); if (a.unidad && a.actv && unitOf(a.p, a.serv, a.actv) !== a.unidad) { a.serv = ''; a.actv = ''; } });
   if (S.telefono) S.telefono = String(S.telefono).replace(/\D/g, '');
 }
@@ -752,6 +761,12 @@ function toggleNoReq(aid){
   if (!a.noReq) a.insumos = a.insumos.filter(i => i.soloC);
   a.noReq = !a.noReq; markDirty(); renderB(); renderC();
 }
+function toggleSinPre(id){
+  const ins = findIns(id); if (!ins) return;
+  if (!ins.sinPre && sum(ins.m) > 0 && !confirm(`El insumo “${ins.nombre || 'sin nombre'}” tiene S/ ${sum(ins.m).toFixed(2)} programados. Al marcarlo como “No requiere presupuesto”, sus montos mensuales pasarán a 0. ¿Continuar?`)) return;
+  ins.sinPre = !ins.sinPre; if (ins.sinPre){ ins.m = Z(); ins.af = false; ins.cm = null; }
+  markDirty(); renderB(); renderC();
+}
 function delIns(id){
   S.actividades.forEach(a => a.insumos = a.insumos.filter(i => i.id !== id));
   S.gastos = S.gastos.filter(i => i.id !== id); markDirty(); renderB(); renderC();
@@ -766,12 +781,12 @@ function renderB(){
   const extra = (pub ? 1 : 0) + (priv ? 1 : 0);
   const insRow = (ins, code, aid) => {
     const b = f => `ins:${ins.id}:${f}`;
-    return `<tr><td class="sticky1" style="left:0;color:var(--muted);font-size:11px" ${aid ? `data-inscode-of="${aid}" data-ins="${ins.id}"` : ''}>${code}</td>
-      <td class="sticky2" style="left:84px"><input class="ins-name" data-b="${b('nombre')}" value="${esc(ins.nombre)}" placeholder="Insumo / concepto de gasto" maxlength="250"/></td>
+    return `<tr${ins.sinPre?' class="sinpre"':''}><td class="sticky1" style="left:0;color:var(--muted);font-size:11px" ${aid ? `data-inscode-of="${aid}" data-ins="${ins.id}"` : ''}>${code}</td>
+      <td class="sticky2" style="left:84px"><div class="insline"><input class="ins-name" data-b="${b('nombre')}" value="${esc(ins.nombre)}" placeholder="Insumo / concepto de gasto" maxlength="250"/>${(ins.sinPre || sum(ins.m) <= 0) ? `<button class="nrbtn${ins.sinPre?' on':''}" title="${ins.sinPre?'Quitar la marca “No requiere presupuesto” y programar montos':'Marcar el insumo como “No requiere presupuesto”: se mantiene el nombre, el monto queda en 0 y la revisión no lo observa'}" onclick="toggleSinPre('${ins.id}')">${ins.sinPre?'✓ No req.':'No req.'}</button>` : ''}</div>${ins.sinPre?'<div class="nr-tag">No requiere presupuesto</div>':''}</td>
       <td class="n sticky3" style="font-weight:700" data-k="bi:${ins.id}:t" data-f="2"></td>
       ${pub ? `<td><input data-b="${b('clas')}" value="${esc(ins.clas)}" placeholder="2.3.x x.xx xx" maxlength="20"/></td>` : ''}
-      ${priv ? `<td style="text-align:center"><input type="checkbox" data-b="${b('af')}" ${ins.af?'checked':''} title="Activo fijo" style="width:auto"/></td>` : ''}
-      ${monthCells('bi:'+ins.id, {d:2, input: i => numIn(`${b('m')}:${i}`, ins.m[i], 'money')})}
+      ${priv ? `<td style="text-align:center">${ins.sinPre ? '' : `<input type="checkbox" data-b="${b('af')}" ${ins.af?'checked':''} title="Activo fijo" style="width:auto"/>`}</td>` : ''}
+      ${monthCells('bi:'+ins.id, {d:2, input: i => ins.sinPre ? '<span class="nr-cell">–</span>' : numIn(`${b('m')}:${i}`, ins.m[i], 'money')})}
       <td><button class="ico" title="Eliminar insumo" onclick="delIns('${ins.id}')">${ICO_DEL}</button></td></tr>`;
   };
   const blank = `${'<td></td>'.repeat(extra)}`;
@@ -982,7 +997,7 @@ function validate(){
     if (a.unidad.trim() && !unitsOf(a.p).includes(a.unidad)) e('A', `${id}: la unidad de medida “${a.unidad}” no figura en el clasificador del Producto ${a.p}.`);
     else if (a.actv && unitOf(a.p, a.serv, a.actv) && a.unidad !== unitOf(a.p, a.serv, a.actv)) e('A', `${id}: la unidad de medida debe ser “${unitOf(a.p, a.serv, a.actv)}”, según la actividad del clasificador.`);
     const tb = K['ba:'+a.id+':t'] || 0;
-    if (!a.noReq && tb <= 0 && !(isPriv() && K['ca:'+a.id+':tot'] > 0)) w('B', `${id}: no tiene presupuesto programado.`);
+    if (!a.noReq && tb <= 0 && !(a.insumos.some(i => !i.soloC) && a.insumos.filter(i => !i.soloC).every(i => i.sinPre)) && !(isPriv() && K['ca:'+a.id+':tot'] > 0)) w('B', `${id}: no tiene presupuesto programado.`);
   });
   PRODUCTOS.forEach(P => { if (!acts(P.n).length) w('A', `Producto ${P.n} (${P.nombre}) no tiene actividades.`); });
   // Anexo B
@@ -990,8 +1005,8 @@ function validate(){
     const owner = S.actividades.find(a => a.insumos.includes(ins));
     const where = owner ? `actividad ${owner.codigo}` : 'gastos de operación';
     if (!ins.nombre.trim()) e('B', `Hay un insumo sin nombre en ${where}.`);
-    if (sum(ins.m) <= 0) w('B', `Insumo “${ins.nombre || 'sin nombre'}” (${where}) sin monto programado.`);
-    if (isPub() && !String(ins.clas).trim()) e('B', `Insumo “${ins.nombre || 'sin nombre'}” (${where}): falta el clasificador de gasto.`);
+    if (!ins.sinPre && sum(ins.m) <= 0) w('B', `Insumo “${ins.nombre || 'sin nombre'}” (${where}) sin monto programado.`);
+    if (isPub() && !ins.sinPre && !String(ins.clas).trim()) e('B', `Insumo “${ins.nombre || 'sin nombre'}” (${where}): falta el clasificador de gasto.`);
   });
   if ((K['bt:t'] || 0) <= 0) e('B', 'El presupuesto MINCETUR del Anexo B es 0.');
   const subv = K['bt:t'] || 0;
@@ -1118,7 +1133,7 @@ function flatten(){
     Fichas: S.actividades.map(a => [f, c, t, pn(a.p), CLASIF[a.p]?.mod || PRODUCTOS[a.p-1].mod, a.codigo, a.nombre, a.serv, a.actv, a.objetivo, sum(a.aten), sum(a.benef), +a.ventas||0, ubicTxt(a), a.obs])
   };
   const push = (grp, cod, act, ins) => {
-    if (!ins.soloC) out.B_Presupuesto.push([f, c, t, grp, cod, act, ins.nombre, ins.clas||'', ins.af?'Sí':'No', sum(ins.m), ...ins.m]);
+    if (!ins.soloC) out.B_Presupuesto.push([f, c, t, grp, cod, act, ins.nombre + (ins.sinPre ? ' [No requiere presupuesto]' : ''), ins.clas||'', ins.af?'Sí':'No', sum(ins.m), ...ins.m]);
     if (t === 'Privado'){ const cm = cmOf(ins); out.C_Fuentes.push([f, c, t, grp, cod, act, ins.nombre, (ins.soloC?0:sum(ins.m)) + (+ins.citeM||0) + (+ins.citeNM||0) + (+ins.entM||0) + (+ins.entNM||0), ...cm, ins.soloC?0:sum(ins.m), +ins.citeM||0, +ins.citeNM||0, +ins.entM||0, +ins.entNM||0]); }
   };
   S.actividades.forEach(a => { if (a.noReq) out.B_Presupuesto.push([f, c, t, pn(a.p), a.codigo, a.nombre, 'No requiere', '', 'No', 0, ...Z()]); a.insumos.forEach(ins => push(pn(a.p), a.codigo, a.nombre, ins)); });
@@ -1282,7 +1297,7 @@ async function downloadExcel(){
     fixed.forEach(([c, t]) => { ws.mergeCells(h1, c, h1+1, c); hdr(ws.getCell(h1, c), t); ws.getCell(h1+1, c).border = BORD; });
     mHeader(ws, h1, C0); ws.getRow(h1).height = 24; ws.getRow(h1+1).height = 34; r = h1 + 2;
     const firstData = r;
-    const insW = (ins, code) => { ws.getCell(r, 1).value = code || ''; ws.getCell(r, 2).value = ins.nombre; if (hasCl) ws.getCell(r, 3).value = ins.clas;
+    const insW = (ins, code) => { ws.getCell(r, 1).value = code || ''; ws.getCell(r, 2).value = ins.nombre + (ins.sinPre ? ' (No requiere presupuesto)' : ''); if (hasCl) ws.getCell(r, 3).value = ins.clas;
       writeMonths(ws, r, C0, ins.m, 'val'); ws.getCell(r, CT).value = fx([0,1,2,3].map(q => colL(qCol(C0,q)) + r).join('+'), sum(ins.m));
       rowStyle(ws, r, 1, LAST, 'ins', C0, NM); ws.getCell(r, 2).alignment = {indent:2, vertical:'middle', wrapText:true}; r++; };
     const grp = (row, label, code, kind, pre, hasRows) => {
@@ -1321,7 +1336,7 @@ async function downloadExcel(){
     const FK = ['mi','cM','cN','eM','eN','tot'];
     const keyOf = (pre, c) => c >= CF ? pre + ':' + FK[c - CF] : (((c - C0) % 4 === 3) ? `${pre}:q${Math.floor((c - C0)/4)}` : `${pre}:m${(c - C0) - Math.floor((c - C0)/4)}`);
     const compRow = r++; const firstData = r;
-    const insW = (ins, code) => { const mv = cmOf(ins); ws.getCell(r, 1).value = code || ''; ws.getCell(r, 2).value = ins.nombre + (ins.soloC ? ' (solo contrapartida)' : '');
+    const insW = (ins, code) => { const mv = cmOf(ins); ws.getCell(r, 1).value = code || ''; ws.getCell(r, 2).value = ins.nombre + (ins.soloC ? ' (solo contrapartida)' : '') + (ins.sinPre ? ' (No requiere presupuesto)' : '');
       writeMonths(ws, r, C0, mv, 'val');
       ws.getCell(r, CF).value = fx([0,1,2,3].map(q => colL(qCol(C0,q)) + r).join('+'), sum(mv));
       [+ins.citeM||0, +ins.citeNM||0, +ins.entM||0, +ins.entNM||0].forEach((v, k) => ws.getCell(r, CF + 1 + k).value = v);
