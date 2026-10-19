@@ -69,6 +69,14 @@ button{font-family:inherit}
 .note.red{border-left-color:var(--red);background:#fdf0f1;color:#7d1020}
 .note b{color:var(--charcoal2)}
 /* TABLES */
+.hbar{position:sticky;top:46px;z-index:30;display:flex;align-items:center;gap:8px;background:var(--white);padding:6px 0}
+.hbar .hs{flex:1;overflow-x:auto;overflow-y:hidden;height:16px;background:#f3f0ea;border-radius:8px}
+.hbar .hs > div{height:1px}
+.hbar .mini{padding:3px 9px}
+.grid-t .sticky2{width:320px;min-width:320px;max-width:320px}
+.grid-t .sticky3{position:sticky;left:404px;z-index:2;min-width:112px;box-shadow:inset -2px 0 0 #d8cfbf}
+.grid-t th.sticky3{z-index:4}
+.grid-t tr.noreq td{color:var(--muted);font-style:italic}
 .tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius);background:var(--white);max-height:72vh;overflow-y:auto}
 table.grid-t{border-collapse:separate;border-spacing:0;font-size:12px;min-width:100%}
 .grid-t thead{position:sticky;top:0;z-index:5}
@@ -99,6 +107,8 @@ table.grid-t{border-collapse:separate;border-spacing:0;font-size:12px;min-width:
 .grid-t .ins-name{padding-left:18px;font-style:italic}
 .grid-t td.bad{background:#fde2e4!important;color:var(--red2);font-weight:700}
 .grid-t td.okc{color:var(--green)}
+.grid-t td.tcol{font-weight:700;background:#f3ead6}
+.grid-t tr.tot td.tcol{background:var(--charcoal2)}
 .namecell{min-width:300px}
 /* BUTTONS */
 .btn{border:none;border-radius:var(--radius);padding:9px 18px;font-size:12.5px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:background .15s,border-color .15s}
@@ -150,6 +160,7 @@ table.grid-t{border-collapse:separate;border-spacing:0;font-size:12px;min-width:
 .modal-foot{padding:12px 22px;border-top:1px solid var(--light);display:flex;justify-content:flex-end;gap:10px}
 .mgrid{display:grid;grid-template-columns:110px repeat(12,1fr) 70px;gap:4px;align-items:center;font-size:11px}
 .mgrid .h{font-weight:700;color:var(--muted);text-align:center}
+.mgrid input:disabled{background:#eeebe5;border-color:#e2ddd4;cursor:not-allowed}
 .mgrid input{width:100%;border:1px solid var(--border);border-radius:4px;padding:5px 3px;font-size:11.5px;text-align:right}
 .mgrid .lbl{font-weight:600;color:var(--charcoal2)}
 .mgrid .tt{font-weight:700;text-align:right;color:var(--charcoal2)}
@@ -219,7 +230,7 @@ footer{text-align:center;padding:20px 20px 30px;color:var(--muted);font-size:11p
         <div class="field"><label>Responsable <span class="req">*</span></label><input id="f-responsable" data-b="g::responsable" maxlength="100" placeholder="Nombres y apellidos"/></div>
         <div class="field"><label>Cargo</label><input id="f-cargo" data-b="g::cargo" maxlength="100" placeholder="Cargo en el CITE"/></div>
         <div class="field"><label>Correo electrónico</label><input id="f-correo" data-b="g::correo" type="email" maxlength="100" placeholder="correo@dominio.pe"/></div>
-        <div class="field"><label>Teléfono / celular</label><input id="f-telefono" data-b="g::telefono" maxlength="20" placeholder="9xx xxx xxx"/></div>
+        <div class="field"><label>Celular</label><input id="f-telefono" data-b="g::telefono" maxlength="9" inputmode="numeric" pattern="[0-9]{9}" placeholder="9 dígitos"/></div>
       </div>
       <div class="grid g2" style="margin-top:14px" id="docRefRow">
         <div class="field"><label>Documento de aprobación de la reformulación <span class="req">*</span></label><span class="hint">Obligatorio en la etapa “Reformulación” (ej.: Oficio N.° 0xx-2027-MINCETUR/VMT/DGA-DCITAT)</span><input id="f-docRef" data-b="g::docRef" maxlength="150"/></div>
@@ -284,11 +295,11 @@ footer{text-align:center;padding:20px 20px 30px;color:var(--muted);font-size:11p
 <!-- ═════════ ANEXO C ═════════ -->
 <section class="panel" id="panel-C">
   <div class="card">
-    <div class="card-head"><div><span class="k">Anexo C</span><h2>Programación del presupuesto (metas financieras) – Total según fuentes de financiamiento</h2><p><b class="citeName"></b>. La programación mensual es el <b>total de todas las fuentes</b> (se precarga con el Anexo B en cursiva). El aporte MINCETUR viene del Anexo B.</p></div></div>
+    <div class="card-head"><div><span class="k">Anexo C</span><h2>Programación del presupuesto (metas financieras) – Total según fuentes de financiamiento</h2><p><b class="citeName"></b>. Presupuesto total del CITE privado: aporte MINCETUR (Anexo B) más los aportes del CITE y de la entidad asociada.</p></div></div>
     <div class="card-body">
       <div class="note red hidden" id="naC">El Anexo C solo corresponde a los CITE privados. Su CITE es público: no debe llenarlo.</div>
       <div id="wrapC">
-        <div class="note" style="margin-bottom:12px">Regla por fila: <b>Total año = Aporte MINCETUR + Aporte del CITE (monetario + no monetario) + Aporte de la entidad asociada (monetario + no monetario)</b>. La columna “Dif.” debe quedar en 0. Puede agregar insumos financiados solo con contrapartida.</div>
+        <div class="note" style="margin-bottom:12px">La programación mensual es la del <b>Anexo B (aporte MINCETUR)</b>, tal cual y sin edición. Registre solo los aportes del CITE y de la entidad asociada (monetario y no monetario) en cada fila. <b>Total presupuesto = Aporte MINCETUR + Aporte del CITE + Aporte de la entidad asociada.</b> Puede agregar insumos financiados solo con contrapartida.</div>
         <div class="tbl-wrap"><table class="grid-t" id="tblC"></table></div>
       </div>
     </div>
@@ -359,7 +370,7 @@ footer{text-align:center;padding:20px 20px 30px;color:var(--muted);font-size:11p
       <span>Actividades <b id="k-act">0</b></span>
       <span>Metas físicas <b data-k="at:t" data-f="0">0</b></span>
       <span>Presupuesto MINCETUR S/ <b data-k="bt:t" data-f="2">0.00</b></span>
-      <span class="privOnly">Contrapartida S/ <b id="k-contra">0.00</b></span>
+      <span class="pubOnly">Presupuesto actividades S/ <b data-k="bc:t" data-f="2">0.00</b></span><span class="pubOnly">Presupuesto operación S/ <b data-k="bg:t" data-f="2">0.00</b></span><span class="privOnly">Contrapartida S/ <b id="k-contra">0.00</b></span><span class="privOnly">Monetario S/ <b id="k-mon">0.00</b></span><span class="privOnly">No monetario S/ <b id="k-nmon">0.00</b></span>
     </div>
     <button class="btn btn-line" onclick="goTab('val')">Revisar</button>
     <button class="btn btn-primary" onclick="grabar()">Grabar PAA</button>
@@ -438,7 +449,7 @@ function blank(){
     hitos:[], afAutorizado:false, afDoc:'', base:null, grabado:null, dirty:true, actualizado:null};
 }
 function newIns(soloC){ return {id:uid(), nombre:'', clas:'', af:false, m:Z(), soloC:!!soloC, cm:soloC?Z():null, citeM:0, citeNM:0, entM:0, entNM:0}; }
-function newAct(p){ return {id:uid(), p, codigo:'', nombre:'', unidad:'', m:Z(), serv:'', actv:'', objetivo:'', aten:Z(), benef:Z(), ventas:0, ubic:[], obs:'', insumos:[]}; }
+function newAct(p){ return {id:uid(), p, codigo:'', nombre:'', unidad:'', m:Z(), serv:'', actv:'', noReq:false, objetivo:'', aten:Z(), benef:Z(), ventas:0, ubic:[], obs:'', insumos:[]}; }
 let S = blank();
 
 const tipo = () => CITES[S.cite] || '';
@@ -451,7 +462,7 @@ const findIns = id => allIns().find(i => i.id === id);
 const sum = a => a.reduce((x, y) => x + (+y || 0), 0);
 const trims = m => [0,1,2,3].map(q => (+m[q*3]||0) + (+m[q*3+1]||0) + (+m[q*3+2]||0));
 const addArr = (a, b) => { for (let i = 0; i < 12; i++) a[i] += (+b[i] || 0); return a; };
-const cmOf = ins => ins.cm || (ins.soloC ? Z() : ins.m);
+const cmOf = ins => (ins.soloC ? Z() : ins.m);   // Anexo C: la programación mensual es la del Anexo B (MINCETUR), sin edición
 const r2 = v => Math.round((+v || 0) * 100) / 100;
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function fmt(v, d){ v = +v || 0; return v.toLocaleString('es-PE', {minimumFractionDigits:d, maximumFractionDigits:d}); }
@@ -464,7 +475,8 @@ function normalize(){
   if (S.base && S.base.etapa === 'Formulación') S.base.etapa = 'Programación';
   if (!S.base) S.etapa = 'Programación';
   S.desembolsos = DES_LABELS.map((c, i) => ({id:'d'+(i+1), concepto:c, monto: +((S.desembolsos || [])[i] || {}).monto || 0}));
-  S.actividades.forEach(a => { if (a.serv === undefined) a.serv = ''; if (a.actv === undefined) a.actv = ''; delete a.tipo; });
+  S.actividades.forEach(a => { if (a.serv === undefined) a.serv = ''; if (a.actv === undefined) a.actv = ''; if (a.noReq === undefined) a.noReq = false; delete a.tipo; clampAB(a); if (a.unidad && a.actv && unitOf(a.p, a.serv, a.actv) !== a.unidad) { a.serv = ''; a.actv = ''; } });
+  if (S.telefono) S.telefono = String(S.telefono).replace(/\D/g, '');
 }
 function loadLocal(){ try { const t = localStorage.getItem(STORE_KEY); if (t) S = Object.assign(blank(), JSON.parse(t)); } catch(e){} normalize(); }
 function markDirty(){ S.dirty = true; S.actualizado = new Date().toISOString(); updatePill(); saveLocal(); }
@@ -482,7 +494,7 @@ function compute(){
   const F = ['mi','cM','cN','eM','eN'];
   const zf = () => ({mi:0,cM:0,cN:0,eM:0,eN:0});
   const addF = (a, b) => { F.forEach(k => a[k] += b[k]); return a; };
-  const putF = (pre, f, ctot) => { F.forEach(k => K[pre+':'+k] = f[k]); K[pre+':dif'] = r2(ctot - sum(F.map(k => f[k]))); };
+  const putF = (pre, f) => { F.forEach(k => K[pre+':'+k] = f[k]); K[pre+':tot'] = r2(sum(F.map(k => f[k]))); };
   S.indicadores.forEach(x => K['iv:'+x.id] = (+x.res||0) - (+x.lb||0));
   // Anexo A
   const AT = Z();
@@ -530,6 +542,8 @@ function updateComputed(){
   });
   document.getElementById('k-act').textContent = S.actividades.length;
   document.getElementById('k-contra').textContent = fmt(K['contra'], 2);
+  document.getElementById('k-mon').textContent = fmt((K['ct:cM'] || 0) + (K['ct:eM'] || 0), 2);
+  document.getElementById('k-nmon').textContent = fmt((K['ct:cN'] || 0) + (K['ct:eN'] || 0), 2);
   updateDots();
 }
 
@@ -555,10 +569,13 @@ function setVal(el){
 }
 document.addEventListener('input', e => {
   const el = e.target; if (!el.dataset || !el.dataset.b) return;
+  if (el.id === 'f-telefono') el.value = el.value.replace(/\D/g, '').slice(0, 9);
   const r = setVal(el); if (!r) return;
   markDirty();
   if (r.kind === 'g' && (r.field === 'cite' || r.field === 'etapa')) { renderAll(); return; }
-  if (r.kind === 'act' && (r.field === 'nombre' || r.field === 'codigo')) syncActLabels(el.dataset.b.split(':')[1]);
+  if (r.kind === 'act' && (r.field === 'nombre' || r.field === 'codigo')) { syncActLabels(el.dataset.b.split(':')[1]); if (r.field === 'codigo') document.querySelectorAll(`[data-inscode-of="${el.dataset.b.split(':')[1]}"]`).forEach(td => { const a = findAct(td.dataset.inscodeOf); const ins = findIns(td.dataset.ins); if (a && ins) td.textContent = a.insumos.includes(ins) ? insCode(a, ins) : ''; }); }
+  if (r.kind === 'act' && r.field === 'unidad') { const a = findAct(el.dataset.b.split(':')[1]); fitFicha(a); refreshFichaBtn(a); }
+  if (r.kind === 'act' && r.field === 'm') clampAB(findAct(el.dataset.b.split(':')[1]));
   if (el.closest('#fichaModal')) updateFichaTotals();
   updateComputed();
 });
@@ -586,6 +603,7 @@ function renderGeneral(){
   document.getElementById('olClas').textContent = isPub() ? 'Como CITE público, indique el clasificador de gasto de cada insumo.' : '';
   document.querySelectorAll('.citeName').forEach(e => e.textContent = S.cite || '[CITE]');
   document.querySelectorAll('.privOnly').forEach(e => e.style.display = isPub() ? 'none' : '');
+  document.querySelectorAll('.pubOnly').forEach(e => e.style.display = isPub() ? '' : 'none');
   document.querySelector('[data-tab="C"]').classList.toggle('na', isPub());
   document.querySelector('[data-tab="D"]').classList.toggle('na', isPub());
   document.getElementById('btnLoadServer').disabled = !ACCESS;
@@ -593,6 +611,32 @@ function renderGeneral(){
 }
 
 /* ═══════════ helpers de tabla ═══════════ */
+// Conserva la posición de desplazamiento de una tabla al redibujarla
+function setTable(id, html){
+  const tb = document.getElementById(id), wrap = tb.closest('.tbl-wrap');
+  const st = wrap ? wrap.scrollTop : 0, sl = wrap ? wrap.scrollLeft : 0, py = window.scrollY;
+  tb.innerHTML = html;
+  if (wrap){ wrap.scrollTop = st; wrap.scrollLeft = sl; }
+  window.scrollTo(0, py);
+  setupHScroll(tb);
+}
+// Barra de desplazamiento horizontal superior + botones Inicio / Fin
+function setupHScroll(tb){
+  const wrap = tb.closest('.tbl-wrap'); if (!wrap) return;
+  let bar = wrap.previousElementSibling;
+  if (!bar || !bar.classList.contains('hbar')){
+    bar = document.createElement('div'); bar.className = 'hbar';
+    bar.innerHTML = '<button type="button" class="mini" data-go="0" title="Ir al inicio de la fila">⇤ Inicio</button><div class="hs"><div></div></div><button type="button" class="mini" data-go="1" title="Ir al final de la fila">Fin ⇥</button>';
+    wrap.parentNode.insertBefore(bar, wrap);
+    const hs = bar.querySelector('.hs');
+    hs.addEventListener('scroll', () => { if (Math.abs(wrap.scrollLeft - hs.scrollLeft) > 1) wrap.scrollLeft = hs.scrollLeft; });
+    wrap.addEventListener('scroll', () => { if (Math.abs(wrap.scrollLeft - hs.scrollLeft) > 1) hs.scrollLeft = wrap.scrollLeft; });
+    bar.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => { const x = b.dataset.go === '1' ? wrap.scrollWidth : 0; wrap.scrollLeft = x; hs.scrollLeft = x; }));
+  }
+  const inner = bar.querySelector('.hs > div');
+  requestAnimationFrame(() => { inner.style.width = tb.scrollWidth + 'px'; bar.querySelector('.hs').scrollLeft = wrap.scrollLeft; bar.style.display = tb.scrollWidth > wrap.clientWidth + 4 ? '' : 'none'; });
+}
+window.addEventListener('resize', () => ['tblA','tblB','tblC'].forEach(id => { const tb = document.getElementById(id); if (tb && tb.innerHTML) setupHScroll(tb); }));
 const ICO_DEL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>';
 const ICO_UP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>';
 const ICO_DN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>';
@@ -639,7 +683,7 @@ function renderInd(){
 }
 
 /* ═══════════ RENDER: ANEXO A ═══════════ */
-function nextCode(p){ const n = acts(p).length + 1; return `${p}.${n}`; }
+function nextCode(p){ const nums = acts(p).map(a => { const m = String(a.codigo).match(new RegExp('^' + p + '\\.(\\d+)$')); return m ? +m[1] : 0; }); return `${p}.${Math.max(0, ...nums) + 1}`; }
 function addAct(p){ const a = newAct(p); a.codigo = nextCode(p); S.actividades.push(a); markDirty(); renderA(); renderB(); renderC();
   setTimeout(() => { const el = document.querySelector(`[data-b="act:${a.id}:nombre"]`); if (el) el.focus(); }, 30); }
 function delAct(id){
@@ -653,7 +697,21 @@ function moveAct(id, dir){
   if (j < 0 || j >= arr.length) return;
   [arr[i], arr[j]] = [arr[j], arr[i]]; markDirty(); renderA(); renderB(); renderC();
 }
-function fichaState(a){ return (a.serv && a.actv && a.objetivo && a.objetivo.trim()) ? 'ok' : 'pend'; }
+const fichaCore = a => !!(a.serv && a.actv && a.objetivo && a.objetivo.trim());
+const ubicOk = a => a.ubic.length > 0 && a.ubic.every(u => u.t === 'N' ? (u.reg && u.prov && u.dist) : String(u.pais || '').trim());
+function fichaState(a){ return (fichaCore(a) && ubicOk(a)) ? 'ok' : 'pend'; }
+const insCode = (a, ins) => `${a.codigo}.${a.insumos.indexOf(ins) + 1}`;
+const goCode = g => `6.${S.gastos.indexOf(g) + 1}`;
+function clampAB(a){ for (let i = 0; i < 12; i++) if (!(+a.m[i] > 0)) { a.aten[i] = 0; a.benef[i] = 0; } }
+const servsForUnit = (p, u) => (CLASIF[p]?.serv || []).filter(s => s.act.some(x => x.u === u));
+function fitFicha(a){ // adecúa servicio y actividad a la unidad de medida (fija)
+  if (!a.unidad) { a.serv = ''; a.actv = ''; return; }
+  const ss = servsForUnit(a.p, a.unidad);
+  if (!ss.some(s => s.n === a.serv)) a.serv = ss.length === 1 ? ss[0].n : '';
+  const acts = a.serv ? ss.find(s => s.n === a.serv).act.filter(x => x.u === a.unidad) : [];
+  if (!acts.some(x => x.n === a.actv)) a.actv = acts.length === 1 ? acts[0].n : '';
+}
+function refreshFichaBtn(a){ const el = document.getElementById('fb-' + a.id); if (el){ const st = fichaState(a); el.className = 'ficha-btn ' + st; el.textContent = st === 'ok' ? '✓ Ficha' : 'Ficha'; } }
 function renderA(){
   let h = `<thead><tr><th rowspan="2" class="sticky1" style="left:0;min-width:84px">CÓDIGO</th><th rowspan="2" class="sticky2 namecell" style="left:84px">COMPONENTE / ACTIVIDAD</th><th rowspan="2" style="min-width:210px">UNIDAD DE MEDIDA</th><th rowspan="2">CANTIDAD<br>ANUAL</th><th colspan="16">PROGRAMACIÓN MENSUAL</th><th rowspan="2">FICHA</th><th rowspan="2"></th></tr><tr>${monthHead()}</tr></thead><tbody>`;
   PRODUCTOS.forEach(P => {
@@ -671,7 +729,7 @@ function renderA(){
     h += `<tr class="addrow"><td class="sticky1" style="left:0"></td><td class="sticky2" style="left:84px"><button class="mini" onclick="addAct(${P.n})">+ Agregar actividad al Producto ${P.n}</button></td><td colspan="20"></td></tr>`;
   });
   h += `<tr class="tot"><td class="sticky1" style="left:0"></td><td class="sticky2" style="left:84px;text-align:center">TOTAL</td><td></td><td class="n" data-k="at:t"></td>${monthCells('at', {d:0})}<td></td><td></td></tr></tbody>`;
-  document.getElementById('tblA').innerHTML = h;
+  setTable('tblA', h);
   document.querySelectorAll('#tblA td.trim, #tblA tr.tot td').forEach(td => { if (td.closest('tr.tot')) td.classList.remove('trim'); });
   updateComputed();
 }
@@ -683,9 +741,16 @@ function syncActLabels(id){
 
 /* ═══════════ RENDER: ANEXO B ═══════════ */
 function addIns(aid){ const a = findAct(aid); const ins = newIns(false); a.insumos.push(ins); markDirty(); renderB(); renderC();
-  setTimeout(() => { const el = document.querySelector(`#tblB [data-b="ins:${ins.id}:nombre"]`); if (el) el.focus(); }, 30); }
-function addGasto(){ const g = newIns(false); S.gastos.push(g); markDirty(); renderB(); renderC(); goTab('B');
-  setTimeout(() => { const el = document.querySelector(`#tblB [data-b="ins:${g.id}:nombre"]`); if (el) el.focus(); }, 30); }
+  setTimeout(() => { const el = document.querySelector(`#tblB [data-b="ins:${ins.id}:nombre"]`); if (el){ el.focus({preventScroll:true}); el.closest('tr').scrollIntoView({block:'nearest'}); } }, 40); }
+function addGasto(){ const g = newIns(false); S.gastos.push(g); markDirty(); renderB(); renderC();
+  if (!document.getElementById('panel-B').classList.contains('active')) goTab('B');
+  setTimeout(() => { const el = document.querySelector(`#tblB [data-b="ins:${g.id}:nombre"]`); if (el){ el.focus({preventScroll:true}); el.closest('tr').scrollIntoView({block:'center', behavior:'smooth'}); } }, 40); }
+function toggleNoReq(aid){
+  const a = findAct(aid); const bIns = a.insumos.filter(i => !i.soloC);
+  if (!a.noReq && bIns.length && !confirm(`La actividad ${a.codigo} tiene ${bIns.length} insumo(s) en el Anexo B. Al marcarla como “No requiere”, se eliminarán. ¿Continuar?`)) return;
+  if (!a.noReq) a.insumos = a.insumos.filter(i => i.soloC);
+  a.noReq = !a.noReq; markDirty(); renderB(); renderC();
+}
 function delIns(id){
   S.actividades.forEach(a => a.insumos = a.insumos.filter(i => i.id !== id));
   S.gastos = S.gastos.filter(i => i.id !== id); markDirty(); renderB(); renderC();
@@ -696,33 +761,39 @@ function renderB(){
   document.getElementById('noteB').innerHTML = pub
     ? 'CITE público: registre el <b>clasificador de gasto</b> de cada insumo (ej.: 2.3.2 7.11 99).'
     : `CITE privado: marque <b>“AF”</b> en los insumos que sean <b>activos fijos para innovación y transferencia tecnológica</b> (límite ${LIM.af} % de la subvención). Los gastos de operación no deben superar el ${LIM.go} % de la subvención.`;
-  let h = `<thead><tr><th rowspan="2" class="sticky1" style="left:0;min-width:84px">CÓDIGO</th><th rowspan="2" class="sticky2 namecell" style="left:84px">COMPONENTE / ACTIVIDAD / INSUMO</th>${pub?'<th rowspan="2" style="min-width:120px">CLASIFICADOR<br>DE GASTO</th>':''}${priv?'<th rowspan="2" title="Activo fijo para innovación y transferencia tecnológica">AF</th>':''}<th rowspan="2">TOTAL AÑO</th><th colspan="16">PROGRAMACIÓN MENSUAL (S/)</th><th rowspan="2"></th></tr><tr>${monthHead()}</tr></thead><tbody>`;
+  let h = `<thead><tr><th rowspan="2" class="sticky1" style="left:0;min-width:84px">CÓDIGO</th><th rowspan="2" class="sticky2 namecell" style="left:84px">COMPONENTE / ACTIVIDAD / INSUMO</th><th rowspan="2" class="sticky3">TOTAL AÑO</th>${pub?'<th rowspan="2" style="min-width:120px">CLASIFICADOR<br>DE GASTO</th>':''}${priv?'<th rowspan="2" title="Activo fijo para innovación y transferencia tecnológica">AF</th>':''}<th colspan="16">PROGRAMACIÓN MENSUAL (S/)</th><th rowspan="2"></th></tr><tr>${monthHead()}</tr></thead><tbody>`;
   const extra = (pub ? 1 : 0) + (priv ? 1 : 0);
-  const insRow = (ins, code) => {
+  const insRow = (ins, code, aid) => {
     const b = f => `ins:${ins.id}:${f}`;
-    return `<tr><td class="sticky1" style="left:0;color:var(--muted);font-size:11px">${code}</td>
+    return `<tr><td class="sticky1" style="left:0;color:var(--muted);font-size:11px" ${aid ? `data-inscode-of="${aid}" data-ins="${ins.id}"` : ''}>${code}</td>
       <td class="sticky2" style="left:84px"><input class="ins-name" data-b="${b('nombre')}" value="${esc(ins.nombre)}" placeholder="Insumo / concepto de gasto" maxlength="250"/></td>
+      <td class="n sticky3" style="font-weight:700" data-k="bi:${ins.id}:t" data-f="2"></td>
       ${pub ? `<td><input data-b="${b('clas')}" value="${esc(ins.clas)}" placeholder="2.3.x x.xx xx" maxlength="20"/></td>` : ''}
       ${priv ? `<td style="text-align:center"><input type="checkbox" data-b="${b('af')}" ${ins.af?'checked':''} title="Activo fijo" style="width:auto"/></td>` : ''}
-      <td class="n" style="font-weight:700" data-k="bi:${ins.id}:t" data-f="2"></td>
       ${monthCells('bi:'+ins.id, {d:2, input: i => numIn(`${b('m')}:${i}`, ins.m[i], 'money')})}
       <td><button class="ico" title="Eliminar insumo" onclick="delIns('${ins.id}')">${ICO_DEL}</button></td></tr>`;
   };
+  const blank = `${'<td></td>'.repeat(extra)}`;
   PRODUCTOS.forEach(P => {
-    h += `<tr class="prod"><td class="sticky1" style="left:0;text-align:center">${P.n}</td><td class="sticky2" style="left:84px">PRODUCTO ${P.n}: ${P.nombre}</td>${'<td></td>'.repeat(extra)}<td class="n" data-k="bp:${P.n}:t" data-f="2"></td>${monthCells('bp:'+P.n, {d:2})}<td></td></tr>`;
+    h += `<tr class="prod"><td class="sticky1" style="left:0;text-align:center">${P.n}</td><td class="sticky2" style="left:84px">PRODUCTO ${P.n}: ${P.nombre}</td><td class="n sticky3" data-k="bp:${P.n}:t" data-f="2"></td>${blank}${monthCells('bp:'+P.n, {d:2})}<td></td></tr>`;
     const list = acts(P.n);
-    if (!list.length) h += `<tr><td class="sticky1" style="left:0"></td><td class="sticky2 hint" style="left:84px;padding:8px">Sin actividades. Agréguelas en el Anexo A.</td><td colspan="${18+extra}"></td></tr>`;
+    if (!list.length) h += `<tr><td class="sticky1" style="left:0"></td><td class="sticky2 hint" style="left:84px;padding:8px">Sin actividades. Agréguelas en el Anexo A.</td><td class="sticky3"></td><td colspan="${17+extra}"></td></tr>`;
     list.forEach(a => {
-      h += `<tr class="act"><td class="sticky1" style="left:0" data-actcode="${a.id}">${esc(a.codigo)}</td><td class="sticky2" style="left:84px" data-actlabel="${a.id}">${esc(a.nombre || '(actividad sin nombre)')}</td>${'<td></td>'.repeat(extra)}<td class="n" data-k="ba:${a.id}:t" data-f="2"></td>${monthCells('ba:'+a.id, {d:2})}<td></td></tr>`;
-      a.insumos.filter(i => !i.soloC).forEach((ins, k) => h += insRow(ins, ''));
-      h += `<tr class="addrow"><td class="sticky1" style="left:0"></td><td class="sticky2" style="left:84px"><button class="mini" onclick="addIns('${a.id}')">+ Insumo</button></td><td colspan="${18+extra}"></td></tr>`;
+      h += `<tr class="act"><td class="sticky1" style="left:0" data-actcode="${a.id}">${esc(a.codigo)}</td><td class="sticky2" style="left:84px" data-actlabel="${a.id}">${esc(a.nombre || '(actividad sin nombre)')}</td><td class="n sticky3" data-k="ba:${a.id}:t" data-f="2"></td>${blank}${monthCells('ba:'+a.id, {d:2})}<td></td></tr>`;
+      if (a.noReq){
+        h += `<tr class="noreq"><td class="sticky1" style="left:0;font-size:11px">${esc(a.codigo)}.1</td><td class="sticky2" style="left:84px;padding:6px 8px">No requiere <span class="hint" style="font-style:normal">(la actividad no requiere presupuesto)</span></td><td class="n sticky3">0.00</td><td colspan="${17+extra}"></td></tr>`;
+        h += `<tr class="addrow"><td class="sticky1" style="left:0"></td><td class="sticky2" style="left:84px"><button class="mini" onclick="toggleNoReq('${a.id}')">Quitar “No requiere” y agregar insumos</button></td><td class="sticky3"></td><td colspan="${17+extra}"></td></tr>`;
+      } else {
+        a.insumos.filter(i => !i.soloC).forEach(ins => h += insRow(ins, insCode(a, ins), a.id));
+        h += `<tr class="addrow"><td class="sticky1" style="left:0"></td><td class="sticky2" style="left:84px"><button class="mini" onclick="addIns('${a.id}')">+ Insumo</button> <button class="mini" onclick="toggleNoReq('${a.id}')" title="La actividad no requiere presupuesto para su cumplimiento">No requiere presupuesto</button></td><td class="sticky3"></td><td colspan="${17+extra}"></td></tr>`;
+      }
     });
   });
-  h += `<tr class="prod"><td class="sticky1" style="left:0;text-align:center">6</td><td class="sticky2" style="left:84px">GASTOS DE OPERACIÓN</td>${'<td></td>'.repeat(extra)}<td class="n" data-k="bg:t" data-f="2"></td>${monthCells('bg', {d:2})}<td></td></tr>`;
-  S.gastos.filter(i => !i.soloC).forEach(g => h += insRow(g, ''));
-  h += `<tr class="addrow"><td class="sticky1" style="left:0"></td><td class="sticky2" style="left:84px"><button class="mini" onclick="addGasto()">+ Gasto de operación</button></td><td colspan="${18+extra}"></td></tr>`;
-  h += `<tr class="tot"><td class="sticky1" style="left:0"></td><td class="sticky2" style="left:84px">TOTAL AÑO ${ANIO} (APORTE MINCETUR)</td>${'<td></td>'.repeat(extra)}<td class="n" data-k="bt:t" data-f="2"></td>${monthCells('bt', {d:2})}<td></td></tr></tbody>`;
-  document.getElementById('tblB').innerHTML = h;
+  h += `<tr class="prod"><td class="sticky1" style="left:0;text-align:center">6</td><td class="sticky2" style="left:84px">GASTOS DE OPERACIÓN</td><td class="n sticky3" data-k="bg:t" data-f="2"></td>${blank}${monthCells('bg', {d:2})}<td></td></tr>`;
+  S.gastos.filter(i => !i.soloC).forEach(g => h += insRow(g, goCode(g)));
+  h += `<tr class="addrow"><td class="sticky1" style="left:0"></td><td class="sticky2" style="left:84px"><button class="mini" onclick="addGasto()">+ Gasto de operación</button></td><td class="sticky3"></td><td colspan="${17+extra}"></td></tr>`;
+  h += `<tr class="tot"><td class="sticky1" style="left:0"></td><td class="sticky2" style="left:84px">TOTAL AÑO ${ANIO} (APORTE MINCETUR)</td><td class="n sticky3" data-k="bt:t" data-f="2"></td>${blank}${monthCells('bt', {d:2})}<td></td></tr></tbody>`;
+  setTable('tblB', h);
   document.querySelectorAll('#tblB tr.tot td.trim').forEach(td => td.classList.remove('trim'));
   updateComputed();
 }
@@ -736,38 +807,36 @@ function renderC(){
   document.getElementById('naC').classList.toggle('hidden', !pub);
   document.getElementById('wrapC').classList.toggle('hidden', pub);
   if (pub){ document.getElementById('tblC').innerHTML = ''; return; }
-  const fcells = pre => ['mi','cM','cN','eM','eN'].map(k => `<td class="n" data-k="${pre}:${k}" data-f="2"></td>`).join('') + `<td class="n" data-dif data-k="${pre}:dif" data-f="2"></td>`;
-  let h = `<thead><tr><th rowspan="2" class="sticky1" style="left:0;min-width:84px">CÓDIGO</th><th rowspan="2" class="sticky2 namecell" style="left:84px">COMPONENTE / ACTIVIDAD / INSUMO</th><th rowspan="2">TOTAL AÑO</th><th colspan="16">PROGRAMACIÓN MENSUAL – TODAS LAS FUENTES (S/)</th><th rowspan="2" class="src">APORTE<br>MINCETUR</th><th colspan="2" class="src">APORTE DEL CITE SOLICITANTE</th><th colspan="2" class="src">APORTE DE LA ENTIDAD ASOCIADA</th><th rowspan="2">Dif.</th><th rowspan="2"></th></tr>
+  const fcells = pre => ['mi','cM','cN','eM','eN','tot'].map(k => `<td class="n${k==='tot'?' tcol':''}" data-k="${pre}:${k}" data-f="2"></td>`).join('');
+  let h = `<thead><tr><th rowspan="2" class="sticky1" style="left:0;min-width:84px">CÓDIGO</th><th rowspan="2" class="sticky2 namecell" style="left:84px">COMPONENTE / ACTIVIDAD / INSUMO</th><th colspan="16">PROGRAMACIÓN MENSUAL – APORTE MINCETUR (S/, igual al Anexo B)</th><th rowspan="2" class="src">APORTE<br>MINCETUR</th><th colspan="2" class="src">APORTE DEL CITE SOLICITANTE</th><th colspan="2" class="src">APORTE DE LA ENTIDAD ASOCIADA</th><th rowspan="2">TOTAL<br>PRESUPUESTO</th><th rowspan="2"></th></tr>
     <tr>${monthHead()}<th class="src">Monetario</th><th class="src">No monetario</th><th class="src">Monetario</th><th class="src">No monetario</th></tr></thead><tbody>`;
-  h += `<tr class="tot"><td class="sticky1" style="left:0"></td><td class="sticky2" style="left:84px">COMPONENTES (Productos 1 a 5)</td><td class="n" data-k="cc:t" data-f="2"></td>${monthCells('cc', {d:2})}${fcells('cc')}<td></td></tr>`;
-  const insRow = ins => {
+  h += `<tr class="tot"><td class="sticky1" style="left:0"></td><td class="sticky2" style="left:84px">COMPONENTES (Productos 1 a 5)</td>${monthCells('cc', {d:2})}${fcells('cc')}<td></td></tr>`;
+  const insRow = (ins, code) => {
     const b = f => `ins:${ins.id}:${f}`;
-    const c = cmOf(ins);
     const name = ins.soloC
       ? `<input class="ins-name" data-b="${b('nombre')}" value="${esc(ins.nombre)}" placeholder="Insumo financiado solo con contrapartida" maxlength="250"/>`
       : `<div class="ins-name" style="padding:5px" data-insname="${ins.id}">${esc(ins.nombre || '(insumo sin nombre)')}</div>`;
-    const mi = i => `<input class="money ${ins.cm ? '' : 'cdef'}" data-ins="${ins.id}" data-i="${i}" type="number" min="0" step="any" data-num data-b="${b('cm')}:${i}" value="${(+c[i]) ? c[i] : ''}" placeholder="0"/>`;
     const fin = f => `<td>${numIn(b(f), ins[f], 'money')}</td>`;
-    return `<tr><td class="sticky1" style="left:0;font-size:10px;color:var(--muted)">${ins.soloC ? 'Solo contrap.' : ''}</td><td class="sticky2" style="left:84px">${name}</td>
-      <td class="n" style="font-weight:700" data-k="ci:${ins.id}:t" data-f="2"></td>
-      ${monthCells('ci:'+ins.id, {d:2, input: mi})}
+    return `<tr><td class="sticky1" style="left:0;font-size:11px;color:var(--muted)" title="${ins.soloC ? 'Solo contrapartida' : ''}">${code}${ins.soloC ? ' <span style="font-size:9px">(contrap.)</span>' : ''}</td><td class="sticky2" style="left:84px">${name}</td>
+      ${monthCells('ci:'+ins.id, {d:2})}
       <td class="n" data-k="ci:${ins.id}:mi" data-f="2"></td>${fin('citeM')}${fin('citeNM')}${fin('entM')}${fin('entNM')}
-      <td class="n" data-dif data-k="ci:${ins.id}:dif" data-f="2"></td>
-      <td><div class="rowtools">${ins.soloC ? `<button class="ico" title="Eliminar" onclick="delIns('${ins.id}')">${ICO_DEL}</button>` : (ins.cm ? `<button class="ico" title="Volver a copiar la programación del Anexo B" onclick="resetCm('${ins.id}')">↺</button>` : '')}</div></td></tr>`;
+      <td class="n tcol" data-k="ci:${ins.id}:tot" data-f="2"></td>
+      <td><div class="rowtools">${ins.soloC ? `<button class="ico" title="Eliminar" onclick="delIns('${ins.id}')">${ICO_DEL}</button>` : ''}</div></td></tr>`;
   };
   PRODUCTOS.forEach(P => {
-    h += `<tr class="prod"><td class="sticky1" style="left:0;text-align:center">${P.n}</td><td class="sticky2" style="left:84px">PRODUCTO ${P.n}: ${P.nombre}</td><td class="n" data-k="cp:${P.n}:t" data-f="2"></td>${monthCells('cp:'+P.n, {d:2})}${fcells('cp:'+P.n)}<td></td></tr>`;
+    h += `<tr class="prod"><td class="sticky1" style="left:0;text-align:center">${P.n}</td><td class="sticky2" style="left:84px">PRODUCTO ${P.n}: ${P.nombre}</td>${monthCells('cp:'+P.n, {d:2})}${fcells('cp:'+P.n)}<td></td></tr>`;
     acts(P.n).forEach(a => {
-      h += `<tr class="act"><td class="sticky1" style="left:0" data-actcode="${a.id}">${esc(a.codigo)}</td><td class="sticky2" style="left:84px" data-actlabel="${a.id}">${esc(a.nombre || '(actividad sin nombre)')}</td><td class="n" data-k="ca:${a.id}:t" data-f="2"></td>${monthCells('ca:'+a.id, {d:2})}${fcells('ca:'+a.id)}<td></td></tr>`;
-      a.insumos.forEach(ins => h += insRow(ins));
-      h += `<tr class="addrow"><td class="sticky1" style="left:0"></td><td class="sticky2" style="left:84px"><button class="mini" onclick="addInsC('${a.id}')">+ Insumo solo con contrapartida</button></td><td colspan="25"></td></tr>`;
+      h += `<tr class="act"><td class="sticky1" style="left:0" data-actcode="${a.id}">${esc(a.codigo)}</td><td class="sticky2" style="left:84px" data-actlabel="${a.id}">${esc(a.nombre || '(actividad sin nombre)')}</td>${monthCells('ca:'+a.id, {d:2})}${fcells('ca:'+a.id)}<td></td></tr>`;
+      if (a.noReq && !a.insumos.length) h += `<tr class="noreq"><td class="sticky1" style="left:0;font-size:11px">${esc(a.codigo)}.1</td><td class="sticky2" style="left:84px;padding:6px 8px">No requiere</td><td colspan="23"></td></tr>`;
+      a.insumos.forEach(ins => h += insRow(ins, insCode(a, ins)));
+      h += `<tr class="addrow"><td class="sticky1" style="left:0"></td><td class="sticky2" style="left:84px"><button class="mini" onclick="addInsC('${a.id}')">+ Insumo solo con contrapartida</button></td><td colspan="23"></td></tr>`;
     });
   });
-  h += `<tr class="prod"><td class="sticky1" style="left:0;text-align:center">6</td><td class="sticky2" style="left:84px">GASTOS DE OPERACIÓN</td><td class="n" data-k="cg:t" data-f="2"></td>${monthCells('cg', {d:2})}${fcells('cg')}<td></td></tr>`;
-  S.gastos.forEach(g => h += insRow(g));
-  h += `<tr class="addrow"><td class="sticky1" style="left:0"></td><td class="sticky2" style="left:84px"><button class="mini" onclick="addInsC(null)">+ Gasto solo con contrapartida</button></td><td colspan="25"></td></tr>`;
-  h += `<tr class="tot"><td class="sticky1" style="left:0"></td><td class="sticky2" style="left:84px">TOTAL AÑO ${ANIO} (TODAS LAS FUENTES)</td><td class="n" data-k="ct:t" data-f="2"></td>${monthCells('ct', {d:2})}${fcells('ct')}<td></td></tr></tbody>`;
-  document.getElementById('tblC').innerHTML = h;
+  h += `<tr class="prod"><td class="sticky1" style="left:0;text-align:center">6</td><td class="sticky2" style="left:84px">GASTOS DE OPERACIÓN</td>${monthCells('cg', {d:2})}${fcells('cg')}<td></td></tr>`;
+  S.gastos.forEach(g => h += insRow(g, goCode(g)));
+  h += `<tr class="addrow"><td class="sticky1" style="left:0"></td><td class="sticky2" style="left:84px"><button class="mini" onclick="addInsC(null)">+ Gasto solo con contrapartida</button></td><td colspan="23"></td></tr>`;
+  h += `<tr class="tot"><td class="sticky1" style="left:0"></td><td class="sticky2" style="left:84px">TOTAL AÑO ${ANIO}</td>${monthCells('ct', {d:2})}${fcells('ct')}<td></td></tr></tbody>`;
+  setTable('tblC', h);
   document.querySelectorAll('#tblC tr.tot td.trim').forEach(td => td.classList.remove('trim'));
   updateComputed();
 }
@@ -821,21 +890,22 @@ function openFicha(id){
   document.getElementById('fichaTitle').textContent = `Ficha de la actividad ${a.codigo || ''}`;
   document.getElementById('fichaSub').textContent = a.nombre || '(sin nombre)';
   const b = f => `act:${a.id}:${f}`;
-  const servs = (CLASIF[a.p]?.serv || []), sv = servOf(a.p, a.serv);
-  const oS = servs.map(s => `<option ${s.n===a.serv?'selected':''}>${esc(s.n)}</option>`).join('');
-  const oA = (sv ? sv.act : []).map(x => `<option ${x.n===a.actv?'selected':''}>${esc(x.n)}</option>`).join('');
-  const mg = (field, label) => `<div class="lbl">${label}</div>${a[field].map((v, i) => `<input class="${i>5?'hide-s':''}" type="number" min="0" step="1" data-num data-b="${b(field)}:${i}" value="${(+v)?v:''}" placeholder="0"/>`).join('')}<div class="tt" id="ft-${field}">0</div>`;
+  const before = a.serv + '|' + a.actv; fitFicha(a); clampAB(a); if (before !== a.serv + '|' + a.actv) markDirty();
+  const ss = a.unidad ? servsForUnit(a.p, a.unidad) : [], sv = ss.find(s => s.n === a.serv);
+  const oS = ss.map(s => `<option ${s.n===a.serv?'selected':''}>${esc(s.n)}</option>`).join('');
+  const oA = (sv ? sv.act.filter(x => x.u === a.unidad) : []).map(x => `<option ${x.n===a.actv?'selected':''}>${esc(x.n)}</option>`).join('');
+  const mg = (field, label) => `<div class="lbl">${label}</div>${a[field].map((v, i) => +a.m[i] > 0 ? `<input class="${i>5?'hide-s':''}" type="number" min="0" step="1" data-num data-b="${b(field)}:${i}" value="${(+v)?v:''}" placeholder="0"/>` : `<input class="${i>5?'hide-s':''}" disabled title="Sin meta física en este mes" value="" placeholder="–"/>`).join('')}<div class="tt" id="ft-${field}">0</div>`;
   let h = `<div class="field"><label>Modalidad de intervención</label><input class="ro" readonly value="${esc(CLASIF[a.p]?.mod || P.mod)} (Producto ${P.n})"/></div>
     <div class="grid" style="margin-top:12px">
-      <div class="field"><label>Servicio estandarizado <span class="req">*</span></label><select onchange="onFichaServ(this)"><option value="">– Seleccione –</option>${oS}</select></div>
+      <div class="field"><label>Unidad de medida <span class="hint">(fijada en el Anexo A; no se cambia aquí)</span></label><input class="ro" readonly value="${esc(a.unidad || 'Primero elija la unidad de medida en el Anexo A')}"/></div>
+      <div class="field"><label>Servicio estandarizado <span class="req">*</span> <span class="hint">(solo los que corresponden a la unidad de medida)</span></label><select onchange="onFichaServ(this)" ${a.unidad ? '' : 'disabled'}><option value="">– Seleccione –</option>${oS}</select></div>
       <div class="field"><label>Actividad <span class="req">*</span></label><select onchange="onFichaAct(this)" ${sv ? '' : 'disabled'}><option value="">${sv ? '– Seleccione –' : 'Primero elija el servicio'}</option>${oA}</select></div>
     </div>
-    <div class="field" style="margin-top:12px"><label>Unidad de medida <span class="hint">(según el clasificador; se copia al Anexo A)</span></label><input class="ro" readonly value="${esc(a.unidad || '—')}"/></div>
     <div class="field" style="margin-top:12px"><label>Objetivo de la actividad <span class="req">*</span></label><span class="hint">Máximo 500 caracteres</span><textarea rows="3" maxlength="500" data-b="${b('objetivo')}" placeholder="Describa el objetivo principal...">${esc(a.objetivo)}</textarea></div>
     <div class="section-title" style="margin-top:16px">Atenciones y beneficiarios programados por mes</div>
-    <p class="hint" style="margin-bottom:8px">Las metas físicas (actividades) y el presupuesto se registran en los Anexos A y B.</p>
+    <p class="hint" style="margin-bottom:8px">Solo se habilitan los meses con meta física programada en el Anexo A. Las metas físicas y el presupuesto se registran en los Anexos A y B.</p>
     <div class="mgrid"><div></div>${MES.map((m, i) => `<div class="h ${i>5?'hide-s':''}">${m}</div>`).join('')}<div class="h">Total</div>${mg('aten','Atenciones')}${mg('benef','Beneficiarios')}</div>
-    <div class="section-title" style="margin-top:16px">Lugares de ejecución <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--muted)">(máximo 6 nacionales y 2 en el extranjero)</span></div>
+    <div class="section-title" style="margin-top:16px">Lugares de ejecución <span class="req">*</span> <span style="text-transform:none;letter-spacing:0;font-weight:400;color:var(--muted)">(máximo 6 nacionales y 2 en el extranjero)</span></div>
     <div id="ubicBox"></div>
     <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="mini solid" onclick="addUbic('N')">+ Ubicación nacional</button><button class="mini solid" onclick="addUbic('E')">+ Actividad en el extranjero</button></div>
     ${a.p === 5 ? `<div class="field" style="margin-top:16px;max-width:320px"><label>Ventas proyectadas (S/)</label><input type="number" min="0" step="0.01" data-num data-b="${b('ventas')}" value="${(+a.ventas)?a.ventas:''}" placeholder="0.00"/></div>` : ''}
@@ -844,8 +914,8 @@ function openFicha(id){
   renderUbic(); updateFichaTotals();
   document.getElementById('fichaModal').classList.add('show');
 }
-function onFichaServ(sel){ const a = findAct(fichaId); a.serv = sel.value; const sv = servOf(a.p, a.serv); a.actv = (sv && sv.act.length === 1) ? sv.act[0].n : ''; if (a.actv) a.unidad = unitOf(a.p, a.serv, a.actv); markDirty(); openFicha(fichaId); }
-function onFichaAct(sel){ const a = findAct(fichaId); a.actv = sel.value; const u = unitOf(a.p, a.serv, a.actv); if (u) a.unidad = u; markDirty(); openFicha(fichaId); }
+function onFichaServ(sel){ const a = findAct(fichaId); a.serv = sel.value; a.actv = ''; markDirty(); openFicha(fichaId); }
+function onFichaAct(sel){ const a = findAct(fichaId); a.actv = sel.value; markDirty(); openFicha(fichaId); }
 function updateFichaTotals(){ const a = findAct(fichaId); if (!a) return; ['aten','benef'].forEach(f => { const el = document.getElementById('ft-'+f); if (el) el.textContent = fmt(sum(a[f]), 0); }); }
 function closeFicha(){ document.getElementById('fichaModal').classList.remove('show'); const a = findAct(fichaId);
   if (a){ const el = document.getElementById('fb-'+a.id); if (el){ const st = fichaState(a); el.className = 'ficha-btn ' + st; el.textContent = st === 'ok' ? '✓ Ficha' : 'Ficha'; } }
@@ -888,6 +958,7 @@ function validate(){
   if (!S.responsable.trim()) e('gen', 'Registre el nombre del responsable.');
   if (S.etapa !== 'Programación' && !S.base) e('gen', 'Primero debe grabar la Programación; recién entonces se habilitan Reprogramación y Reformulación.');
   if (S.base && S.etapa === 'Programación' && S.dirty) e('gen', 'La Programación ya fue grabada y no se puede volver a grabar. Para modificar el PAA, cambie la etapa a Reprogramación (variación máxima de 10 % por actividad) o a Reformulación (con documento de aprobación).');
+  if (S.telefono && !/^\d{9}$/.test(S.telefono)) e('gen', 'El celular debe tener 9 dígitos.');
   if (S.etapa === 'Reformulación' && !S.docRef.trim()) e('gen', 'En la etapa “Reformulación” debe indicar el documento de aprobación.');
   // Anexo A – indicadores
   if (!S.indicadores.length) w('A', 'No ha registrado indicadores (programación de indicadores).');
@@ -905,12 +976,12 @@ function validate(){
     if (!a.nombre.trim()) e('A', `${id}: falta el nombre.`);
     if (!a.unidad.trim()) e('A', `${id}: falta la unidad de medida.`);
     if (sum(a.m) <= 0) e('A', `${id}: la cantidad anual es 0; programe la meta mensual.`);
-    if (fichaState(a) !== 'ok') e('A', `${id}: complete la ficha (servicio estandarizado, actividad y objetivo).`);
+    if (!fichaCore(a)) e('A', `${id}: complete la ficha (servicio estandarizado, actividad y objetivo).`);
+    if (!ubicOk(a)) e('A', a.ubic.length ? `${id}: complete los lugares de ejecución de la ficha (región, provincia y distrito; o país en el extranjero).` : `${id}: registre al menos un lugar de ejecución en la ficha.`);
     if (a.unidad.trim() && !unitsOf(a.p).includes(a.unidad)) e('A', `${id}: la unidad de medida “${a.unidad}” no figura en el clasificador del Producto ${a.p}.`);
     else if (a.actv && unitOf(a.p, a.serv, a.actv) && a.unidad !== unitOf(a.p, a.serv, a.actv)) e('A', `${id}: la unidad de medida debe ser “${unitOf(a.p, a.serv, a.actv)}”, según la actividad del clasificador.`);
-    if (!a.ubic.length) w('A', `${id}: no tiene lugares de ejecución en la ficha.`);
     const tb = K['ba:'+a.id+':t'] || 0;
-    if (tb <= 0 && !(isPriv() && K['ca:'+a.id+':t'] > 0)) w('B', `${id}: no tiene presupuesto programado.`);
+    if (!a.noReq && tb <= 0 && !(isPriv() && K['ca:'+a.id+':tot'] > 0)) w('B', `${id}: no tiene presupuesto programado.`);
   });
   PRODUCTOS.forEach(P => { if (!acts(P.n).length) w('A', `Producto ${P.n} (${P.nombre}) no tiene actividades.`); });
   // Anexo B
@@ -927,8 +998,6 @@ function validate(){
   if (isPriv()){
     // Anexo C
     allIns().forEach(ins => {
-      const d = K['ci:'+ins.id+':dif'];
-      if (Math.abs(d) > 0.005) e('C', `Insumo “${ins.nombre || 'sin nombre'}”: total año (${fmt(K['ci:'+ins.id+':t'],2)}) ≠ suma de aportes (diferencia ${fmt(d,2)}).`);
       if (ins.soloC && !ins.nombre.trim()) e('C', 'Hay un insumo de contrapartida sin nombre.');
     });
     // Anexo D
@@ -940,7 +1009,7 @@ function validate(){
     if (S.etapa === 'Reprogramación'){
       if (!S.base) w('val', 'No hay una programación de referencia grabada; no se puede controlar la variación por actividad.');
       else S.actividades.forEach(a => {
-        const b0 = S.base.acts[a.id]; const now = K['ca:'+a.id+':t'] || 0;
+        const b0 = S.base.acts[a.id]; const now = K['ca:'+a.id+':tot'] || 0;
         if (b0 === undefined){ if (now > 0) w('val', `Actividad ${a.codigo} es nueva respecto a la programación de referencia.`); return; }
         if (b0 > 0 && now > b0 * (1 + LIM.varAct/100) + 0.005){ R.var.push(a.codigo); e('val', `Actividad ${a.codigo}: el presupuesto (S/ ${fmt(now,2)}) supera en ${fmt((now/b0-1)*100,1)} % lo programado (S/ ${fmt(b0,2)}). Requiere reformulación previa aprobada (no retroactiva).`); }
       });
@@ -995,7 +1064,7 @@ function updateDots(){
 function renderValLight(){ renderVal(); }
 
 /* ═══════════ GRABAR ═══════════ */
-function baseSnapshot(){ compute(); const acts = {}; S.actividades.forEach(a => acts[a.id] = r2(K['ca:'+a.id+':t'] || 0)); return {fecha:new Date().toISOString(), etapa:S.etapa, acts}; }
+function baseSnapshot(){ compute(); const acts = {}; S.actividades.forEach(a => acts[a.id] = r2(K['ca:'+a.id+':tot'] || 0)); return {fecha:new Date().toISOString(), etapa:S.etapa, acts}; }
 async function grabar(){
   const {E, W} = renderVal();
   if (E.length){
@@ -1049,9 +1118,9 @@ function flatten(){
   };
   const push = (grp, cod, act, ins) => {
     if (!ins.soloC) out.B_Presupuesto.push([f, c, t, grp, cod, act, ins.nombre, ins.clas||'', ins.af?'Sí':'No', sum(ins.m), ...ins.m]);
-    if (t === 'Privado'){ const cm = cmOf(ins); out.C_Fuentes.push([f, c, t, grp, cod, act, ins.nombre, sum(cm), ...cm, ins.soloC?0:sum(ins.m), +ins.citeM||0, +ins.citeNM||0, +ins.entM||0, +ins.entNM||0]); }
+    if (t === 'Privado'){ const cm = cmOf(ins); out.C_Fuentes.push([f, c, t, grp, cod, act, ins.nombre, (ins.soloC?0:sum(ins.m)) + (+ins.citeM||0) + (+ins.citeNM||0) + (+ins.entM||0) + (+ins.entNM||0), ...cm, ins.soloC?0:sum(ins.m), +ins.citeM||0, +ins.citeNM||0, +ins.entM||0, +ins.entNM||0]); }
   };
-  S.actividades.forEach(a => a.insumos.forEach(ins => push(pn(a.p), a.codigo, a.nombre, ins)));
+  S.actividades.forEach(a => { if (a.noReq) out.B_Presupuesto.push([f, c, t, pn(a.p), a.codigo, a.nombre, 'No requiere', '', 'No', 0, ...Z()]); a.insumos.forEach(ins => push(pn(a.p), a.codigo, a.nombre, ins)); });
   S.gastos.forEach(ins => push('6: Gastos de operación', '6', 'Gastos de operación', ins));
   return {meta:{fecha:f, cite:c, tipo:t, etapa:S.etapa, responsable:S.responsable, docRef:S.docRef, subvencion:K['bt:t'], contrapartida:K['contra']}, sheets:out};
 }
@@ -1212,7 +1281,7 @@ async function downloadExcel(){
     fixed.forEach(([c, t]) => { ws.mergeCells(h1, c, h1+1, c); hdr(ws.getCell(h1, c), t); ws.getCell(h1+1, c).border = BORD; });
     mHeader(ws, h1, C0); ws.getRow(h1).height = 24; ws.getRow(h1+1).height = 34; r = h1 + 2;
     const firstData = r;
-    const insW = (ins) => { ws.getCell(r, 2).value = ins.nombre; if (hasCl) ws.getCell(r, 3).value = ins.clas;
+    const insW = (ins, code) => { ws.getCell(r, 1).value = code || ''; ws.getCell(r, 2).value = ins.nombre; if (hasCl) ws.getCell(r, 3).value = ins.clas;
       writeMonths(ws, r, C0, ins.m, 'val'); ws.getCell(r, CT).value = fx([0,1,2,3].map(q => colL(qCol(C0,q)) + r).join('+'), sum(ins.m));
       rowStyle(ws, r, 1, LAST, 'ins', C0, NM); ws.getCell(r, 2).alignment = {indent:2, vertical:'middle', wrapText:true}; r++; };
     const grp = (row, label, code, kind, pre, hasRows) => {
@@ -1224,10 +1293,10 @@ async function downloadExcel(){
     };
     PRODUCTOS.forEach(P => {
       const pr = r++; const list = acts(P.n);
-      list.forEach(a => { const ar = r++; const ins = a.insumos.filter(i => !i.soloC); ins.forEach(insW); grp(ar, a.nombre, a.codigo, 'act', 'ba:'+a.id, ins.length); });
+      list.forEach(a => { const ar = r++; const ins = a.noReq ? [] : a.insumos.filter(i => !i.soloC); if (a.noReq) insW({id:'nr', nombre:'No requiere', clas:'', m:Z()}, a.codigo + '.1'); else ins.forEach(i => insW(i, insCode(a, i))); grp(ar, a.nombre, a.codigo, 'act', 'ba:'+a.id, ins.length || a.noReq); });
       grp(pr, `PRODUCTO ${P.n}: ${P.nombre}`, P.n, 'prod', 'bp:'+P.n, list.length);
     });
-    const gr = r++; const gl = S.gastos.filter(i => !i.soloC); gl.forEach(insW); grp(gr, 'GASTOS DE OPERACIÓN', 6, 'prod', 'bg', gl.length);
+    const gr = r++; const gl = S.gastos.filter(i => !i.soloC); gl.forEach(g => insW(g, goCode(g))); grp(gr, 'GASTOS DE OPERACIÓN', 6, 'prod', 'bg', gl.length);
     const tr = r; ws.getCell(tr, 2).value = `TOTAL AÑO ${ANIO} (APORTE MINCETUR)`;
     for (let c = CT; c <= LAST; c++){ const L = colL(c); ws.getCell(tr, c).value = fx(`SUBTOTAL(9,${L}${firstData}:${L}${tr-1})`, c === CT ? K['bt:t'] : (((c - C0) % 4 === 3) ? K[`bt:q${Math.floor((c - C0)/4)}`] : K[`bt:m${(c - C0) - Math.floor((c - C0)/4)}`])); }
     rowStyle(ws, tr, 1, LAST, 'tot', C0, NM);
@@ -1237,49 +1306,46 @@ async function downloadExcel(){
 
   /* ── Anexo C (privados) ── */
   if (!pub){ const ws = wb.addWorksheet('Anexo C', {pageSetup:page, properties:{tabColor:{argb:XC.red}}});
-    const CT = 3, C0 = 4, CF = C0 + 16, LAST = CF + 4;
-    ws.columns = [{width:11},{width:50},{width:13}, ...Array(16).fill({width:11}), ...Array(5).fill({width:13})];
+    const C0 = 3, CF = C0 + 16, LAST = CF + 5;
+    ws.columns = [{width:11},{width:50}, ...Array(16).fill({width:11}), ...Array(6).fill({width:13})];
     sheetTitle(wb, ws, logo, ['ANEXO C', 'PROGRAMACIÓN DEL PRESUPUESTO (METAS FINANCIERAS) - TOTAL SEGÚN FUENTES DE FINANCIAMIENTO', `PLAN ANUAL DE ACTIVIDADES - AÑO ${ANIO}`, S.cite], LAST, estado);
     let r = 7; band(ws, r, 1, LAST, 'PROGRAMACIÓN DE METAS FINANCIERAS'); r++;
     const h1 = r;
-    [[1,'CÓDIGO DEL COMPONENTE Y DE LA ACTIVIDAD'],[2,'COMPONENTE / ACTIVIDAD'],[CT,'TOTAL AÑO'],[CF,'APORTE MINCETUR']].forEach(([c, t]) => { ws.mergeCells(h1, c, h1+1, c); hdr(ws.getCell(h1, c), t, c === CF ? XC.src : null); ws.getCell(h1+1, c).border = BORD; });
-    mHeader(ws, h1, C0);
+    [[1,'CÓDIGO DEL COMPONENTE Y DE LA ACTIVIDAD'],[2,'COMPONENTE / ACTIVIDAD'],[CF,'APORTE MINCETUR'],[LAST,'TOTAL PRESUPUESTO']].forEach(([c, t]) => { ws.mergeCells(h1, c, h1+1, c); hdr(ws.getCell(h1, c), t, c === CF ? XC.src : null); ws.getCell(h1+1, c).border = BORD; });
+    mHeader(ws, h1, C0); ws.getCell(h1, C0).value = 'PROGRAMACIÓN MENSUAL (APORTE MINCETUR – ANEXO B)';
     ws.mergeCells(h1, CF+1, h1, CF+2); hdr(ws.getCell(h1, CF+1), 'APORTE DEL CITE SOLICITANTE', XC.src);
     ws.mergeCells(h1, CF+3, h1, CF+4); hdr(ws.getCell(h1, CF+3), 'APORTE DE LA ENTIDAD ASOCIADA', XC.src);
     ['Monetario','No Monetario','Monetario','No Monetario'].forEach((t, k) => hdr(ws.getCell(h1+1, CF+1+k), t, XC.src));
     ws.getRow(h1).height = 28; ws.getRow(h1+1).height = 34; r = h1 + 2;
-    const FK = ['mi','cM','cN','eM','eN'];
+    const FK = ['mi','cM','cN','eM','eN','tot'];
+    const keyOf = (pre, c) => c >= CF ? pre + ':' + FK[c - CF] : (((c - C0) % 4 === 3) ? `${pre}:q${Math.floor((c - C0)/4)}` : `${pre}:m${(c - C0) - Math.floor((c - C0)/4)}`);
     const compRow = r++; const firstData = r;
-    const insW = ins => { const cm = cmOf(ins); ws.getCell(r, 2).value = ins.nombre + (ins.soloC ? ' (solo contrapartida)' : '');
-      writeMonths(ws, r, C0, cm, 'val'); ws.getCell(r, CT).value = fx([0,1,2,3].map(q => colL(qCol(C0,q)) + r).join('+'), sum(cm));
-      [ins.soloC ? 0 : sum(ins.m), +ins.citeM||0, +ins.citeNM||0, +ins.entM||0, +ins.entNM||0].forEach((v, k) => ws.getCell(r, CF + k).value = v);
-      rowStyle(ws, r, 1, LAST, 'ins', C0, NM); ws.getCell(r, 2).alignment = {indent:2, vertical:'middle', wrapText:true}; r++; };
+    const insW = (ins, code) => { const mv = cmOf(ins); ws.getCell(r, 1).value = code || ''; ws.getCell(r, 2).value = ins.nombre + (ins.soloC ? ' (solo contrapartida)' : '');
+      writeMonths(ws, r, C0, mv, 'val');
+      ws.getCell(r, CF).value = fx([0,1,2,3].map(q => colL(qCol(C0,q)) + r).join('+'), sum(mv));
+      [+ins.citeM||0, +ins.citeNM||0, +ins.entM||0, +ins.entNM||0].forEach((v, k) => ws.getCell(r, CF + 1 + k).value = v);
+      ws.getCell(r, LAST).value = fx(`SUM(${colL(CF)}${r}:${colL(CF+4)}${r})`, K['ci:'+ins.id+':tot']);
+      rowStyle(ws, r, 1, LAST, 'ins', C0, NM); ws.getCell(r, 2).alignment = {indent:2, vertical:'middle', wrapText:true}; ws.getCell(r, LAST).font = {name:'Arial', size:9, bold:true}; r++; };
     const grp = (row, label, code, kind, pre, hasRows) => {
       ws.getCell(row, 1).value = String(code); ws.getCell(row, 2).value = label;
-      const ctx = {r1: row + 1, r2: Math.max(row + 1, r - 1)};
-      if (hasRows){ writeMonths(ws, row, C0, MES.map((_, i) => K[`${pre}:m${i}`]), 'sub', ctx);
-        ws.getCell(row, CT).value = fx(`SUBTOTAL(9,${colL(CT)}${ctx.r1}:${colL(CT)}${ctx.r2})`, K[pre+':t']);
-        FK.forEach((k, j) => { const L = colL(CF + j); ws.getCell(row, CF + j).value = fx(`SUBTOTAL(9,${L}${ctx.r1}:${L}${ctx.r2})`, K[pre+':'+k]); }); }
-      else for (let c = CT; c <= LAST; c++) ws.getCell(row, c).value = 0;
+      const r1 = row + 1, r2 = Math.max(row + 1, r - 1);
+      for (let c = C0; c <= LAST; c++){ const L = colL(c); ws.getCell(row, c).value = hasRows ? fx(`SUBTOTAL(9,${L}${r1}:${L}${r2})`, K[keyOf(pre, c)]) : 0; }
       rowStyle(ws, row, 1, LAST, kind, C0, NM);
     };
     PRODUCTOS.forEach(P => {
       const pr = r++; const list = acts(P.n);
-      list.forEach(a => { const ar = r++; a.insumos.forEach(insW); grp(ar, a.nombre, a.codigo, 'act', 'ca:'+a.id, a.insumos.length); });
+      list.forEach(a => { const ar = r++; if (a.noReq && !a.insumos.length) insW({id:'nr', nombre:'No requiere', m:Z(), citeM:0, citeNM:0, entM:0, entNM:0}, a.codigo + '.1'); a.insumos.forEach(i => insW(i, insCode(a, i))); grp(ar, a.nombre, a.codigo, 'act', 'ca:'+a.id, a.insumos.length || a.noReq); });
       grp(pr, `PRODUCTO ${P.n}: ${P.nombre}`, P.n, 'prod', 'cp:'+P.n, list.length);
     });
     const lastComp = r - 1;
-    // fila COMPONENTES
     ws.getCell(compRow, 2).value = 'COMPONENTES';
-    for (let c = CT; c <= LAST; c++){ const L = colL(c); const key = c === CT ? 'cc:t' : c >= CF ? 'cc:' + FK[c - CF] : (((c - C0) % 4 === 3) ? `cc:q${Math.floor((c - C0)/4)}` : `cc:m${(c - C0) - Math.floor((c - C0)/4)}`);
-      ws.getCell(compRow, c).value = lastComp >= firstData ? fx(`SUBTOTAL(9,${L}${firstData}:${L}${lastComp})`, K[key]) : 0; }
+    for (let c = C0; c <= LAST; c++){ const L = colL(c); ws.getCell(compRow, c).value = lastComp >= firstData ? fx(`SUBTOTAL(9,${L}${firstData}:${L}${lastComp})`, K[keyOf('cc', c)]) : 0; }
     rowStyle(ws, compRow, 1, LAST, 'tot', C0, NM);
-    const gr = r++; S.gastos.forEach(insW); grp(gr, 'GASTOS DE OPERACIÓN', 6, 'prod', 'cg', S.gastos.length);
-    const tr = r; ws.getCell(tr, 2).value = `TOTAL AÑO ${ANIO} (TODAS LAS FUENTES)`;
-    for (let c = CT; c <= LAST; c++){ const L = colL(c); const key = c === CT ? 'ct:t' : c >= CF ? 'ct:' + FK[c - CF] : (((c - C0) % 4 === 3) ? `ct:q${Math.floor((c - C0)/4)}` : `ct:m${(c - C0) - Math.floor((c - C0)/4)}`);
-      ws.getCell(tr, c).value = fx(`SUBTOTAL(9,${L}${firstData}:${L}${tr-1})`, K[key]); }
+    const gr = r++; S.gastos.forEach(g => insW(g, goCode(g))); grp(gr, 'GASTOS DE OPERACIÓN', 6, 'prod', 'cg', S.gastos.length);
+    const tr = r; ws.getCell(tr, 2).value = `TOTAL AÑO ${ANIO}`;
+    for (let c = C0; c <= LAST; c++){ const L = colL(c); ws.getCell(tr, c).value = fx(`SUBTOTAL(9,${L}${firstData}:${L}${tr-1})`, K[keyOf('ct', c)]); }
     rowStyle(ws, tr, 1, LAST, 'tot', C0, NM);
-    r = tr + 2; ws.getCell(r, 1).value = `Total año = Aporte MINCETUR + Aporte del CITE solicitante + Aporte de la entidad asociada. Ene-${YY} … Dic-${YY}: meses del año ${ANIO}.`; ws.getCell(r, 1).font = {name:'Arial', size:8, italic:true};
+    r = tr + 2; ws.getCell(r, 1).value = `Programación mensual = aporte MINCETUR del Anexo B. Total presupuesto = Aporte MINCETUR + Aporte del CITE solicitante + Aporte de la entidad asociada. Ene-${YY} … Dic-${YY}: meses del año ${ANIO}.`; ws.getCell(r, 1).font = {name:'Arial', size:8, italic:true};
     ws.views = [{state:'frozen', xSplit:2, ySplit:h1+1}];
   }
 
